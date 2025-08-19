@@ -1,0 +1,13 @@
+.header-gradient {
+  background: linear-gradient(90deg, #0ea5e9, #6366f1); /* cyan -> indigo */
+  min-height: 6rem; /* más grueso */
+}
+
+h1 {
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+small {
+  font-size: 0.9rem;
+}
