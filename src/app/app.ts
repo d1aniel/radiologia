@@ -7,7 +7,7 @@ import { Content } from './components/layout/content/content';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Header, Aside, Footer, Content],
+  imports: [RouterOutlet, Header,Content, Aside, Footer],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
