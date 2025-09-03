@@ -30,7 +30,6 @@ export class Aside {
         icon: 'pi pi-fw pi-images',
         items: [
           { label: 'Listado', icon: 'pi pi-list', routerLink: '/studies/show' },
-          { label: 'Nuevo estudio', icon: 'pi pi-plus', routerLink: '/studies/create' }
         ]
       },
 
@@ -40,7 +39,6 @@ export class Aside {
         icon: 'pi pi-fw pi-users',
         items: [
           { label: 'Listado', icon: 'pi pi-list', routerLink: '/patients/show' },
-          { label: 'Nuevo paciente', icon: 'pi pi-user-plus', routerLink: '/patients/create' }
         ]
       },
 
@@ -50,7 +48,6 @@ export class Aside {
         icon: 'pi pi-fw pi-clock',
         items: [
           { label: 'Listado', icon: 'pi pi-list', routerLink: '/quotes/show' },
-          { label: 'Programar cita', icon: 'pi pi-plus', routerLink: '/quotes/create' }
         ]
       },
 
@@ -60,7 +57,6 @@ export class Aside {
         icon: 'pi pi-fw pi-cog',
         items: [
           { label: 'Listado', icon: 'pi pi-list', routerLink: '/teams/show' },
-          { label: 'Nuevo equipo', icon: 'pi pi-plus', routerLink: '/teams/create' }
         ]
       },
 
@@ -70,7 +66,6 @@ export class Aside {
         icon: 'pi pi-fw pi-clone',
         items: [
           { label: 'Listado', icon: 'pi pi-list', routerLink: '/modalities/show' },
-          { label: 'Nueva modalidad', icon: 'pi pi-plus', routerLink: '/modalities/create' }
         ]
       },
 
@@ -80,7 +75,6 @@ export class Aside {
         icon: 'pi pi-fw pi-id-card',
         items: [
           { label: 'Listado', icon: 'pi pi-list', routerLink: '/doctors/show' },
-          { label: 'Nuevo médico', icon: 'pi pi-user-plus', routerLink: '/doctors/create' }
         ]
       },
 
@@ -90,7 +84,6 @@ export class Aside {
         icon: 'pi pi-fw pi-briefcase',
         items: [
           { label: 'Listado', icon: 'pi pi-list', routerLink: '/technologists/show' },
-          { label: 'Nuevo tecnólogo', icon: 'pi pi-user-plus', routerLink: '/technologists/create' }
         ]
       },
 
@@ -100,7 +93,6 @@ export class Aside {
         icon: 'pi pi-fw pi-tag',
         items: [
           { label: 'Listado', icon: 'pi pi-list', routerLink: '/labels/show' },
-          { label: 'Nueva etiqueta', icon: 'pi pi-plus', routerLink: '/labels/create' }
         ]
       },
 
@@ -110,7 +102,6 @@ export class Aside {
         icon: 'pi pi-fw pi-credit-card',
         items: [
           { label: 'Listado', icon: 'pi pi-list', routerLink: '/payments/show' },
-          { label: 'Nuevo pago', icon: 'pi pi-plus', routerLink: '/payments/create' }
         ]
       },
 

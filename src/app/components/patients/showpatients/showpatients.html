@@ -1,1 +1,38 @@
-<p>showpatients works!</p>
+<div class="card p-1 ">
+    <div class="flex flex-wrap gap-4 justify-end">
+        <p-button 
+        type ="button"
+        label="Nuevo Paciente" 
+        icon="pi pi-user-plus" 
+        [routerLink]="'/patients/create'"
+        />
+    </div>
+    <p-table [value]="pacients" stripedRows [tableStyle]="{'min-width': '50rem'}">
+        <ng-template #header>
+            <tr>
+                <th>id</th>
+                <th>nombre</th>
+                <th>apellido</th>
+                <th>tpdocumento</th>
+                <th>documento</th>
+                <th>telefono</th>
+                <th>eps</th>
+                <th>correo</th>
+                <th>estado</th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-pacient>
+            <tr>
+                <td>{{pacient.id}}</td>
+                <td>{{pacient.nombre}}</td>
+                <td>{{pacient.apellido}}</td>
+                <td>{{pacient.tpdocumento}}</td>
+                <td>{{pacient.documento}}</td>
+                <td>{{pacient.telefono}}</td>
+                <td>{{pacient.eps}}</td>
+                <td>{{pacient.correo}}</td>
+                <td>{{pacient.status}}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
