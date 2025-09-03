@@ -3,3 +3,6 @@
 @import "tailwindcss";
 
 html, body { height: 100%; margin: 0; font-family: Inter, Roboto, "Helvetica Neue", sans-serif; }
+.p-tooltip .p-tooltip-text {
+  white-space: nowrap;  /* evita saltos de línea */
+}
