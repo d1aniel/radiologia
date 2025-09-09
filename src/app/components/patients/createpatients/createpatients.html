@@ -1,1 +1,85 @@
-<p>createpatients works!</p>
+<div class="mx-auto w-full max-w-[880px] rounded-xl bg-white p-4 sm:p-6 shadow-sm">
+  <h2 class="mb-4 text-lg font-semibold text-slate-800">Agregar Paciente (Cliente)</h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="grid grid-cols-12 gap-3">
+
+    <!-- NOMBRE -->
+    <div class="col-span-12 md:col-span-6">
+      <label for="nombre" class="block mb-1 text-sm font-medium text-slate-700">Nombre</label>
+      <input id="nombre" type="text" pInputText formControlName="nombre"
+             placeholder="Ej. Camilo"
+             class="w-full text-sm px-3 py-2"/>
+      <small class="block mt-1 text-xs text-red-600"
+             *ngIf="f['nombre'].touched && f['nombre'].errors?.['required']">El nombre es obligatorio.</small>
+    </div>
+
+    <!-- APELLIDO -->
+    <div class="col-span-12 md:col-span-6">
+      <label for="apellido" class="block mb-1 text-sm font-medium text-slate-700">Apellido</label>
+      <input id="apellido" type="text" pInputText formControlName="apellido"
+             placeholder="Ej. Rodríguez"
+             class="w-full text-sm px-3 py-2"/>
+      <small class="block mt-1 text-xs text-red-600"
+             *ngIf="f['apellido'].touched && f['apellido'].errors?.['required']">El apellido es obligatorio.</small>
+    </div>
+
+    <!-- TIPO DOCUMENTO -->
+    <div class="col-span-12 md:col-span-4">
+      <label for="tpdocumento" class="block mb-1 text-sm font-medium text-slate-700">Tipo de Documento</label>
+      <p-select
+        inputId="tpdocumento"
+        formControlName="tpdocumento"
+        [options]="tiposDocumento"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Seleccione..."
+        class="w-full text-sm">
+      </p-select>
+    </div>
+
+    <!-- DOCUMENTO -->
+    <div class="col-span-12 md:col-span-4">
+      <label for="documento" class="block mb-1 text-sm font-medium text-slate-700">Documento</label>
+      <input id="documento" type="text" pInputText formControlName="documento"
+             placeholder="Solo números"
+             class="w-full text-sm px-3 py-2"/>
+    </div>
+
+    <!-- TELÉFONO -->
+    <div class="col-span-12 md:col-span-4">
+      <label for="telefono" class="block mb-1 text-sm font-medium text-slate-700">Teléfono</label>
+      <input id="telefono" type="text" pInputText formControlName="telefono"
+             placeholder="Ej. 3001234567"
+             class="w-full text-sm px-3 py-2"/>
+    </div>
+
+    <!-- EPS (texto en vez de select) -->
+    <div class="col-span-12 md:col-span-6">
+      <label for="eps" class="block mb-1 text-sm font-medium text-slate-700">EPS</label>
+      <input id="eps" type="text" pInputText formControlName="eps"
+             placeholder="Ej. Sanitas"
+             class="w-full text-sm px-3 py-2"/>
+      <small class="block mt-1 text-xs text-red-600"
+             *ngIf="f['eps'].touched && f['eps'].errors?.['required']">La EPS es obligatoria.</small>
+    </div>
+
+    <!-- CORREO -->
+    <div class="col-span-12 md:col-span-6">
+      <label for="correo" class="block mb-1 text-sm font-medium text-slate-700">Correo</label>
+      <input id="correo" type="email" pInputText formControlName="correo"
+             placeholder="correo@dominio.com"
+             class="w-full text-sm px-3 py-2"/>
+    </div>
+
+    <!-- ACCIONES -->
+    <div class="col-span-12">
+      <div class="mt-3 flex items-center justify-end gap-2">
+        <p-button label="Cancelar" severity="secondary" [size]="'small'"
+                  (onClick)="onCancel()" type="button"></p-button>
+        <p-button label="Guardar" icon="pi pi-check" [size]="'small'"
+                  type="submit" [disabled]="form.invalid"></p-button>
+      </div>
+    </div>
+
+  </form>
+</div>
