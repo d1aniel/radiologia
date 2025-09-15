@@ -13,7 +13,7 @@ import { MedicosService } from '../../../services/doctor';
   imports: [CommonModule, TableModule, ButtonModule, RouterModule],
   templateUrl: './showdoctors.html'
 })
-export class ShowMedicos {
+export class Showdoctors {
   medicos: MedicoI[] = [];
 
   constructor(private medicosService: MedicosService) {

@@ -18,13 +18,8 @@ import { MedicosService } from '../../../services/doctor';
   ],
   templateUrl: './createdoctors.html'
 })
-export class CreateMedico {
+export class Createdoctors {
   form: FormGroup;
-
-  estados = [
-    { label: 'Activo', value: 'ACTIVATE' },
-    { label: 'Inactivo', value: 'INACTIVE' }
-  ];
 
   especialidades = [
     { label: 'Radiología General', value: 'Radiología General' },
@@ -44,8 +39,7 @@ export class CreateMedico {
       especialidad: ['', Validators.required],
       telefono: ['', [Validators.required, Validators.pattern(/^\d{7,15}$/)]],
       correo: ['', [Validators.required, Validators.email]],
-      registro: [''], // opcional
-      status: ['ACTIVATE', Validators.required]
+      registro: [''] // opcional
     });
   }
 
@@ -58,7 +52,10 @@ export class CreateMedico {
       this.form.markAllAsTouched();
       return;
     }
-    this.medicosService.addMedico(this.form.value as any);
+    this.medicosService.addMedico({
+      ...this.form.value,
+      status: 'ACTIVATE'   // 🔹 por defecto todos los médicos nuevos estarán activos
+    });
     this.router.navigate(['/medicos/show']);
   }
 
