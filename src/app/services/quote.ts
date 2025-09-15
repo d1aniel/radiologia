@@ -1,4 +1,3 @@
-// src/app/services/cita.ts
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { CitaI, EstadoCita } from '../models/quotes';

@@ -1,8 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { StudiesI } from '../models/studies';
-
-// Importa TU servicio de etiquetas desde "label"
 import { TagsService } from './label';
 import { LabelsI } from '../models/labels';
 
@@ -10,7 +8,6 @@ import { LabelsI } from '../models/labels';
 export class StudiesService {
   private tagsService = inject(TagsService);
 
-  // Datos semilla: usa IDs que existan en tu TagsService (label)
   private studiesSubject = new BehaviorSubject<StudiesI[]>([
     {
       id: 1,
@@ -22,14 +19,13 @@ export class StudiesService {
       motivo: 'Dolor lumbar posterior a caída',
       tecnologo: 'Laura Martínez',
       medico: 'Dr. Andrés Velásquez',
-      etiquetas: [2, 1] // Control(2), Urgente(1)
+      etiquetas: [2, 1]
     }
   ]);
 
   studies$ = this.studiesSubject.asObservable();
   get value(): StudiesI[] { return this.studiesSubject.value; }
 
-  // ---------- CRUD ----------
   getAll(): StudiesI[] { return this.value; }
 
   getById(id: number): StudiesI | undefined {
@@ -52,7 +48,6 @@ export class StudiesService {
     this.studiesSubject.next(this.value.filter(e => e.id !== id));
   }
 
-  // ---------- Gestión de etiquetas (IDs) ----------
   setLabels(idEstudio: number, etiquetaIds: number[]): void {
     const updated = this.value.map(e => e.id === idEstudio ? { ...e, etiquetas: [...etiquetaIds] } : e);
     this.studiesSubject.next(updated);
@@ -76,16 +71,10 @@ export class StudiesService {
     this.studiesSubject.next(updated);
   }
 
-  // ---------- Búsqueda (incluye nombres de etiquetas) ----------
-  /**
-   * Busca por texto en: paciente, modalidad, equipo, tecnologo, medico, prioridad, motivo
-   * y también por NOMBRE de etiqueta (resolviendo IDs con TagsService.value).
-   */
   search(term: string): StudiesI[] {
     const t = term.toLowerCase().trim();
     if (!t) return this.value;
 
-    // Construye mapa id->nombre desde tu TagsService (usa .value)
     const etiquetasMap = new Map<number, string>();
     this.tagsService.value.forEach((tag: LabelsI) => {
       etiquetasMap.set(tag.id, tag.nombre);

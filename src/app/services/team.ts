@@ -1,4 +1,3 @@
-// src/app/services/team.ts
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { TeamI, EstadoTeam } from '../models/teams';
