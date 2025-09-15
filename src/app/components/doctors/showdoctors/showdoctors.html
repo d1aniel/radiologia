@@ -1,1 +1,54 @@
-<p>showdoctors works!</p>
+<div class="mx-auto w-full max-w-[1100px] p-4 sm:p-6">
+  <div class="mb-3 flex items-center justify-between">
+    <h2 class="text-lg font-semibold text-slate-800">Médicos</h2>
+    <a routerLink="/medicos/create" pButton label="Agregar Médico" class="p-button-sm"></a>
+  </div>
+
+  <p-table
+    [value]="medicos"
+    [paginator]="true"
+    [rows]="8"
+    responsiveLayout="scroll"
+    [tableStyle]="{ 'min-width': '60rem' }"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Especialidad</th>
+        <th>Teléfono</th>
+        <th>Correo</th>
+        <th>Estado</th>
+        <th class="w-28">Acciones</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-m>
+      <tr>
+        <td>{{ m.id }}</td>
+        <td>{{ m.nombre }}</td>
+        <td>{{ m.especialidad }}</td>
+        <td>{{ m.telefono }}</td>
+        <td>{{ m.correo }}</td>
+        <td>
+          <span
+            class="px-2 py-0.5 rounded-full text-xs"
+            [class.bg-green-100]="m.status === 'ACTIVATE'"
+            [class.text-green-700]="m.status === 'ACTIVATE'"
+            [class.bg-red-100]="m.status === 'INACTIVE'"
+            [class.text-red-700]="m.status === 'INACTIVE'">
+            {{ m.status === 'ACTIVATE' ? 'Activo' : 'Inactivo' }}
+          </span>
+        </td>
+        <td class="space-x-2">
+          <button
+            pButton
+            label="Eliminar"
+            class="p-button-sm p-button-danger"
+            (click)="onDelete(m.id)">
+          </button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

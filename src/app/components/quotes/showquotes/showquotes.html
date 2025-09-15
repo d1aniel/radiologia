@@ -1,1 +1,47 @@
-<p>showquotes works!</p>
+<!-- src/app/features/citas/showcitas.html -->
+<div class="mx-auto w-full max-w-[1100px] p-4 sm:p-6">
+  <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <h2 class="text-lg font-semibold">Citas</h2>
+    <div class="flex gap-2">
+      <input pInputText type="text" [(ngModel)]="globalFilter"
+             placeholder="Buscar (paciente, modalidad, equipo, estado...)"
+             class="w-64" />
+      <a pButton routerLink="/quotes/create" label="Programar cita" icon="pi pi-plus"></a>
+    </div>
+  </div>
+
+  <p-table [value]="filtered" [tableStyle]="{'min-width':'100%'}" [scrollable]="true" scrollHeight="flex">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Paciente</th>
+        <th>Modalidad</th>
+        <th>Equipo</th>
+        <th>Fecha/Hora</th>
+        <th>Tecnólogo</th>
+        <th>Motivo</th>
+        <th>Estado</th>
+        <th class="w-28 text-center">Acciones</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-row>
+      <tr>
+        <td class="font-medium">{{ row.paciente }}</td>
+        <td>{{ row.modalidad }}</td>
+        <td>{{ row.equipo }}</td>
+        <td>{{ row.fechaHora | date:'dd/MM/yyyy HH:mm' }}</td>
+        <td>{{ row.tecnologo }}</td>
+        <td class="max-w-[280px] truncate" title="{{ row.motivo }}">{{ row.motivo }}</td>
+        <td><p-tag [severity]="tagSeverity(row.estado)" [value]="row.estado"></p-tag></td>
+        <td class="text-center">
+          <!-- Si luego agregas editar, pon routerLink con el id -->
+          <button pButton icon="pi pi-trash" severity="danger" (click)="delete(row)"></button>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr><td colspan="8" class="text-center py-6">Sin registros</td></tr>
+    </ng-template>
+  </p-table>
+</div>

@@ -1,1 +1,124 @@
-<p>showagendabyteam works!</p>
+<!-- Filtros superiores -->
+<div class="mx-auto w-full max-w-[1100px] rounded-xl bg-white p-4 sm:p-6 shadow-sm space-y-4">
+  <div class="flex items-center justify-between">
+    <h2 class="text-lg font-semibold text-slate-800">Agenda por Equipo</h2>
+    <!-- Programar cita (redirige a agenda/create-byteam) -->
+    <button pButton label="Programar cita" icon="pi pi-calendar-plus" (click)="programarCita()" severity="success"></button>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
+    <!-- Fecha -->
+    <div>
+      <label class="block text-sm mb-1 text-slate-600">Fecha</label>
+      <p-datepicker [(ngModel)]="fechaSel" inputId="fecha" dateFormat="dd/mm/yy" [fluid]="true"></p-datepicker>
+    </div>
+
+    <!-- Equipo -->
+    <div>
+      <label class="block text-sm mb-1 text-slate-600">Equipo</label>
+      <p-select
+        [(ngModel)]="equipoSel"
+        [options]="equiposOptions"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Seleccione equipo"
+        [fluid]="true">
+      </p-select>
+    </div>
+
+    <!-- Modalidad (opcional) -->
+    <div>
+      <label class="block text-sm mb-1 text-slate-600">Modalidad (opcional)</label>
+      <p-select
+        [(ngModel)]="modalidadSel"
+        [options]="modalidadesOptions"
+        optionLabel="label"
+        optionValue="value"
+        [showClear]="true"
+        placeholder="Todas"
+        [fluid]="true">
+      </p-select>
+    </div>
+
+    <!-- Estado (opcional) -->
+    <div>
+      <label class="block text-sm mb-1 text-slate-600">Estado (opcional)</label>
+      <p-select
+        [(ngModel)]="estadoSel"
+        [options]="estadosOptions"
+        optionLabel="label"
+        optionValue="value"
+        [showClear]="true"
+        placeholder="Todos"
+        [fluid]="true">
+      </p-select>
+    </div>
+  </div>
+
+  <!-- Filtro global -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+    <div class="md:col-span-2">
+      <input pInputText [(ngModel)]="filtroGlobal" placeholder="Buscar por nombre, doc, tecnólogo, motivo, etiqueta..." class="w-full" />
+    </div>
+  </div>
+</div>
+
+<!-- Tabla agrupada por equipo -->
+<div class="mx-auto w-full max-w-[1100px] mt-4">
+  <p-table
+    [value]="rowsForView((agenda$ | async) ?? [])"
+    rowGroupMode="subheader"
+    [groupRowsBy]="['equipo']"
+    sortField="fechaHora"
+    [sortOrder]="1"
+    [paginator]="true"
+    [rows]="10"
+    [tableStyle]="{ 'min-width': '100%' }">
+
+    <!-- Header del grupo (equipo + estado + métricas) -->
+    <ng-template pTemplate="rowgroupheader" let-row>
+      <div class="flex flex-wrap items-center justify-between bg-slate-50 px-3 py-2 rounded">
+        <div class="flex items-center gap-2">
+          <span class="font-semibold text-slate-700">Equipo: {{ row.equipo }}</span>
+          <p-tag [severity]="equipoEstado(row.equipo) === 'DISPONIBLE' ? 'success' : 'warn'"
+                 [value]="equipoEstado(row.equipo)">
+          </p-tag>
+        </div>
+        <div class="text-sm text-slate-600">
+          <ng-container *ngIf="metricas(row.equipo) as metrikas">
+            Ocupación: {{ metrikas.citas }}/{{ metrikas.totalSlots }} ({{ metrikas.ocupacionPct }}%) · Próximo libre: {{ metrikas.proximoLibre }}
+          </ng-container>
+        </div>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Hora</th>
+        <th>Paciente</th>
+        <th>Documento</th>
+        <th>Modalidad</th>
+        <th>Tecnólogo</th>
+        <th>Prioridad</th>
+        <th>Estado</th>
+        <th class="text-right">Acciones</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-row>
+      <tr>
+        <td class="whitespace-nowrap">{{ row.fechaHora | date:'HH:mm' }}</td>
+        <td>{{ row.paciente }}</td>
+        <td>{{ row.documento }}</td>
+        <td>{{ row.modalidad }}</td>
+        <td>{{ row.tecnologo }}</td>
+        <td><p-tag [severity]="severityPrioridad(row.prioridad)" [value]="row.prioridad"></p-tag></td>
+        <td><p-tag [severity]="severityEstado(row.estado)" [value]="row.estado"></p-tag></td>
+        <td class="text-right space-x-2">
+          <button pButton label="Reprogramar" size="small" (click)="reprogramar(row)" severity="secondary"></button>
+          <button pButton icon="pi pi-trash" size="small" (click)="delete(row)" severity="danger" [text]="true"></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

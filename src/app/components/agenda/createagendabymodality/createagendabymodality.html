@@ -1,1 +1,120 @@
-<p>createagendabymodality works!</p>
+<!-- src/app/features/agenda-modalidad/createmodalidadagenda.html -->
+<div class="mx-auto w-full max-w-[880px] rounded-xl bg-white p-4 sm:p-6 shadow-sm">
+  <h2 class="mb-4 text-lg font-semibold text-slate-800">Programar cita (Agenda por Modalidad)</h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+    <!-- Paciente -->
+    <div>
+      <label class="block text-sm font-medium mb-1">Paciente*</label>
+      <input
+        pInputText
+        formControlName="paciente"
+        placeholder="Ej. Camilo Rodríguez"
+        class="w-full"
+      />
+      <small class="text-red-600" *ngIf="f.paciente.touched && f.paciente.invalid">
+        Requerido (mín. 2 caracteres).
+      </small>
+    </div>
+
+    <!-- Modalidad y Equipo -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm font-medium mb-1">Modalidad*</label>
+        <p-select
+          formControlName="modalidad"
+          [options]="modalidades"
+          placeholder="Seleccione modalidad"
+          class="w-full"
+        />
+        <small class="text-red-600" *ngIf="f.modalidad.touched && f.modalidad.invalid">Requerido.</small>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium mb-1">Equipo*</label>
+        <input pInputText formControlName="equipo" class="w-full" placeholder="Ej. RX-01 Sala A" />
+        <small class="text-red-600" *ngIf="f.equipo.touched && f.equipo.invalid">Requerido.</small>
+      </div>
+    </div>
+
+    <!-- Estudio y Fecha/Hora -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm font-medium mb-1">Estudio*</label>
+        <input pInputText formControlName="motivo" class="w-full" placeholder="Indicación clínica (breve)" />
+        <small class="text-slate-500">Puedes detallar en “Motivo” abajo.</small>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium mb-1">Fecha/Hora*</label>
+        <p-datepicker
+          formControlName="fechaHora"
+          [showTime]="true"
+          hourFormat="24"
+          showIcon="true"
+          dateFormat="dd/mm/yy"
+          styleClass="w-full"
+        ></p-datepicker>
+        <small class="text-red-600" *ngIf="f.fechaHora.touched && f.fechaHora.invalid">Requerido.</small>
+      </div>
+    </div>
+
+    <!-- Prioridad -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm font-medium mb-1">Prioridad*</label>
+        <p-select
+          formControlName="prioridad"
+          [options]="prioridades"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Seleccione prioridad"
+          class="w-full"
+        />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium mb-1">Tecnólogo*</label>
+        <input pInputText formControlName="tecnologo" class="w-full" placeholder="Ej. Laura Martínez" />
+        <small class="text-red-600" *ngIf="f.tecnologo.touched && f.tecnologo.invalid">Requerido.</small>
+      </div>
+    </div>
+
+    <!-- Médico y Motivo -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm font-medium mb-1">Médico radiólogo*</label>
+        <input pInputText formControlName="medico" class="w-full" placeholder="Ej. Dr. Andrés Velásquez" />
+        <small class="text-red-600" *ngIf="f.medico.touched && f.medico.invalid">Requerido.</small>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium mb-1">Motivo / Indicación clínica*</label>
+        <input pInputText formControlName="motivo" class="w-full" placeholder="Dolor lumbar posterior a caída" />
+        <small class="text-red-600" *ngIf="f.motivo.touched && f.motivo.invalid">Mín. 5 caracteres.</small>
+      </div>
+    </div>
+
+    <!-- Etiquetas (AutoComplete múltiple) -->
+    <div>
+      <label class="block text-sm font-medium mb-1">Etiquetas</label>
+      <p-autoComplete
+        formControlName="etiquetas"
+        [suggestions]="filteredEtiquetas"
+        [multiple]="true"
+        [dropdown]="true"
+        [forceSelection]="false"
+        (completeMethod)="filterEtiquetas($event)"
+        placeholder="Escribe para buscar o crear etiquetas"
+        [inputStyle]="{ width: '100%' }"
+      ></p-autoComplete>
+      <small class="text-slate-500">Puedes escribir nuevas etiquetas y presionar Enter.</small>
+    </div>
+
+    <!-- Acciones -->
+    <div class="pt-2 flex justify-end gap-2">
+      <button pButton type="button" label="Cancelar" severity="secondary" (click)="onCancel()"></button>
+      <button pButton type="submit" label="Guardar" severity="primary"></button>
+    </div>
+  </form>
+</div>

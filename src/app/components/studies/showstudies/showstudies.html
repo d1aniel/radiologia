@@ -1,1 +1,56 @@
-<p>showstudies works!</p>
+<div class="card p-4 max-w-screen-xl mx-auto">
+  <div class="flex items-center justify-between mb-3">
+    <h2 class="text-xl font-semibold">Estudios</h2>
+    <a pButton label="Nuevo Estudio" icon="pi pi-plus" routerLink="/studies/create"></a>
+  </div>
+
+  <p-table
+    [value]="(studies$ | async) || []"
+    [paginator]="true"
+    [rows]="10"
+    [rowsPerPageOptions]="[5,10,20]"
+    [tableStyle]="{'min-width':'70rem'}"
+    responsiveLayout="scroll"
+    stripedRows
+    sortMode="multiple">
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="paciente">Paciente <p-sortIcon field="paciente"/></th>
+        <th pSortableColumn="modalidad">Modalidad <p-sortIcon field="modalidad"/></th>
+        <th pSortableColumn="equipo">Equipo <p-sortIcon field="equipo"/></th>
+        <th pSortableColumn="fechaHora">Fecha/Hora <p-sortIcon field="fechaHora"/></th>
+        <th pSortableColumn="prioridad">Prioridad <p-sortIcon field="prioridad"/></th>
+        <th>Motivo / Indicación</th>
+        <th pSortableColumn="tecnologo" class="hidden lg:table-cell">Tecnólogo</th>
+        <th pSortableColumn="medico" class="hidden lg:table-cell">Médico</th>
+        <th>Etiquetas</th>
+        <th class="w-28 text-center">Acciones</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-row>
+      <tr>
+        <td>{{ row.paciente }}</td>
+        <td>{{ row.modalidad }}</td>
+        <td>{{ row.equipo }}</td>
+        <td>{{ row.fechaHora | date:'yyyy-MM-dd HH:mm' }}</td>
+        <td>
+          <p-tag [value]="row.prioridad" [severity]="severity(row.prioridad)"></p-tag>
+        </td>
+        <td class="max-w-[20rem] truncate" title="{{ row.motivo }}">{{ row.motivo }}</td>
+        <td class="hidden lg:table-cell">{{ row.tecnologo }}</td>
+        <td class="hidden lg:table-cell">{{ row.medico }}</td>
+        <td>
+          <div class="flex flex-wrap gap-1">
+            <p-chip *ngFor="let tag of row.etiquetas" [label]="tag"></p-chip>
+          </div>
+        </td>
+        <td class="flex gap-2 justify-center">
+          <!-- aquí podrías poner editar si ya tienes update -->
+          <button pButton icon="pi pi-trash" class="p-button-text p-button-danger" (click)="delete(row)"></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

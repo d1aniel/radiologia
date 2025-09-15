@@ -1,5 +1,5 @@
 <div class="mx-auto w-full max-w-[880px] rounded-xl bg-white p-4 sm:p-6 shadow-sm">
-  <h2 class="mb-4 text-lg font-semibold text-slate-800">Agregar Paciente (Cliente)</h2>
+  <h2 class="mb-4 text-lg font-semibold text-slate-800">Agregar Paciente</h2>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()" class="grid grid-cols-12 gap-3">
 
@@ -21,6 +21,22 @@
              class="w-full text-sm px-3 py-2"/>
       <small class="block mt-1 text-xs text-red-600"
              *ngIf="f['apellido'].touched && f['apellido'].errors?.['required']">El apellido es obligatorio.</small>
+    </div>
+
+    <!-- SEXO -->
+    <div class="col-span-12 md:col-span-4">
+      <label for="sexo" class="block mb-1 text-sm font-medium text-slate-700">Sexo</label>
+      <p-select
+        inputId="sexo"
+        formControlName="sexo"
+        [options]="[{ label: 'Masculino', value: 'M' }, { label: 'Femenino', value: 'F' }]"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Seleccione..."
+        class="w-full text-sm">
+      </p-select>
+      <small class="block mt-1 text-xs text-red-600"
+             *ngIf="f['sexo'].touched && f['sexo'].errors?.['required']">El sexo es obligatorio.</small>
     </div>
 
     <!-- TIPO DOCUMENTO -->

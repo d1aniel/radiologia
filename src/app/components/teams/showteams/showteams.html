@@ -1,1 +1,44 @@
-<p>showteams works!</p>
+<!-- src/app/features/teams/showteams.html -->
+<div class="mx-auto w-full max-w-[1100px] p-4 sm:p-6">
+  <div class="mb-4 flex items-center justify-between">
+    <h2 class="text-lg font-semibold">Equipos</h2>
+    <a routerLink="/teams/create" class="p-button p-component">
+      <span class="p-button-label">Nuevo equipo</span>
+    </a>
+  </div>
+
+  <p-table [value]="(teams$ | async) ?? []" dataKey="id" responsiveLayout="scroll">
+    <ng-template pTemplate="header">
+      <tr>
+        <th class="w-20">ID</th>
+        <th>Nombre/Identificador</th>
+        <th>Modalidad</th>
+        <th>Ubicación</th>
+        <th class="w-40">Estado</th>
+        <th class="w-28 text-right">Acciones</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-row>
+      <tr>
+        <td>{{ row.id }}</td>
+        <td class="font-medium">{{ row.nombre }}</td>
+        <td>{{ row.modalidad }}</td>
+        <td>{{ row.ubicacion }}</td>
+        <td>
+          <p-tag [severity]="severity(row.estado)"
+                 [value]="row.estado === 'DISPONIBLE' ? 'Disponible' : (row.estado === 'MANTENIMIENTO' ? 'Mantenimiento' : 'Ocupado')">
+          </p-tag>
+        </td>
+        <td class="text-right">
+          <button pButton class="p-button-outlined p-component mr-2" [routerLink]="['/teams/edit', row.id]">
+            <span class="p-button-label">Editar</span>
+          </button>
+          <button pButton class="p-button-danger p-component" (click)="delete(row)">
+            <span class="p-button-label">Eliminar</span>
+          </button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

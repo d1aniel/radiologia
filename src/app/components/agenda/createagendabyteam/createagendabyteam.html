@@ -1,1 +1,78 @@
-<p>createagendabyteam works!</p>
+<div class="mx-auto w-full max-w-[880px] rounded-xl bg-white p-4 sm:p-6 shadow-sm">
+  <h2 class="mb-4 text-lg font-semibold text-slate-800">Agregar Cita por Equipo</h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label class="block mb-1 text-sm text-slate-600">Paciente*</label>
+        <input pInputText formControlName="paciente" placeholder="Ej. Camilo Rodríguez" class="w-full" />
+      </div>
+      <div>
+        <label class="block mb-1 text-sm text-slate-600">Documento*</label>
+        <input pInputText formControlName="documento" placeholder="CC 1.234.567.890" class="w-full" />
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div>
+        <label class="block mb-1 text-sm text-slate-600">Modalidad*</label>
+        <p-select formControlName="modalidad" [options]="modalidades" placeholder="Seleccione" [fluid]="true"></p-select>
+      </div>
+      <div>
+        <label class="block mb-1 text-sm text-slate-600">Equipo*</label>
+        <p-select formControlName="equipo" [options]="equipos" placeholder="Seleccione" [fluid]="true"></p-select>
+      </div>
+      <div>
+        <label class="block mb-1 text-sm text-slate-600">Prioridad*</label>
+        <p-select formControlName="prioridad" [options]="prioridades" optionLabel="label" optionValue="value" [fluid]="true"></p-select>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div>
+        <label class="block mb-1 text-sm text-slate-600">Fecha/Hora*</label>
+        <p-datePicker formControlName="fechaHora" hourFormat="24" [showTime]="true" [fluid]="true"></p-datePicker>
+      </div>
+      <div>
+        <label class="block mb-1 text-sm text-slate-600">Duración (min)*</label>
+        <input pInputText type="number" formControlName="duracionMinutos" class="w-full" />
+      </div>
+      <div>
+        <label class="block mb-1 text-sm text-slate-600">Tecnólogo*</label>
+        <input pInputText formControlName="tecnologo" class="w-full" />
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label class="block mb-1 text-sm text-slate-600">Médico Radiólogo*</label>
+        <input pInputText formControlName="medico" class="w-full" />
+      </div>
+      <div>
+        <label class="block mb-1 text-sm text-slate-600">Motivo / Indicación clínica*</label>
+        <input pInputText formControlName="motivo" placeholder="Ej. Lumbalgia crónica" class="w-full" />
+      </div>
+    </div>
+
+    <!-- Etiquetas con AutoComplete + chips -->
+    <div>
+      <label class="block mb-1 text-sm text-slate-600">Etiquetas</label>
+      <p-autoComplete
+        [multiple]="true"
+        [suggestions]="filteredEtiquetas"
+        (completeMethod)="filterEtiquetas($event)"
+        formControlName="etiquetas"
+        [dropdown]="true"
+        placeholder="Agregar etiquetas...">
+      </p-autoComplete>
+      <div class="mt-2 flex flex-wrap gap-2">
+        <p-chip *ngFor="let e of (form.value?.etiquetas ?? [])" [label]="e"></p-chip>
+      </div>
+    </div>
+
+    <div class="flex gap-2 justify-end">
+      <button pButton type="button" severity="secondary" label="Cancelar" (click)="onCancel()"></button>
+      <button pButton type="submit" label="Guardar"></button>
+    </div>
+  </form>
+</div>

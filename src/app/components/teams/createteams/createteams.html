@@ -1,1 +1,74 @@
-<p>createteams works!</p>
+<!-- src/app/features/teams/createteam.html -->
+<div class="mx-auto w-full max-w-[880px] rounded-xl bg-white p-4 sm:p-6 shadow-sm">
+  <h2 class="mb-4 text-lg font-semibold text-slate-800">Agregar Equipo</h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="grid grid-cols-12 gap-3">
+
+    <!-- NOMBRE / IDENTIFICADOR -->
+    <div class="col-span-12 md:col-span-6">
+      <label for="nombre" class="block mb-1 text-sm font-medium text-slate-700">Nombre / Identificador</label>
+      <input id="nombre" type="text" pInputText formControlName="nombre"
+             placeholder="Ej. RX-01 Sala A"
+             class="w-full text-sm px-3 py-2"/>
+      <small class="block mt-1 text-xs text-red-600"
+             *ngIf="f['nombre'].touched && f['nombre'].errors?.['required']">El nombre es obligatorio.</small>
+    </div>
+
+    <!-- MODALIDAD -->
+    <div class="col-span-12 md:col-span-6">
+      <label for="modalidad" class="block mb-1 text-sm font-medium text-slate-700">Modalidad</label>
+      <p-select
+        inputId="modalidad"
+        formControlName="modalidad"
+        [options]="modalidades"
+        placeholder="Seleccione..."
+        class="w-full text-sm">
+      </p-select>
+      <small class="block mt-1 text-xs text-red-600"
+             *ngIf="f['modalidad'].touched && f['modalidad'].errors?.['required']">La modalidad es obligatoria.</small>
+    </div>
+
+    <!-- UBICACIÓN -->
+    <div class="col-span-12 md:col-span-6">
+      <label for="ubicacion" class="block mb-1 text-sm font-medium text-slate-700">Ubicación</label>
+      <input id="ubicacion" type="text" pInputText formControlName="ubicacion"
+             placeholder="Ej. Sala A - Piso 1"
+             class="w-full text-sm px-3 py-2"/>
+      <small class="block mt-1 text-xs text-red-600"
+             *ngIf="f['ubicacion'].touched && f['ubicacion'].errors?.['required']">La ubicación es obligatoria.</small>
+    </div>
+
+    <!-- ESTADO -->
+    <div class="col-span-12 md:col-span-6">
+      <label for="estado" class="block mb-1 text-sm font-medium text-slate-700">Estado</label>
+      <p-select
+        inputId="estado"
+        formControlName="estado"
+        [options]="estados"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Seleccione..."
+        class="w-full text-sm">
+      </p-select>
+    </div>
+
+    <!-- OBSERVACIONES -->
+    <div class="col-span-12">
+      <label for="observaciones" class="block mb-1 text-sm font-medium text-slate-700">Observaciones</label>
+      <textarea id="observaciones" pTextarea formControlName="observaciones"
+                placeholder="Notas de mantenimiento, particularidades, etc."
+                class="w-full text-sm px-3 py-2 min-h-[80px]"></textarea>
+    </div>
+
+    <!-- ACCIONES -->
+    <div class="col-span-12">
+      <div class="mt-3 flex items-center justify-end gap-2">
+        <p-button label="Cancelar" severity="secondary" [size]="'small'"
+                  (onClick)="onCancel()" type="button"></p-button>
+        <p-button label="Guardar" icon="pi pi-check" [size]="'small'"
+                  type="submit" [disabled]="form.invalid"></p-button>
+      </div>
+    </div>
+
+  </form>
+</div>

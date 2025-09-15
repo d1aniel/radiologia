@@ -27,6 +27,7 @@ export class Createpatients {
       apellido: ['', [Validators.required, Validators.minLength(2)]],
       tpdocumento: ['cedula', Validators.required],
       documento: ['', [Validators.required, Validators.pattern(/^\d{6,15}$/)]],
+      sexo: ['',[ Validators.required,]],
       telefono: ['', [Validators.required, Validators.pattern(/^\d{7,15}$/)]],
       eps: ['', Validators.required],
       correo: ['', [Validators.required, Validators.email]],

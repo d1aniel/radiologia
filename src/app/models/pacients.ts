@@ -3,6 +3,7 @@ export interface PacientsI{
     nombre: string;
     apellido: string;
     tpdocumento: string;
+    sexo?: string;
     documento: number;
     telefono: number;
     eps: string;
