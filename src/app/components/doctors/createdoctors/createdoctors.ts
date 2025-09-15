@@ -56,10 +56,10 @@ export class Createdoctors {
       ...this.form.value,
       status: 'ACTIVATE'   // 🔹 por defecto todos los médicos nuevos estarán activos
     });
-    this.router.navigate(['/medicos/show']);
+    this.router.navigate(['/doctors/show']);
   }
 
   onCancel() {
-    this.router.navigate(['/medicos/show']);
+    this.router.navigate(['/doctors/show']);
   }
 }

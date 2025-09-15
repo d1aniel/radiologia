@@ -66,10 +66,10 @@ export class Createquotes {
       estado:    v.estado!
     });
 
-    this.router.navigate(['/citas/show']);
+    this.router.navigate(['/quotes/show']);
   }
 
   onCancel() {
-    this.router.navigate(['/citas/show']);
+    this.router.navigate(['/quotes/show']);
   }
 }

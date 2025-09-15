@@ -43,10 +43,6 @@ import { Updateimages } from './components/images/updateimages/updateimages';
 import { Createreports } from './components/reports/createreports/createreports';
 import { Showreports } from './components/reports/showreports/showreports';
 import { Updatereports } from './components/reports/updatereports/updatereports';
-// crud study-labels
-import { CreatestudyLabel } from './components/study-label/createstudy-label/createstudy-label';
-import { ShowstudyLabel } from './components/study-label/showstudy-label/showstudy-label';
-import { UpdatestudyLabel } from './components/study-label/updatestudy-label/updatestudy-label';
 export const routes: Routes = [
   // ===== Doctors =====
   { path: 'doctors/create', component: Createdoctors },
@@ -102,12 +98,7 @@ export const routes: Routes = [
   {path: 'reports/create', component: Createreports },
   {path: 'reports/show', component: Showreports },
   {path: 'reports/update/:id', component: Updatereports },
-
-  // ===== Study-Labels =====
-  {path: 'study-label/create', component: CreatestudyLabel },
-  {path: 'study-label/show', component: ShowstudyLabel },
-  {path: 'study-label/update/:id', component: UpdatestudyLabel },
-
+  
   // ===== Default =====
   { path: '', redirectTo: 'patients/show', pathMatch: 'full' }, // ruta por defecto
   { path: '**', redirectTo: '' } // rutas no encontradas

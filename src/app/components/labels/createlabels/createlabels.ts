@@ -44,10 +44,10 @@ export class Createlabels {
       ...this.form.value,
       status: 'ACTIVATE'
     });
-    this.router.navigate(['/tags/show']);
+    this.router.navigate(['/labels/show']);
   }
 
   onCancel() {
-    this.router.navigate(['/tags/show']);
+    this.router.navigate(['/labels/show']);
   }
 }

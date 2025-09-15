@@ -1,16 +1,17 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { ButtonModule } from 'primeng/button';
 import { DatePickerModule } from 'primeng/datepicker';
-import { AutoCompleteModule } from 'primeng/autocomplete';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 import { StudiesService } from '../../../services/studie';
 import { Prioridad } from '../../../models/studies';
+import { TagsService } from '../../../services/label';
 
 @Component({
   selector: 'app-createstudies',
@@ -18,7 +19,7 @@ import { Prioridad } from '../../../models/studies';
   imports: [
     CommonModule, ReactiveFormsModule, RouterModule,
     InputTextModule, SelectModule, ButtonModule,
-    DatePickerModule, AutoCompleteModule
+    DatePickerModule, MultiSelectModule
   ],
   templateUrl: './createstudies.html',
   styleUrls: ['./createstudies.css']
@@ -27,6 +28,7 @@ export class Createstudies {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private studiesService = inject(StudiesService);
+  private tagsService = inject(TagsService);
 
   prioridades: { label: string; value: Prioridad }[] = [
     { label: 'Baja', value: 'BAJA' },
@@ -35,65 +37,43 @@ export class Createstudies {
     { label: 'Urgente', value: 'URGENTE' }
   ];
 
-  // Catálogo de etiquetas sugeridas (puedes cargarlo desde servicio si quieres)
-  etiquetasCatalogo: string[] = [
-    'Trauma', 'Columna', 'Cefalea', 'Postoperatorio', 'Control', 'Prioritario', 'Pediatría', 'Oncología'
-  ];
-  filteredEtiquetas: string[] = [];
+  /** Opciones multiselect (solo activas) */
+  etiquetasOptions = this.tagsService.value
+    .filter(t => t.status === 'ACTIVATE')
+    .map(t => ({ label: t.nombre, value: t.id }));
 
   form = this.fb.group({
     paciente: ['', [Validators.required, Validators.minLength(2)]],
     modalidad: ['', Validators.required],
     equipo: ['', Validators.required],
-
-    // DatePicker trabaja con Date en el form
-    fechaHora: [new Date(), Validators.required],
-
+    fechaHora: [new Date(), Validators.required], // Date en el form
     prioridad: ['MEDIA' as Prioridad, Validators.required],
     motivo: ['', [Validators.required, Validators.minLength(5)]],
     tecnologo: ['', Validators.required],
     medico: ['', Validators.required],
-
-    // AutoComplete multiple: string[]
-    etiquetas: [[] as string[]]
+    etiquetas: [[] as number[]] // IDs de etiquetas
   });
 
   get f() { return this.form.controls; }
 
-  // Autocomplete: filtra por lo que escribe el usuario
-  filterEtiquetas(event: { query: string }) {
-    const query = (event?.query ?? '').toLowerCase();
-    this.filteredEtiquetas = this.etiquetasCatalogo.filter(tag =>
-      tag.toLowerCase().includes(query)
-    );
-
-    // Si quieres permitir nuevas etiquetas que no estén en catálogo, deja forceSelection = false en el HTML
-  }
-
   onSubmit() {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
-
     const v = this.form.value;
 
     this.studiesService.add({
-      paciente: v.paciente!,
+      paciente:  v.paciente!,
       modalidad: v.modalidad!,
-      equipo: v.equipo!,
-
-      // Convertimos Date -> ISO para guardar
-      fechaHora: (v.fechaHora as Date).toISOString(),
-
+      equipo:    v.equipo!,
+      fechaHora: (v.fechaHora as Date).toISOString(), // Date -> ISO
       prioridad: v.prioridad!,
-      motivo: v.motivo!,
+      motivo:    v.motivo!,
       tecnologo: v.tecnologo!,
-      medico: v.medico!,
-      etiquetas: (v.etiquetas ?? []) as string[]
+      medico:    v.medico!,
+      etiquetas: (v.etiquetas ?? []) as number[]
     });
 
     this.router.navigate(['/studies/show']);
   }
 
-  onCancel() {
-    this.router.navigate(['/studies/show']);
-  }
+  onCancel() { this.router.navigate(['/studies/show']); }
 }

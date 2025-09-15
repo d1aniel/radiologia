@@ -43,10 +43,10 @@ export class Createmodalities {
       activa: !!v.activa
     });
 
-    this.router.navigate(['/modalidad/show']);
+    this.router.navigate(['/modalities/show']);
   }
 
   onCancel() {
-    this.router.navigate(['/modalidad/show']);
+    this.router.navigate(['/modalities/show']);
   }
 }

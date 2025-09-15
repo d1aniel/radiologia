@@ -43,11 +43,11 @@
         <td class="hidden lg:table-cell">{{ row.medico }}</td>
         <td>
           <div class="flex flex-wrap gap-1">
-            <p-chip *ngFor="let tag of row.etiquetas" [label]="tag"></p-chip>
+            <!-- 🔹 Usamos labelNames(row) para mostrar nombres en lugar de IDs -->
+            <p-chip *ngFor="let name of labelNames(row)" [label]="name"></p-chip>
           </div>
         </td>
         <td class="flex gap-2 justify-center">
-          <!-- aquí podrías poner editar si ya tienes update -->
           <button pButton icon="pi pi-trash" class="p-button-text p-button-danger" (click)="delete(row)"></button>
         </td>
       </tr>

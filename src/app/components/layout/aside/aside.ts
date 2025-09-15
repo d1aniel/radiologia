@@ -41,14 +41,6 @@ export class Aside {
         ]
       },
 
-      // ===== Estudio - Etiqueta =====
-      {
-        label: 'Estudio-Etiqueta',
-        icon: 'pi pi-fw pi-tags',
-        items: [
-          { label: 'Listado', icon: 'pi pi-list', routerLink: '/study-label/show' },
-        ]
-      },
 
       // ===== Pacientes =====
       {

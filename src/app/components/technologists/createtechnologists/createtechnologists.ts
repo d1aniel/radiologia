@@ -30,8 +30,8 @@ export class Createtechnologists {
   onSubmit() {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     this.tecnologosService.addTecnologo({ ...this.form.value, status: 'ACTIVATE' });
-    this.router.navigate(['/tecnologos/show']);
+    this.router.navigate(['/technologists/show']);
   }
 
-  onCancel() { this.router.navigate(['/tecnologos/show']); }
+  onCancel() { this.router.navigate(['/technologists/show']); }
 }

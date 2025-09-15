@@ -13,7 +13,7 @@
     <!-- Modalidad -->
     <div class="col-span-12 md:col-span-3">
       <label class="block mb-1 text-sm font-medium text-slate-700">Modalidad</label>
-      <input pInputText formControlName="modalidad" class="w-full text-sm px-3 py-2" placeholder="RX / TAC / RM"/>
+      <p-select formControlName="modalidad" [options]="['RX','TAC','RM']" placeholder="Seleccione" class="w-full"></p-select>
       <small class="text-red-600 text-xs" *ngIf="f['modalidad'].touched && f['modalidad'].invalid">Requerido.</small>
     </div>
 
@@ -24,7 +24,7 @@
       <small class="text-red-600 text-xs" *ngIf="f['equipo'].touched && f['equipo'].invalid">Requerido.</small>
     </div>
 
-    <!-- Fecha/Hora (DatePicker) -->
+    <!-- Fecha/Hora -->
     <div class="col-span-12 md:col-span-4">
       <label class="block mb-1 text-sm font-medium text-slate-700">Fecha/Hora</label>
       <p-datepicker
@@ -58,30 +58,26 @@
       <small class="text-red-600 text-xs" *ngIf="f['medico'].touched && f['medico'].invalid">Requerido.</small>
     </div>
 
-    <!-- Motivo / Indicación clínica -->
+    <!-- Motivo -->
     <div class="col-span-12">
       <label class="block mb-1 text-sm font-medium text-slate-700">Motivo / Indicación clínica</label>
       <input pInputText formControlName="motivo" class="w-full text-sm px-3 py-2" placeholder="Describe brevemente la indicación clínica"/>
       <small class="text-red-600 text-xs" *ngIf="f['motivo'].touched && f['motivo'].invalid">Mínimo 5 caracteres.</small>
     </div>
 
-    <!-- Etiquetas (AutoComplete multiple) -->
+    <!-- Etiquetas -->
     <div class="col-span-12">
       <label class="block mb-1 text-sm font-medium text-slate-700">Etiquetas</label>
-
-      <!-- permite escribir etiquetas nuevas -->
-      <p-autocomplete
+      <p-multiSelect
         formControlName="etiquetas"
-        [multiple]="true"
-        [dropdown]="true"
-        [suggestions]="filteredEtiquetas"
-        (completeMethod)="filterEtiquetas($event)"
-        [forceSelection]="false"
-        placeholder="Escribe para buscar o agrega nuevas (Enter)"
+        [options]="etiquetasOptions"
+        optionLabel="label"
+        optionValue="value"
+        display="chip"
+        placeholder="Seleccione etiquetas"
         class="w-full">
-      </p-autocomplete>
-
-      <small class="text-slate-500 text-xs">Ejemplos: Columna, Trauma, Urgente</small>
+      </p-multiSelect>
+      <small class="text-slate-500 text-xs">Solo se muestran etiquetas ACTIVAS.</small>
     </div>
 
     <!-- Acciones -->
@@ -91,6 +87,5 @@
         <p-button label="Guardar" icon="pi pi-check" [size]="'small'" type="submit" [disabled]="form.invalid"></p-button>
       </div>
     </div>
-
   </form>
 </div>

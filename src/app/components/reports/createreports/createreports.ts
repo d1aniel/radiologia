@@ -74,10 +74,10 @@ export class Createreports {
       // el service setea id y fechaCreacion
     });
 
-    this.router.navigate(['/informes/show']);
+    this.router.navigate(['/reports/show']);
   }
 
   onCancel() {
-    this.router.navigate(['/informes/show']);
+    this.router.navigate(['/reports/show']);
   }
 }

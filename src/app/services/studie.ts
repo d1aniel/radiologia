@@ -1,9 +1,16 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { StudiesI, Prioridad } from '../models/studies';
+import { StudiesI } from '../models/studies';
+
+// Importa TU servicio de etiquetas desde "label"
+import { TagsService } from './label';
+import { LabelsI } from '../models/labels';
 
 @Injectable({ providedIn: 'root' })
 export class StudiesService {
+  private tagsService = inject(TagsService);
+
+  // Datos semilla: usa IDs que existan en tu TagsService (label)
   private studiesSubject = new BehaviorSubject<StudiesI[]>([
     {
       id: 1,
@@ -15,15 +22,19 @@ export class StudiesService {
       motivo: 'Dolor lumbar posterior a caída',
       tecnologo: 'Laura Martínez',
       medico: 'Dr. Andrés Velásquez',
-      etiquetas: ['Columna', 'Trauma']
+      etiquetas: [2, 1] // Control(2), Urgente(1)
     }
   ]);
 
   studies$ = this.studiesSubject.asObservable();
-  get value() { return this.studiesSubject.value; }
+  get value(): StudiesI[] { return this.studiesSubject.value; }
 
+  // ---------- CRUD ----------
   getAll(): StudiesI[] { return this.value; }
-  getById(id: number)  { return this.value.find(e => e.id === id); }
+
+  getById(id: number): StudiesI | undefined {
+    return this.value.find(e => e.id === id);
+  }
 
   add(payload: Omit<StudiesI, 'id'>): StudiesI {
     const nextId = this.value.length ? Math.max(...this.value.map(x => x.id)) + 1 : 1;
@@ -41,15 +52,56 @@ export class StudiesService {
     this.studiesSubject.next(this.value.filter(e => e.id !== id));
   }
 
-  // Búsqueda simple (por si luego quieres filtro global)
+  // ---------- Gestión de etiquetas (IDs) ----------
+  setLabels(idEstudio: number, etiquetaIds: number[]): void {
+    const updated = this.value.map(e => e.id === idEstudio ? { ...e, etiquetas: [...etiquetaIds] } : e);
+    this.studiesSubject.next(updated);
+  }
+
+  addLabel(idEstudio: number, etiquetaId: number): void {
+    const updated = this.value.map(e => {
+      if (e.id !== idEstudio) return e;
+      const set = new Set<number>(e.etiquetas ?? []);
+      set.add(etiquetaId);
+      return { ...e, etiquetas: Array.from(set) };
+    });
+    this.studiesSubject.next(updated);
+  }
+
+  removeLabel(idEstudio: number, etiquetaId: number): void {
+    const updated = this.value.map(e => {
+      if (e.id !== idEstudio) return e;
+      return { ...e, etiquetas: (e.etiquetas ?? []).filter(id => id !== etiquetaId) };
+    });
+    this.studiesSubject.next(updated);
+  }
+
+  // ---------- Búsqueda (incluye nombres de etiquetas) ----------
+  /**
+   * Busca por texto en: paciente, modalidad, equipo, tecnologo, medico, prioridad, motivo
+   * y también por NOMBRE de etiqueta (resolviendo IDs con TagsService.value).
+   */
   search(term: string): StudiesI[] {
     const t = term.toLowerCase().trim();
     if (!t) return this.value;
-    return this.value.filter(e =>
-      [
+
+    // Construye mapa id->nombre desde tu TagsService (usa .value)
+    const etiquetasMap = new Map<number, string>();
+    this.tagsService.value.forEach((tag: LabelsI) => {
+      etiquetasMap.set(tag.id, tag.nombre);
+    });
+
+    return this.value.filter(e => {
+      const campos = [
         e.paciente, e.modalidad, e.equipo, e.tecnologo, e.medico,
-        e.prioridad, e.motivo, e.etiquetas.join(' ')
-      ].some(v => String(v).toLowerCase().includes(t))
-    );
+        e.prioridad, e.motivo
+      ].map(v => String(v).toLowerCase());
+
+      const etiquetasNombres = (e.etiquetas ?? [])
+        .map(id => (etiquetasMap.get(id) || '').toLowerCase())
+        .filter(Boolean);
+
+      return [...campos, ...etiquetasNombres].some(v => v.includes(t));
+    });
   }
 }
