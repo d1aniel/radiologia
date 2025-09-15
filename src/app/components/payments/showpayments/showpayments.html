@@ -1,1 +1,46 @@
-<p>showpayments works!</p>
+<div class="mx-auto w-full max-w-[1100px] p-4 sm:p-6">
+  <div class="mb-4 flex items-center justify-between">
+    <h2 class="text-lg font-semibold text-slate-800">Pagos</h2>
+    <a routerLink="/payments/create" class="p-button p-component">
+      <span class="p-button-label">Registrar Pago</span>
+    </a>
+  </div>
+
+  <p-table [value]="payments" dataKey="id" class="shadow-sm rounded-xl overflow-hidden">
+    <ng-template pTemplate="header">
+      <tr>
+        <th class="text-sm">ID</th>
+        <th class="text-sm">Paciente</th>
+        <th class="text-sm">Estudio</th>
+        <th class="text-sm">Monto</th>
+        <th class="text-sm">Método</th>
+        <th class="text-sm">Fecha</th>
+        <th class="text-sm">Estado</th>
+        <th class="text-sm text-right">Acciones</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-row>
+      <tr>
+        <td class="text-sm">{{ row.id }}</td>
+        <td class="text-sm">{{ getPatientName(row.pacienteId) }}</td>
+        <td class="text-sm">{{ row.estudioId || '—' }}</td>
+        <td class="text-sm">$ {{ row.monto | number:'1.0-0' }}</td>
+        <td class="text-sm">{{ row.metodo }}</td>
+        <td class="text-sm">{{ row.fecha }}</td>
+        <td class="text-sm">
+          <p-tag [severity]="colorEstado(row.estado)" [value]="row.estado"></p-tag>
+        </td>
+        <td class="text-right">
+          <button pButton type="button" label="Eliminar" (click)="onDelete(row.id)" class="p-button-danger p-button-sm"></button>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="8" class="text-center py-6 text-sm text-slate-500">Sin pagos registrados.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

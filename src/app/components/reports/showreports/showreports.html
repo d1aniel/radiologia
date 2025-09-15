@@ -1,0 +1,41 @@
+<div class="mx-auto w-full max-w-[1100px] p-4 sm:p-6">
+  <div class="flex items-center justify-between mb-3">
+    <h2 class="text-lg font-semibold text-slate-800">Informes</h2>
+    <a routerLink="/reports/create" class="p-button p-component px-3 py-2 rounded-md">
+      <span class="p-button-label">Nuevo Informe</span>
+    </a>
+  </div>
+
+  <p-table [value]="filas" dataKey="id" class="text-sm">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>ID</th>
+        <th>Estudio</th>
+        <th>Paciente</th>
+        <th>Médico</th>
+        <th>Estado</th>
+        <th>Fecha creación</th>
+        <th class="w-28 text-right">Acciones</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-row>
+      <tr>
+        <td>{{ row.id }}</td>
+        <td>{{ row.estudioLabel }}</td>
+        <td>{{ row.pacienteNombre }}</td>
+        <td>{{ row.medicoNombre }}</td>
+        <td>
+          <p-tag [value]="row.estado"
+                 [severity]="row.estado === 'FIRMADO' ? 'success' : 'info'"></p-tag>
+        </td>
+        <td>{{ row.fechaCreacion | date:'short' }}</td>
+        <td class="text-right space-x-2">
+          <button pButton type="button" label="Borrar"
+                  (click)="borrar(row.id)"
+                  class="p-button-danger p-button-sm"></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

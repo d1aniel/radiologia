@@ -1,0 +1,43 @@
+<div class="mx-auto w-full max-w-[1100px] p-4 sm:p-6">
+  <div class="mb-4 flex items-center justify-between">
+    <h2 class="text-lg font-semibold text-slate-800">Imágenes de Estudios</h2>
+    <a routerLink="/images/create" class="p-button p-component">
+      <span class="p-button-label">Subir imagen</span>
+    </a>
+  </div>
+
+  <p-table [value]="images" [tableStyle]="{'min-width':'980px'}" class="text-sm">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Estudio</th>
+        <th>Tipo</th>
+        <th>Nombre / Serie</th>
+        <th># / Orden</th>
+        <th>Fecha carga</th>
+        <th>Tamaño</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-img>
+      <tr>
+        <td>{{ getStudyLabel(img.estudioId) }}</td>
+        <td>{{ img.tipo }}</td>
+        <td>
+          <div class="flex flex-col">
+            <span class="font-medium">{{ img.nombreArchivo }}</span>
+            <small class="text-slate-500" *ngIf="img.serie">Serie: {{ img.serie }}</small>
+          </div>
+        </td>
+        <td>{{ img.orden ?? '-' }}</td>
+        <td>{{ img.fechaCarga | date:'short' }}</td>
+        <td>{{ fmtBytes(img.tamanoBytes) }}</td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="6" class="text-center py-6 text-slate-500">Aún no hay imágenes cargadas.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

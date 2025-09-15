@@ -1,1 +1,37 @@
-<p>showlabels works!</p>
+<div class="mx-auto w-full max-w-[1000px] p-4 sm:p-6">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-lg font-semibold text-slate-800">Etiquetas</h2>
+    <a routerLink="/labels/create" pButton label="Nueva etiqueta" class="p-button-sm"></a>
+  </div>
+
+  <p-table [value]="tags" dataKey="id" [tableStyle]="{'min-width':'720px'}" class="rounded-xl shadow-sm">
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 80px">ID</th>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th style="width: 140px">Estado</th>
+        <th style="width: 140px">Acciones</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-row>
+      <tr>
+        <td>{{ row.id }}</td>
+        <td class="font-medium text-slate-800">{{ row.nombre }}</td>
+        <td class="text-slate-600">{{ row.descripcion || '—' }}</td>
+        <td>
+          <p-tag
+            [value]="row.status === 'ACTIVATE' ? 'Activo' : 'Inactivo'"
+            [severity]="row.status === 'ACTIVATE' ? 'success' : 'danger'">
+          </p-tag>
+        </td>
+        <td class="space-x-2">
+          <!-- Si luego agregas editar, aquí iría el botón -->
+          <button pButton label="Eliminar" severity="danger" class="p-button-sm"
+                  (click)="eliminar(row.id)"></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

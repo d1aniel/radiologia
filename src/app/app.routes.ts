@@ -1,13 +1,4 @@
 import { Routes } from '@angular/router';
-
-
-// crud agenda
-import { Createagendabymodality } from './components/agenda/createagendabymodality/createagendabymodality';
-import { Createagendabyteam } from './components/agenda/createagendabyteam/createagendabyteam'; 
-import { Showagendabymodality } from './components/agenda/showagendabymodality/showagendabymodality';
-import { Showagendabyteam } from './components/agenda/showagendabyteam/showagendabyteam';
-import { Updateagendabymodality } from './components/agenda/updateagendabymodality/updateagendabymodality';
-import { Updateagendabyteam } from './components/agenda/updateagendabyteam/updateagendabyteam';
 // crud doctor
 import { Createdoctors } from './components/doctors/createdoctors/createdoctors';
 import { Showdoctors } from './components/doctors/showdoctors/showdoctors';
@@ -44,25 +35,19 @@ import { Updateteams } from './components/teams/updateteams/updateteams';
 import { Createtechnologists } from './components/technologists/createtechnologists/createtechnologists';
 import { Showtechnologists } from './components/technologists/showtechnologists/showtechnologists';
 import { Updatetechnologists } from './components/technologists/updatetechnologists/updatetechnologists';
-//crud administration
-import { Createparameters } from './components/administration/createparameters/createparameters';
-import { Showparameters } from './components/administration/showparameters/showparameters';
-import { Updateparameters } from './components/administration/updateparameters/updateparameters';
-import { Createuserandroles } from './components/administration/createuserandroles/createuserandroles';
-import { Showuserandroles } from './components/administration/showuserandroles/showuserandroles';
-import { Updateuserandroles } from './components/administration/updateuserandroles/updateuserandroles';
-
-
+//crud images
+import { Createimages } from './components/images/createimages/createimages';
+import { Showimages } from './components/images/showimages/showimages';
+import { Updateimages } from './components/images/updateimages/updateimages';
+//crud reports
+import { Createreports } from './components/reports/createreports/createreports';
+import { Showreports } from './components/reports/showreports/showreports';
+import { Updatereports } from './components/reports/updatereports/updatereports';
+// crud study-labels
+import { CreatestudyLabel } from './components/study-label/createstudy-label/createstudy-label';
+import { ShowstudyLabel } from './components/study-label/showstudy-label/showstudy-label';
+import { UpdatestudyLabel } from './components/study-label/updatestudy-label/updatestudy-label';
 export const routes: Routes = [
-  // ===== Agenda =====
-  { path: 'agenda/create-bymodality', component: Createagendabymodality },
-  { path: 'agenda/show-bymodality', component: Showagendabymodality },
-  { path: 'agenda/update-bymodality/:id', component: Updateagendabymodality },
-
-  { path: 'agenda/create-byteam', component: Createagendabyteam },
-  { path: 'agenda/show-byteam', component: Showagendabyteam },
-  { path: 'agenda/update-byteam/:id', component: Updateagendabyteam },
-
   // ===== Doctors =====
   { path: 'doctors/create', component: Createdoctors },
   { path: 'doctors/show', component: Showdoctors },
@@ -108,15 +93,20 @@ export const routes: Routes = [
   { path: 'technologists/show', component: Showtechnologists },
   { path: 'technologists/update/:id', component: Updatetechnologists },
 
-  // ===== Administration - Parameters =====
-  { path: 'administration/parameters/create', component: Createparameters },
-  { path: 'administration/parameters/show', component: Showparameters },
-  { path: 'administration/parameters/update/:id', component: Updateparameters },
+  // ===== Images =====
+  {path: 'images/create', component: Createimages },
+  {path: 'images/show', component: Showimages },
+  {path: 'images/update/:id', component: Updateimages },
 
-  // ===== Administration - Users and Roles =====
-  { path: 'administration/usersroles/create', component: Createuserandroles },
-  { path: 'administration/usersroles/show', component: Showuserandroles },
-  { path: 'administration/usersroles/update/:id', component: Updateuserandroles },
+  // ===== Reports =====
+  {path: 'reports/create', component: Createreports },
+  {path: 'reports/show', component: Showreports },
+  {path: 'reports/update/:id', component: Updatereports },
+
+  // ===== Study-Labels =====
+  {path: 'study-label/create', component: CreatestudyLabel },
+  {path: 'study-label/show', component: ShowstudyLabel },
+  {path: 'study-label/update/:id', component: UpdatestudyLabel },
 
   // ===== Default =====
   { path: '', redirectTo: 'patients/show', pathMatch: 'full' }, // ruta por defecto

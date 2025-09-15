@@ -1,1 +1,29 @@
-<p>createlabels works!</p>
+<div class="mx-auto w-full max-w-[880px] rounded-xl bg-white p-4 sm:p-6 shadow-sm">
+  <h2 class="mb-4 text-lg font-semibold text-slate-800">Agregar Etiqueta</h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="grid grid-cols-12 gap-3">
+    <!-- NOMBRE -->
+    <div class="col-span-12 md:col-span-6">
+      <label for="nombre" class="block mb-1 text-sm font-medium text-slate-700">Nombre</label>
+      <input id="nombre" type="text" pInputText formControlName="nombre"
+             placeholder="Ej. Urgente" class="w-full text-sm px-3 py-2"/>
+      <small class="block mt-1 text-xs text-red-600"
+             *ngIf="f['nombre'].touched && f['nombre'].errors?.['required']">El nombre es obligatorio.</small>
+      <small class="block mt-1 text-xs text-red-600"
+             *ngIf="f['nombre'].touched && f['nombre'].errors?.['minlength']">Mínimo 2 caracteres.</small>
+    </div>
+
+    <!-- DESCRIPCIÓN -->
+    <div class="col-span-12">
+      <label for="descripcion" class="block mb-1 text-sm font-medium text-slate-700">Descripción (opcional)</label>
+      <input id="descripcion" type="text" pInputText formControlName="descripcion"
+             placeholder="Ej. Atención prioritaria" class="w-full text-sm px-3 py-2"/>
+    </div>
+
+    <!-- ACCIONES -->
+    <div class="col-span-12 flex gap-2 pt-2">
+      <button pButton type="submit" label="Guardar"></button>
+      <button pButton type="button" label="Cancelar" severity="secondary" (click)="onCancel()"></button>
+    </div>
+  </form>
+</div>

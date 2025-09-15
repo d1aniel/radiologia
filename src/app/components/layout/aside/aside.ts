@@ -14,22 +14,39 @@ export class Aside {
 
   ngOnInit(): void {
     this.items = [
-      // ===== Agenda =====
-      {
-        label: 'Agenda',
-        icon: 'pi pi-fw pi-calendar',
-        items: [
-          { label: 'Por Modalidad', icon: 'pi pi-list', routerLink: '/agenda/show-bymodality' },
-          { label: 'Por Equipo', icon: 'pi pi-list', routerLink: '/agenda/show-byteam' },
-        ]
-      },
-
       // ===== Estudios =====
       {
         label: 'Estudios',
         icon: 'pi pi-fw pi-images',
         items: [
           { label: 'Listado', icon: 'pi pi-list', routerLink: '/studies/show' },
+        ]
+      },
+
+      // ===== Imágenes =====
+      {
+        label: 'Imágenes',
+        icon: 'pi pi-fw pi-image',
+        items: [
+          { label: 'Listado', icon: 'pi pi-list', routerLink: '/images/show' },
+        ]
+      },
+
+      // ===== Informes =====
+      {
+        label: 'Informes',
+        icon: 'pi pi-fw pi-file',
+        items: [
+          { label: 'Listado', icon: 'pi pi-list', routerLink: '/reports/show' },
+        ]
+      },
+
+      // ===== Estudio - Etiqueta =====
+      {
+        label: 'Estudio-Etiqueta',
+        icon: 'pi pi-fw pi-tags',
+        items: [
+          { label: 'Listado', icon: 'pi pi-list', routerLink: '/study-label/show' },
         ]
       },
 
@@ -42,7 +59,7 @@ export class Aside {
         ]
       },
 
-      // ===== Citas (Quotes) =====
+      // ===== Citas =====
       {
         label: 'Citas',
         icon: 'pi pi-fw pi-clock',
@@ -102,29 +119,6 @@ export class Aside {
         icon: 'pi pi-fw pi-credit-card',
         items: [
           { label: 'Listado', icon: 'pi pi-list', routerLink: '/payments/show' },
-        ]
-      },
-
-      // ===== Administración =====
-      {
-        label: 'Administración',
-        icon: 'pi pi-fw pi-sliders-h',
-        items: [
-          {
-            label: 'Usuarios y Roles',
-            icon: 'pi pi-users',
-            items: [
-              { label: 'Listado', icon: 'pi pi-list', routerLink: '/administration/usersroles/show' },
-            ]
-          },
-          {
-            label: 'Parámetros',
-            icon: 'pi pi-sliders-h',
-            items: [
-              { label: 'Listado', icon: 'pi pi-list', routerLink: '/administration/parameters/show' },
-
-            ]
-          }
         ]
       }
     ];
