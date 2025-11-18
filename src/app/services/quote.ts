@@ -1,52 +1,94 @@
+// src/app/services/quote.service.ts
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { CitaI, EstadoCita } from '../models/quotes';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { BehaviorSubject, Observable, map } from 'rxjs';
+import { CitaI } from '../models/quotes';
+import { AuthService } from '../services/auth';
 
-@Injectable({ providedIn: 'root' })
-export class CitaService {
-  private citasSubject = new BehaviorSubject<CitaI[]>([
-    {
-      id: 1,
-      paciente: 'Camilo Rodríguez',
-      modalidad: 'RX',
-      equipo: 'RX-01 Sala A',
-      tecnologo: 'Laura Martínez',
-      fechaHora: new Date().toISOString(),
-      motivo: 'Dolor lumbar posterior a caída',
-      estado: 'PENDIENTE'
+@Injectable({
+  providedIn: 'root',
+})
+export class QuoteService {
+  // 👇 ajusta la URL si tu endpoint es otro (ej: /api/citas)
+  private baseUrl = 'http://localhost:4000/api/quotes';
+
+  private quotesSubject = new BehaviorSubject<CitaI[]>([]);
+  public quotes$ = this.quotesSubject.asObservable();
+
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) {}
+
+  private getHeaders(): HttpHeaders {
+    let headers = new HttpHeaders();
+    const token = this.authService.getToken();
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
     }
-  ]);
-
-  citas$ = this.citasSubject.asObservable();
-  private get value() { return this.citasSubject.value; }
-
-  getAll(): CitaI[] { return this.value; }
-  getById(id: number) { return this.value.find(x => x.id === id); }
-
-  add(payload: Omit<CitaI, 'id'>): CitaI {
-    const nextId = this.value.length ? Math.max(...this.value.map(x => x.id)) + 1 : 1;
-    const row: CitaI = { id: nextId, ...payload };
-    this.citasSubject.next([...this.value, row]);
-    return row;
+    return headers;
   }
 
-  update(id: number, changes: Partial<CitaI>): void {
-    const updated = this.value.map(e => e.id === id ? { ...e, ...changes, id } : e);
-    this.citasSubject.next(updated);
+  // GET /quotes  -> { quotes: CitaI[] }
+  getAllQuotes(): Observable<CitaI[]> {
+    return this.http
+      .get<{ quotes: CitaI[] }>(this.baseUrl, { headers: this.getHeaders() })
+      .pipe(map((resp) => resp.quotes));
   }
 
-  remove(id: number): void {
-    this.citasSubject.next(this.value.filter(e => e.id !== id));
+  // GET /quotes/:id -> { quote: CitaI }
+  getQuoteById(id: number | string): Observable<CitaI> {
+    return this.http
+      .get<{ quote: CitaI }>(`${this.baseUrl}/${id}`, {
+        headers: this.getHeaders(),
+      })
+      .pipe(map((resp) => resp.quote));
   }
 
-  search(term: string): CitaI[] {
-    const t = term.toLowerCase().trim();
-    if (!t) return this.value;
-    return this.value.filter(e =>
-      [
-        e.paciente, e.modalidad, e.equipo, e.tecnologo,
-        e.motivo, e.estado
-      ].some(v => String(v).toLowerCase().includes(t))
+  // POST /quotes
+  // el objeto debe traer: patient_id, technologist_id, modalidad, equipo, fechaHora, motivo, estado?
+  createQuote(cita: Omit<CitaI, 'id'>): Observable<CitaI> {
+    return this.http.post<CitaI>(this.baseUrl, cita, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  // PATCH /quotes/:id
+  updateQuote(
+    id: number | string,
+    cita: Partial<CitaI>
+  ): Observable<CitaI> {
+    return this.http.patch<CitaI>(`${this.baseUrl}/${id}`, cita, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  // DELETE físico /quotes/:id
+  deleteQuote(id: number | string): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(`${this.baseUrl}/${id}`, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  // DELETE lógico /quotes/:id/logic (estado = CANCELADA)
+  deleteQuoteAdv(id: number | string): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(
+      `${this.baseUrl}/${id}/logic`,
+      {
+        headers: this.getHeaders(),
+      }
     );
+  }
+
+  // Estado local
+  updateLocalQuotes(quotes: CitaI[]): void {
+    this.quotesSubject.next(quotes);
+  }
+
+  // Refrescar desde backend y actualizar BehaviorSubject
+  refreshQuotes(): void {
+    this.getAllQuotes().subscribe((quotes) => {
+      this.quotesSubject.next(quotes);
+    });
   }
 }

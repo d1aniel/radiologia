@@ -5,9 +5,17 @@
     <!-- Nombre -->
     <div>
       <label class="block mb-1 font-medium" for="nombre">Nombre*</label>
-      <input id="nombre" type="text" pInputText formControlName="nombre"
-             placeholder="Ej. RX / TAC / RM" class="w-full"
-             [ngClass]="{'p-invalid': f['nombre'].invalid && (f['nombre'].dirty || f['nombre'].touched)}" />
+      <input
+        id="nombre"
+        type="text"
+        pInputText
+        formControlName="nombre"
+        placeholder="Ej. RX / TAC / RM"
+        class="w-full"
+        [ngClass]="{
+          'p-invalid': f['nombre'].invalid && (f['nombre'].dirty || f['nombre'].touched)
+        }"
+      />
       <small class="text-red-600" *ngIf="f['nombre'].touched && f['nombre'].invalid">
         El nombre es obligatorio (mín. 2 caracteres).
       </small>
@@ -16,10 +24,17 @@
     <!-- Descripción -->
     <div>
       <label class="block mb-1 font-medium" for="descripcion">Descripción*</label>
-      <textarea id="descripcion" pTextarea rows="3" class="w-full"
-                formControlName="descripcion"
-                placeholder="Breve descripción de la modalidad"
-                [ngClass]="{'p-invalid': f['descripcion'].invalid && (f['descripcion'].dirty || f['descripcion'].touched)}"></textarea>
+      <textarea
+        id="descripcion"
+        pTextarea
+        rows="3"
+        class="w-full"
+        formControlName="descripcion"
+        placeholder="Breve descripción de la modalidad"
+        [ngClass]="{
+          'p-invalid': f['descripcion'].invalid && (f['descripcion'].dirty || f['descripcion'].touched)
+        }"
+      ></textarea>
       <small class="text-red-600" *ngIf="f['descripcion'].touched && f['descripcion'].invalid">
         La descripción es obligatoria (mín. 5 caracteres).
       </small>
@@ -33,11 +48,26 @@
 
     <!-- Acciones -->
     <div class="flex items-center gap-2 pt-2">
-      <button pButton type="submit" label="Guardar" icon="pi pi-check"
-              class="p-button-sm"></button>
+      <button
+        pButton
+        type="submit"
+        label="Guardar"
+        icon="pi pi-check"
+        class="p-button-sm"
+        [disabled]="form.invalid || loading"
+        [loading]="loading"
+      ></button>
 
-      <button pButton type="button" label="Cancelar" icon="pi pi-times"
-              class="p-button-text p-button-sm" (click)="onCancel()"></button>
+      <button
+        pButton
+        type="button"
+        label="Cancelar"
+        icon="pi pi-times"
+        class="p-button-text p-button-sm"
+        (click)="onCancel()"
+      ></button>
     </div>
   </form>
 </div>
+
+<p-toast></p-toast>

@@ -1,47 +1,124 @@
-<!-- src/app/features/citas/showcitas.html -->
-<div class="mx-auto w-full max-w-[1100px] p-4 sm:p-6">
-  <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-    <h2 class="text-lg font-semibold">Citas</h2>
-    <div class="flex gap-2">
-      <input pInputText type="text" [(ngModel)]="globalFilter"
-             placeholder="Buscar (paciente, modalidad, equipo, estado...)"
-             class="w-64" />
-      <a pButton routerLink="/quotes/create" label="Programar cita" icon="pi pi-plus"></a>
-    </div>
+<!-- src/app/components/quotes/showquotes/showquotes.html -->
+<div class="card p-8">
+  <div class="mb-4 flex items-center justify-between">
+    <h2 class="text-2xl font-bold">Gestión de Citas</h2>
+
+    <button
+      pButton
+      type="button"
+      class="p-button p-component bg-blue-500 hover:bg-blue-600 text-white"
+      icon="pi pi-plus"
+      label="Nueva Cita"
+      [routerLink]="['/quotes/create']">
+    </button>
   </div>
 
-  <p-table [value]="filtered" [tableStyle]="{'min-width':'100%'}" [scrollable]="true" scrollHeight="flex">
-    <ng-template pTemplate="header">
-      <tr>
-        <th>Paciente</th>
-        <th>Modalidad</th>
-        <th>Equipo</th>
-        <th>Fecha/Hora</th>
-        <th>Tecnólogo</th>
-        <th>Motivo</th>
-        <th>Estado</th>
-        <th class="w-28 text-center">Acciones</th>
-      </tr>
-    </ng-template>
+  <ng-container *ngIf="quotes$ | async as quotes">
+    <p-table
+      [value]="quotes"
+      [loading]="loading$ | async"
+      stripedRows
+      [tableStyle]="{'min-width': '60rem'}"
+      [paginator]="true"
+      [rows]="10"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros">
 
-    <ng-template pTemplate="body" let-row>
-      <tr>
-        <td class="font-medium">{{ row.paciente }}</td>
-        <td>{{ row.modalidad }}</td>
-        <td>{{ row.equipo }}</td>
-        <td>{{ row.fechaHora | date:'dd/MM/yyyy HH:mm' }}</td>
-        <td>{{ row.tecnologo }}</td>
-        <td class="max-w-[280px] truncate" title="{{ row.motivo }}">{{ row.motivo }}</td>
-        <td><p-tag [severity]="tagSeverity(row.estado)" [value]="row.estado"></p-tag></td>
-        <td class="text-center">
-          <!-- Si luego agregas editar, pon routerLink con el id -->
-          <button pButton icon="pi pi-trash" severity="danger" (click)="delete(row)"></button>
-        </td>
-      </tr>
-    </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="text-left">ID</th>
+          <th class="text-left">Paciente</th>
+          <th class="text-left">Tecnólogo</th>
+          <th class="text-left">Modalidad</th>
+          <th class="text-left">Equipo</th>
+          <th class="text-left">Fecha / Hora</th>
+          <th class="text-left">Motivo</th>
+          <th class="text-left">Estado</th>
+          <th class="text-center">Acciones</th>
+        </tr>
+      </ng-template>
 
-    <ng-template pTemplate="emptymessage">
-      <tr><td colspan="8" class="text-center py-6">Sin registros</td></tr>
-    </ng-template>
-  </p-table>
+      <ng-template pTemplate="body" let-cita>
+        <tr>
+          <td>{{ cita.id }}</td>
+
+          <!-- Paciente -->
+          <td>
+            <ng-container *ngIf="cita.paciente_obj; else pacienteIdOnly">
+              {{ cita.paciente_obj?.nombre }} {{ cita.paciente_obj?.apellido }}
+            </ng-container>
+            <ng-template #pacienteIdOnly>
+              #{{ cita.patient_id }}
+            </ng-template>
+          </td>
+
+          <!-- Tecnólogo -->
+          <td>
+            <ng-container *ngIf="cita.technologist_obj; else technoIdOnly">
+              {{ cita.technologist_obj?.nombre }}
+              <span *ngIf="cita.technologist_obj?.especialidad">
+                ({{ cita.technologist_obj?.especialidad }})
+              </span>
+            </ng-container>
+            <ng-template #technoIdOnly>
+              #{{ cita.technologist_id }}
+            </ng-template>
+          </td>
+
+          <td>{{ cita.modalidad }}</td>
+          <td>{{ cita.equipo }}</td>
+          <td>{{ cita.fechaHora | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td class="max-w-[280px] truncate" [title]="cita.motivo">{{ cita.motivo }}</td>
+
+          <td>
+            <span
+              class="px-2 py-1 rounded text-xs font-semibold"
+              [class]="
+                cita.estado === 'PENDIENTE'  ? 'bg-yellow-100 text-yellow-800' :
+                cita.estado === 'CONFIRMADA' ? 'bg-blue-100 text-blue-800'   :
+                cita.estado === 'ATENDIDA'   ? 'bg-green-100 text-green-800' :
+                                               'bg-red-100 text-red-800'
+              ">
+              {{ cita.estado }}
+            </span>
+          </td>
+
+          <td class="text-center">
+            <div class="flex justify-center gap-2">
+              <button
+                pButton
+                type="button"
+                icon="pi pi-pencil"
+                class="p-button-rounded p-button-text p-button-warning"
+                [routerLink]="['/quotes/update', cita.id]"
+                pTooltip="Editar">
+              </button>
+
+              <button
+                pButton
+                type="button"
+                icon="pi pi-trash"
+                class="p-button-rounded p-button-text p-button-danger"
+                (click)="deleteQuote(cita)"
+                pTooltip="Eliminar físico">
+              </button>
+
+              <button
+                *ngIf="cita.estado !== 'CANCELADA'"
+                pButton
+                type="button"
+                icon="pi pi-ban"
+                class="p-button-rounded p-button-text p-button-secondary"
+                (click)="cancelQuote(cita)"
+                pTooltip="Marcar CANCELADA">
+              </button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </ng-container>
 </div>
+
+<p-confirmDialog></p-confirmDialog>
+<p-toast></p-toast>

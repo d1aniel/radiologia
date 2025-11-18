@@ -1,1 +1,133 @@
-<p>updatepayments works!</p>
+<!-- src/app/components/payments/editpayments/updatepayments.html -->
+
+<div class="mx-auto w-full max-w-[880px] rounded-xl bg-white p-4 sm:p-6 shadow-sm">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-lg font-semibold text-slate-800">
+      Editar Pago
+    </h2>
+
+    <button
+      pButton
+      type="button"
+      class="p-button p-component p-button-text"
+      icon="pi pi-arrow-left"
+      label="Volver"
+      (click)="cancelar()">
+    </button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="grid grid-cols-12 gap-3 text-sm">
+    <!-- PACIENTE -->
+    <div class="col-span-12 md:col-span-6">
+      <label class="block mb-1 text-sm font-medium text-slate-700">Paciente</label>
+      <p-select
+        formControlName="pacienteId"
+        [options]="pacientesOpts"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Seleccione..."
+        class="w-full">
+      </p-select>
+      <small class="block mt-1 text-xs text-red-600"
+             *ngIf="f['pacienteId'].touched && f['pacienteId'].invalid">
+        El paciente es obligatorio.
+      </small>
+    </div>
+
+    <!-- ESTUDIO (quote_id opcional) -->
+    <div class="col-span-12 md:col-span-6">
+      <label for="estudioId" class="block mb-1 text-sm font-medium text-slate-700">ID Estudio / Cita (opcional)</label>
+      <input
+        id="estudioId"
+        type="text"
+        pInputText
+        formControlName="estudioId"
+        placeholder="Ej. 101"
+        class="w-full text-sm px-3 py-2" />
+    </div>
+
+    <!-- MONTO -->
+    <div class="col-span-12 md:col-span-6">
+      <label class="block mb-1 text-sm font-medium text-slate-700">Monto</label>
+      <p-inputnumber
+        formControlName="monto"
+        [useGrouping]="true"
+        inputId="monto"
+        class="w-full">
+      </p-inputnumber>
+      <small class="block mt-1 text-xs text-red-600"
+             *ngIf="f['monto'].touched && f['monto'].errors?.['required']">
+        El monto es obligatorio.
+      </small>
+      <small class="block mt-1 text-xs text-red-600"
+             *ngIf="f['monto'].touched && f['monto'].errors?.['min']">
+        El monto debe ser mayor a 0.
+      </small>
+    </div>
+
+    <!-- MÉTODO -->
+    <div class="col-span-12 md:col-span-6">
+      <label class="block mb-1 text-sm font-medium text-slate-700">Método de pago</label>
+      <p-select
+        formControlName="metodo"
+        [options]="metodoOptions"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Seleccione..."
+        class="w-full">
+      </p-select>
+      <small class="block mt-1 text-xs text-red-600"
+             *ngIf="f['metodo'].touched && f['metodo'].invalid">
+        Seleccione un método.
+      </small>
+    </div>
+
+    <!-- FECHA -->
+    <div class="col-span-12 md:col-span-6">
+      <label class="block mb-1 text-sm font-medium text-slate-700">Fecha</label>
+      <p-datepicker
+        formControlName="fecha"
+        showIcon="true"
+        dateFormat="yy-mm-dd"
+        styleClass="w-full">
+      </p-datepicker>
+      <small class="block mt-1 text-xs text-red-600"
+             *ngIf="f['fecha'].touched && f['fecha'].invalid">
+        La fecha es obligatoria.
+      </small>
+    </div>
+
+    <!-- ESTADO -->
+    <div class="col-span-12 md:col-span-6">
+      <label class="block mb-1 text-sm font-medium text-slate-700">Estado</label>
+      <p-select
+        formControlName="estado"
+        [options]="estadoOptions"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Seleccione..."
+        class="w-full">
+      </p-select>
+    </div>
+
+    <!-- BOTONES -->
+    <div class="col-span-12 flex justify-end gap-2 mt-4">
+      <button
+        pButton
+        type="button"
+        class="p-button-text"
+        label="Cancelar"
+        (click)="cancelar()">
+      </button>
+
+      <button
+        pButton
+        type="submit"
+        label="Guardar cambios"
+        [disabled]="loading || form.invalid">
+      </button>
+    </div>
+  </form>
+</div>
+
+<p-toast></p-toast>

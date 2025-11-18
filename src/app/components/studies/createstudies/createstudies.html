@@ -1,91 +1,149 @@
+<!-- src/app/components/studies/createstudies/createstudies.html -->
+
+<p-toast></p-toast>
+
 <div class="mx-auto w-full max-w-[880px] rounded-xl bg-white p-4 sm:p-6 shadow-sm">
-  <h2 class="mb-4 text-lg font-semibold text-slate-800">Agregar Estudio</h2>
+  <h2 class="mb-4 text-lg font-semibold text-slate-800">Crear Estudio</h2>
 
-  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="grid grid-cols-12 gap-3">
+  <form [formGroup]="form" (ngSubmit)="submit()" class="grid grid-cols-12 gap-3 text-sm">
 
-    <!-- Paciente -->
+    <!-- PACIENTE -->
     <div class="col-span-12 md:col-span-6">
       <label class="block mb-1 text-sm font-medium text-slate-700">Paciente</label>
-      <input pInputText formControlName="paciente" class="w-full text-sm px-3 py-2" placeholder="Nombre del paciente"/>
-      <small class="text-red-600 text-xs" *ngIf="f['paciente'].touched && f['paciente'].invalid">Requerido.</small>
+      <p-select
+        formControlName="patient_id"
+        [options]="patients"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Seleccione..."
+        class="w-full">
+      </p-select>
+      <small class="block mt-1 text-xs text-red-600" *ngIf="getError('patient_id')">{{ getError('patient_id') }}</small>
     </div>
 
-    <!-- Modalidad -->
-    <div class="col-span-12 md:col-span-3">
+    <!-- MODALIDAD -->
+    <div class="col-span-12 md:col-span-6">
       <label class="block mb-1 text-sm font-medium text-slate-700">Modalidad</label>
-      <p-select formControlName="modalidad" [options]="['RX','TAC','RM']" placeholder="Seleccione" class="w-full"></p-select>
-      <small class="text-red-600 text-xs" *ngIf="f['modalidad'].touched && f['modalidad'].invalid">Requerido.</small>
+      <p-select
+        formControlName="modality_id"
+        [options]="modalities"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Seleccione..."
+        class="w-full">
+      </p-select>
+      <small class="block mt-1 text-xs text-red-600" *ngIf="getError('modality_id')">{{ getError('modality_id') }}</small>
     </div>
 
-    <!-- Equipo -->
-    <div class="col-span-12 md:col-span-3">
+    <!-- EQUIPO -->
+    <div class="col-span-12 md:col-span-6">
       <label class="block mb-1 text-sm font-medium text-slate-700">Equipo</label>
-      <input pInputText formControlName="equipo" class="w-full text-sm px-3 py-2" placeholder="Ej. RX-01 Sala A"/>
-      <small class="text-red-600 text-xs" *ngIf="f['equipo'].touched && f['equipo'].invalid">Requerido.</small>
+      <p-select
+        formControlName="team_id"
+        [options]="teams"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Seleccione..."
+        class="w-full">
+      </p-select>
+      <small class="block mt-1 text-xs text-red-600" *ngIf="getError('team_id')">{{ getError('team_id') }}</small>
     </div>
 
-    <!-- Fecha/Hora -->
-    <div class="col-span-12 md:col-span-4">
-      <label class="block mb-1 text-sm font-medium text-slate-700">Fecha/Hora</label>
+    <!-- MÉDICO (opcional) -->
+    <div class="col-span-12 md:col-span-6">
+      <label class="block mb-1 text-sm font-medium text-slate-700">Médico</label>
+      <p-select
+        formControlName="medico_id"
+        [options]="doctors"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Seleccione..."
+        class="w-full">
+      </p-select>
+    </div>
+
+    <!-- TECNÓLOGO (opcional) -->
+    <div class="col-span-12 md:col-span-6">
+      <label class="block mb-1 text-sm font-medium text-slate-700">Tecnólogo</label>
+      <p-select
+        formControlName="technologist_id"
+        [options]="technologists"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Seleccione..."
+        class="w-full">
+      </p-select>
+    </div>
+
+    <!-- CITA (opcional) -->
+    <div class="col-span-12 md:col-span-6">
+      <label class="block mb-1 text-sm font-medium text-slate-700">Cita (ID)</label>
+      <input pInputText type="number" formControlName="quote_id" class="w-full px-3 py-2" placeholder="ID de la cita">
+    </div>
+
+    <!-- FECHA/HORA -->
+    <div class="col-span-12 md:col-span-6">
+      <label class="block mb-1 text-sm font-medium text-slate-700">Fecha y hora</label>
       <p-datepicker
         formControlName="fechaHora"
         [showTime]="true"
         hourFormat="24"
-        [iconDisplay]="'input'"
         appendTo="body"
+        inputId="fechaHora"
         class="w-full">
       </p-datepicker>
-      <small class="text-red-600 text-xs" *ngIf="f['fechaHora'].touched && f['fechaHora'].invalid">Requerido.</small>
+      <small class="block mt-1 text-xs text-red-600" *ngIf="getError('fechaHora')">{{ getError('fechaHora') }}</small>
     </div>
 
-    <!-- Prioridad -->
-    <div class="col-span-12 md:col-span-4">
-      <label class="block mb-1 text-sm font-medium text-slate-700">Prioridad</label>
-      <p-select formControlName="prioridad" [options]="prioridades" optionLabel="label" optionValue="value" class="w-full text-sm"></p-select>
-    </div>
-
-    <!-- Tecnólogo -->
-    <div class="col-span-12 md:col-span-4">
-      <label class="block mb-1 text-sm font-medium text-slate-700">Tecnólogo asignado</label>
-      <input pInputText formControlName="tecnologo" class="w-full text-sm px-3 py-2" placeholder="Nombre del tecnólogo"/>
-      <small class="text-red-600 text-xs" *ngIf="f['tecnologo'].touched && f['tecnologo'].invalid">Requerido.</small>
-    </div>
-
-    <!-- Médico -->
+    <!-- PRIORIDAD -->
     <div class="col-span-12 md:col-span-6">
-      <label class="block mb-1 text-sm font-medium text-slate-700">Médico radiólogo</label>
-      <input pInputText formControlName="medico" class="w-full text-sm px-3 py-2" placeholder="Nombre del médico"/>
-      <small class="text-red-600 text-xs" *ngIf="f['medico'].touched && f['medico'].invalid">Requerido.</small>
+      <label class="block mb-1 text-sm font-medium text-slate-700">Prioridad</label>
+      <p-select
+        formControlName="prioridad"
+        [options]="prioridadOpts"
+        optionLabel="label"
+        optionValue="value"
+        class="w-full">
+      </p-select>
     </div>
 
-    <!-- Motivo -->
+    <!-- MOTIVO -->
     <div class="col-span-12">
-      <label class="block mb-1 text-sm font-medium text-slate-700">Motivo / Indicación clínica</label>
-      <input pInputText formControlName="motivo" class="w-full text-sm px-3 py-2" placeholder="Describe brevemente la indicación clínica"/>
-      <small class="text-red-600 text-xs" *ngIf="f['motivo'].touched && f['motivo'].invalid">Mínimo 5 caracteres.</small>
+      <label class="block mb-1 text-sm font-medium text-slate-700">Motivo / Indicación</label>
+      <input pInputText formControlName="motivo" class="w-full px-3 py-2" placeholder="Describa el motivo">
+      <small class="block mt-1 text-xs text-red-600" *ngIf="getError('motivo')">{{ getError('motivo') }}</small>
     </div>
 
-    <!-- Etiquetas -->
+    <!-- ESTADO -->
+    <div class="col-span-12 md:col-span-6">
+      <label class="block mb-1 text-sm font-medium text-slate-700">Estado</label>
+      <p-select
+        formControlName="status"
+        [options]="statusOpts"
+        optionLabel="label"
+        optionValue="value"
+        class="w-full">
+      </p-select>
+    </div>
+
+    <!-- ETIQUETAS -->
     <div class="col-span-12">
       <label class="block mb-1 text-sm font-medium text-slate-700">Etiquetas</label>
       <p-multiSelect
-        formControlName="etiquetas"
-        [options]="etiquetasOptions"
+        formControlName="labels"
+        [options]="labelsOpt"
         optionLabel="label"
         optionValue="value"
         display="chip"
-        placeholder="Seleccione etiquetas"
+        defaultLabel="Selecciona etiquetas"
         class="w-full">
       </p-multiSelect>
-      <small class="text-slate-500 text-xs">Solo se muestran etiquetas ACTIVAS.</small>
     </div>
 
-    <!-- Acciones -->
-    <div class="col-span-12">
-      <div class="mt-3 flex items-center justify-end gap-2">
-        <p-button label="Cancelar" severity="secondary" [size]="'small'" (onClick)="onCancel()" type="button"></p-button>
-        <p-button label="Guardar" icon="pi pi-check" [size]="'small'" type="submit" [disabled]="form.invalid"></p-button>
-      </div>
+    <!-- ACCIONES -->
+    <div class="col-span-12 mt-2 flex gap-2 justify-end">
+      <button pButton type="button" label="Cancelar" class="p-button-text" (click)="cancelar()"></button>
+      <button pButton type="submit" label="Crear" icon="pi pi-check" [disabled]="loading"></button>
     </div>
   </form>
 </div>

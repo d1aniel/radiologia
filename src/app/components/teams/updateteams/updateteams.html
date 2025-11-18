@@ -1,1 +1,124 @@
-<p>updateteams works!</p>
+<!-- src/app/features/teams/updateteams.html -->
+
+<p-toast></p-toast>
+
+<div class="mx-auto w-full max-w-[880px] rounded-xl bg-white p-4 sm:p-6 shadow-sm">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-lg font-semibold text-slate-800">
+      Editar Equipo
+    </h2>
+
+    <button
+      pButton
+      type="button"
+      class="p-button p-component p-button-text"
+      icon="pi pi-arrow-left"
+      label="Volver"
+      (click)="cancelar()">
+    </button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="grid grid-cols-12 gap-3 text-sm">
+
+    <!-- NOMBRE / IDENTIFICADOR -->
+    <div class="col-span-12 md:col-span-6">
+      <label for="nombre" class="block mb-1 text-sm font-medium text-slate-700">
+        Nombre / Identificador
+      </label>
+      <input
+        id="nombre"
+        type="text"
+        pInputText
+        formControlName="nombre"
+        placeholder="Ej. RX-01 Sala A"
+        [ngClass]="{'p-invalid': f['nombre'].invalid && f['nombre'].touched}"
+        class="w-full px-3 py-2" />
+      <small class="block mt-1 text-xs text-red-600" *ngIf="getError('nombre')">
+        {{ getError('nombre') }}
+      </small>
+    </div>
+
+    <!-- MODALIDAD (modality_id) -->
+    <div class="col-span-12 md:col-span-6">
+      <label class="block mb-1 text-sm font-medium text-slate-700">Modalidad</label>
+      <p-select
+        formControlName="modality_id"
+        [options]="modalities"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Seleccione..."
+        class="w-full">
+      </p-select>
+      <small class="block mt-1 text-xs text-red-600" *ngIf="getError('modality_id')">
+        {{ getError('modality_id') }}
+      </small>
+    </div>
+
+    <!-- UBICACIÓN -->
+    <div class="col-span-12 md:col-span-6">
+      <label for="ubicacion" class="block mb-1 text-sm font-medium text-slate-700">
+        Ubicación
+      </label>
+      <input
+        id="ubicacion"
+        type="text"
+        pInputText
+        formControlName="ubicacion"
+        placeholder="Ej. Sala A - Piso 1"
+        [ngClass]="{'p-invalid': f['ubicacion'].invalid && f['ubicacion'].touched}"
+        class="w-full px-3 py-2" />
+      <small class="block mt-1 text-xs text-red-600" *ngIf="getError('ubicacion')">
+        {{ getError('ubicacion') }}
+      </small>
+    </div>
+
+    <!-- ESTADO -->
+    <div class="col-span-12 md:col-span-6">
+      <label class="block mb-1 text-sm font-medium text-slate-700">Estado</label>
+      <p-select
+        formControlName="estado"
+        [options]="estados"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Seleccione..."
+        class="w-full">
+      </p-select>
+      <small class="block mt-1 text-xs text-red-600" *ngIf="getError('estado')">
+        {{ getError('estado') }}
+      </small>
+    </div>
+
+    <!-- OBSERVACIONES -->
+    <div class="col-span-12">
+      <label for="observaciones" class="block mb-1 text-sm font-medium text-slate-700">
+        Observaciones
+      </label>
+      <textarea
+        id="observaciones"
+        pTextarea
+        formControlName="observaciones"
+        placeholder="Notas de mantenimiento, particularidades, etc."
+        class="w-full px-3 py-2 min-h-[80px]">
+      </textarea>
+    </div>
+
+    <!-- BOTONES -->
+    <div class="col-span-12 flex justify-end gap-2 mt-4">
+      <button
+        pButton
+        type="button"
+        class="p-button-text"
+        label="Cancelar"
+        (click)="cancelar()">
+      </button>
+
+      <button
+        pButton
+        type="submit"
+        label="Guardar cambios"
+        [disabled]="loading || form.invalid">
+      </button>
+    </div>
+
+  </form>
+</div>

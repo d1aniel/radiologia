@@ -1,44 +1,94 @@
+// src/app/services/payment.service.ts
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { PaymentI } from '../models/payments';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-@Injectable({ providedIn: 'root' })
-export class PaymentsService {
-  private paymentsSubject = new BehaviorSubject<PaymentI[]>([
-    {
-      id: 1,
-      pacienteId: 1,
-      estudioId: null,
-      monto: 85000,
-      metodo: 'EFECTIVO',
-      fecha: '2025-09-14',
-      estado: 'PAID'
-    },
-    {
-      id: 2,
-      pacienteId: 2,
-      estudioId: 101,
-      monto: 120000,
-      metodo: 'TARJETA',
-      fecha: '2025-09-10',
-      estado: 'PAID'
+import { PaymentI } from '../models/payments';   // ajusta la ruta si es distinta
+import { AuthService } from '../services/auth';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class PaymentService {
+ 
+  private baseUrl = 'http://localhost:4000/api/pagos';
+
+  private paymentsSubject = new BehaviorSubject<PaymentI[]>([]);
+  public payments$ = this.paymentsSubject.asObservable();
+
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) {}
+
+  // ===== Helpers =====
+  private getHeaders(): HttpHeaders {
+    let headers = new HttpHeaders();
+    const token = this.authService.getToken();
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
     }
-  ]);
-
-  payments$ = this.paymentsSubject.asObservable();
-
-  get value(): PaymentI[] {
-    return this.paymentsSubject.value;
+    return headers;
   }
 
-  addPayment(payment: Omit<PaymentI, 'id' | 'estado'>) {
-    const list = this.value;
-    const nextId = list.length ? Math.max(...list.map(p => p.id)) + 1 : 1;
-    const nuevo: PaymentI = { id: nextId, estado: 'PAID', ...payment };
-    this.paymentsSubject.next([...list, nuevo]);
+  // ===== CRUD =====
+
+  // GET /payments   -> controlador devuelve { payments: [...] }
+  getAllPayments(): Observable<PaymentI[]> {
+    return this.http
+      .get<{ payments: PaymentI[] }>(this.baseUrl, { headers: this.getHeaders() })
+      .pipe(
+        map(resp => resp.payments)
+      );
   }
 
-  deletePayment(id: number) {
-    this.paymentsSubject.next(this.value.filter(p => p.id !== id));
+  // GET /payments/:id   -> controlador devuelve { payment: {...} }
+  getPaymentById(id: number | string): Observable<PaymentI> {
+    return this.http
+      .get<{ payment: PaymentI }>(`${this.baseUrl}/${id}`, { headers: this.getHeaders() })
+      .pipe(
+        map(resp => resp.payment)
+      );
+  }
+
+  // POST /payments   -> controlador responde con el payment creado (instancia directa)
+  createPayment(payment: Omit<PaymentI, 'id'>): Observable<PaymentI> {
+    return this.http.post<PaymentI>(this.baseUrl, payment, {
+      headers: this.getHeaders()
+    });
+  }
+
+  // PATCH /payments/:id   -> controlador responde con el payment actualizado (instancia directa)
+  updatePayment(id: number | string, payment: Partial<PaymentI>): Observable<PaymentI> {
+    return this.http.patch<PaymentI>(`${this.baseUrl}/${id}`, payment, {
+      headers: this.getHeaders()
+    });
+  }
+
+  // DELETE físico /payments/:id   -> { message: string }
+  deletePayment(id: number | string): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(`${this.baseUrl}/${id}`, {
+      headers: this.getHeaders()
+    });
+  }
+
+  // DELETE lógico /payments/:id/logic   -> { message: string }
+  deletePaymentAdv(id: number | string): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(`${this.baseUrl}/${id}/logic`, {
+      headers: this.getHeaders()
+    });
+  }
+
+  // ===== Estado local (igual que en PatientService) =====
+
+  updateLocalPayments(payments: PaymentI[]): void {
+    this.paymentsSubject.next(payments);
+  }
+
+  refreshPayments(): void {
+    this.getAllPayments().subscribe(payments => {
+      this.paymentsSubject.next(payments);
+    });
   }
 }

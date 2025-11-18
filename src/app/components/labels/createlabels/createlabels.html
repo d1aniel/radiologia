@@ -1,29 +1,88 @@
 <div class="mx-auto w-full max-w-[880px] rounded-xl bg-white p-4 sm:p-6 shadow-sm">
   <h2 class="mb-4 text-lg font-semibold text-slate-800">Agregar Etiqueta</h2>
 
-  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="grid grid-cols-12 gap-3">
+  <form [formGroup]="form" (ngSubmit)="submit()" class="grid grid-cols-12 gap-3">
     <!-- NOMBRE -->
     <div class="col-span-12 md:col-span-6">
       <label for="nombre" class="block mb-1 text-sm font-medium text-slate-700">Nombre</label>
-      <input id="nombre" type="text" pInputText formControlName="nombre"
-             placeholder="Ej. Urgente" class="w-full text-sm px-3 py-2"/>
+      <input
+        id="nombre"
+        type="text"
+        pInputText
+        formControlName="nombre"
+        placeholder="Ej. Urgente, Prioridad alta"
+        class="w-full text-sm px-3 py-2"/>
+
       <small class="block mt-1 text-xs text-red-600"
-             *ngIf="f['nombre'].touched && f['nombre'].errors?.['required']">El nombre es obligatorio.</small>
+             *ngIf="form.controls['nombre'].touched && form.controls['nombre'].errors?.['required']">
+        El nombre es obligatorio.
+      </small>
       <small class="block mt-1 text-xs text-red-600"
-             *ngIf="f['nombre'].touched && f['nombre'].errors?.['minlength']">Mínimo 2 caracteres.</small>
+             *ngIf="form.controls['nombre'].touched && form.controls['nombre'].errors?.['minlength']">
+        Nombre debe tener al menos
+        {{ form.controls['nombre'].errors?.['minlength']?.requiredLength }} caracteres.
+      </small>
     </div>
 
     <!-- DESCRIPCIÓN -->
-    <div class="col-span-12">
-      <label for="descripcion" class="block mb-1 text-sm font-medium text-slate-700">Descripción (opcional)</label>
-      <input id="descripcion" type="text" pInputText formControlName="descripcion"
-             placeholder="Ej. Atención prioritaria" class="w-full text-sm px-3 py-2"/>
+    <div class="col-span-12 md:col-span-6">
+      <label for="descripcion" class="block mb-1 text-sm font-medium text-slate-700">Descripción</label>
+      <input
+        id="descripcion"
+        type="text"
+        pInputText
+        formControlName="descripcion"
+        placeholder="Descripción breve (opcional)"
+        class="w-full text-sm px-3 py-2"/>
+
+      <small class="block mt-1 text-xs text-red-600"
+             *ngIf="form.controls['descripcion'].touched && form.controls['descripcion'].errors?.['maxlength']">
+        La descripción no puede exceder
+        {{ form.controls['descripcion'].errors?.['maxlength']?.requiredLength }} caracteres.
+      </small>
+    </div>
+
+    <!-- ESTADO -->
+    <div class="col-span-12 md:col-span-4">
+      <label for="status" class="block mb-1 text-sm font-medium text-slate-700">Estado</label>
+      <p-select
+        inputId="status"
+        formControlName="status"
+        [options]="statusOptions"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Seleccione..."
+        class="w-full text-sm">
+      </p-select>
+
+      <small class="block mt-1 text-xs text-red-600"
+             *ngIf="form.controls['status'].touched && form.controls['status'].errors?.['required']">
+        El estado es obligatorio.
+      </small>
     </div>
 
     <!-- ACCIONES -->
-    <div class="col-span-12 flex gap-2 pt-2">
-      <button pButton type="submit" label="Guardar"></button>
-      <button pButton type="button" label="Cancelar" severity="secondary" (click)="onCancel()"></button>
+    <div class="col-span-12">
+      <div class="mt-3 flex items-center justify-end gap-2">
+        <p-button
+          label="Cancelar"
+          severity="secondary"
+          [size]="'small'"
+          (onClick)="cancelar()"
+          type="button">
+        </p-button>
+
+        <p-button
+          label="Guardar"
+          icon="pi pi-check"
+          [size]="'small'"
+          type="submit"
+          [disabled]="form.invalid || loading"
+          [loading]="loading">
+        </p-button>
+      </div>
     </div>
   </form>
 </div>
+
+<p-toast></p-toast>

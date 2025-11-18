@@ -1,53 +1,105 @@
-import { Component } from '@angular/core';
+// src/app/components/labels/createlabels/createlabels.ts
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
-
-import { InputTextModule } from 'primeng/inputtext';
+import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { Select } from 'primeng/select';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
-import { TagsService } from '../../../services/label';
+// 👇 Usa el service real: LabelService o TagsService
+import { LabelService } from '../../../services/label';
 
 @Component({
-  selector: 'app-create-tags',
+  selector: 'app-create-labels',
   standalone: true,
-  imports: [
-    CommonModule, ReactiveFormsModule, RouterModule,
-    InputTextModule, ButtonModule
-  ],
-  templateUrl: './createlabels.html'
+  imports: [CommonModule, ReactiveFormsModule, ButtonModule, InputTextModule, Select, ToastModule],
+  templateUrl: './createlabels.html',
+  styleUrls: ['./createlabels.css'],
+  providers: [MessageService]
 })
 export class Createlabels {
   form: FormGroup;
+  loading = false;
+
+  statusOptions = [
+    { label: 'Activo', value: 'ACTIVATE' },
+    { label: 'Inactivo', value: 'INACTIVE' }
+  ];
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private tagsService: TagsService
+    private labelService: LabelService,
+    private messageService: MessageService
   ) {
     this.form = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(2)]],
-      descripcion: ['']
-      // status eliminado del form
+      descripcion: ['', [Validators.maxLength(255)]],
+      status: ['ACTIVATE', Validators.required]
     });
   }
 
-  get f() { return this.form.controls; }
+  submit(): void {
+    if (this.form.valid) {
+      this.loading = true;
+      const payload = this.form.value; // { nombre, descripcion, status }
 
-  onSubmit() {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
+      this.labelService.createLabel(payload).subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Éxito',
+            detail: 'Etiqueta creada correctamente'
+          });
+          setTimeout(() => {
+            // Ajusta según tu ruta de listado
+            this.router.navigate(['/labels/show']);
+          }, 800);
+        },
+        error: (error) => {
+          console.error('Error creating label:', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: error?.error?.error || 'Error al crear la etiqueta'
+          });
+          this.loading = false;
+        }
+      });
+    } else {
+      this.markFormGroupTouched();
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Advertencia',
+        detail: 'Por favor complete los campos requeridos'
+      });
     }
-    // Forzamos que la etiqueta quede activa al crear
-    this.tagsService.addTag({
-      ...this.form.value,
-      status: 'ACTIVATE'
-    });
+  }
+
+  cancelar(): void {
     this.router.navigate(['/labels/show']);
   }
 
-  onCancel() {
-    this.router.navigate(['/labels/show']);
+  private markFormGroupTouched(): void {
+    Object.keys(this.form.controls).forEach(key => {
+      this.form.get(key)?.markAsTouched();
+    });
+  }
+
+  getFieldError(fieldName: string): string {
+    const field = this.form.get(fieldName);
+    if (field?.errors && field?.touched) {
+      if (field.errors['required']) return `${fieldName} es requerido`;
+      if (field.errors['minlength']) {
+        return `${fieldName} debe tener al menos ${field.errors['minlength'].requiredLength} caracteres`;
+      }
+      if (field.errors['maxlength']) {
+        return `${fieldName} no puede exceder ${field.errors['maxlength'].requiredLength} caracteres`;
+      }
+    }
+    return '';
   }
 }

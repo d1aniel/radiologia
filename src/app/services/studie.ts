@@ -1,96 +1,99 @@
-import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { StudiesI } from '../models/studies';
-import { TagsService } from './label';
-import { LabelsI } from '../models/labels';
+// src/app/services/study.service.ts
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { AuthService } from './auth';
+
+import {
+  StudyCreateI,
+  StudyReadI,
+  GetAllStudiesResponse,
+  GetStudyByIdResponse,
+  DeleteStudyResponse,
+} from '../models/studies';
 
 @Injectable({ providedIn: 'root' })
-export class StudiesService {
-  private tagsService = inject(TagsService);
+export class StudyService {
+  private baseUrl = 'http://localhost:4000/api/estudios';
 
-  private studiesSubject = new BehaviorSubject<StudiesI[]>([
-    {
-      id: 1,
-      paciente: 'Camilo Rodríguez',
-      modalidad: 'RX',
-      equipo: 'RX-01 Sala A',
-      fechaHora: new Date().toISOString(),
-      prioridad: 'MEDIA',
-      motivo: 'Dolor lumbar posterior a caída',
-      tecnologo: 'Laura Martínez',
-      medico: 'Dr. Andrés Velásquez',
-      etiquetas: [2, 1]
-    }
-  ]);
+  // cache/local state
+  private studiesSubject = new BehaviorSubject<StudyReadI[]>([]);
+  public studies$ = this.studiesSubject.asObservable();
 
-  studies$ = this.studiesSubject.asObservable();
-  get value(): StudiesI[] { return this.studiesSubject.value; }
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) {}
 
-  getAll(): StudiesI[] { return this.value; }
-
-  getById(id: number): StudiesI | undefined {
-    return this.value.find(e => e.id === id);
+  /** Headers con Bearer token */
+  private getHeaders(): HttpHeaders {
+    let headers = new HttpHeaders();
+    const token = this.authService.getToken();
+    if (token) headers = headers.set('Authorization', `Bearer ${token}`);
+    return headers;
   }
 
-  add(payload: Omit<StudiesI, 'id'>): StudiesI {
-    const nextId = this.value.length ? Math.max(...this.value.map(x => x.id)) + 1 : 1;
-    const row: StudiesI = { id: nextId, ...payload };
-    this.studiesSubject.next([...this.value, row]);
-    return row;
-  }
-
-  update(id: number, changes: Partial<StudiesI>): void {
-    const updated = this.value.map(e => e.id === id ? { ...e, ...changes, id } : e);
-    this.studiesSubject.next(updated);
-  }
-
-  remove(id: number): void {
-    this.studiesSubject.next(this.value.filter(e => e.id !== id));
-  }
-
-  setLabels(idEstudio: number, etiquetaIds: number[]): void {
-    const updated = this.value.map(e => e.id === idEstudio ? { ...e, etiquetas: [...etiquetaIds] } : e);
-    this.studiesSubject.next(updated);
-  }
-
-  addLabel(idEstudio: number, etiquetaId: number): void {
-    const updated = this.value.map(e => {
-      if (e.id !== idEstudio) return e;
-      const set = new Set<number>(e.etiquetas ?? []);
-      set.add(etiquetaId);
-      return { ...e, etiquetas: Array.from(set) };
+  /** GET /estudios  -> { studies: StudyReadI[] } */
+  getAll(): Observable<GetAllStudiesResponse> {
+    return this.http.get<GetAllStudiesResponse>(this.baseUrl, {
+      headers: this.getHeaders(),
     });
-    this.studiesSubject.next(updated);
   }
 
-  removeLabel(idEstudio: number, etiquetaId: number): void {
-    const updated = this.value.map(e => {
-      if (e.id !== idEstudio) return e;
-      return { ...e, etiquetas: (e.etiquetas ?? []).filter(id => id !== etiquetaId) };
+  /** GET /estudios/:id -> { study: StudyReadI } */
+  getById(id: number | string): Observable<GetStudyByIdResponse> {
+    return this.http.get<GetStudyByIdResponse>(`${this.baseUrl}/${id}`, {
+      headers: this.getHeaders(),
     });
-    this.studiesSubject.next(updated);
   }
 
-  search(term: string): StudiesI[] {
-    const t = term.toLowerCase().trim();
-    if (!t) return this.value;
-
-    const etiquetasMap = new Map<number, string>();
-    this.tagsService.value.forEach((tag: LabelsI) => {
-      etiquetasMap.set(tag.id, tag.nombre);
+  /** POST /estudios -> { study: StudyReadI } */
+  create(payload: StudyCreateI): Observable<{ study: StudyReadI }> {
+    return this.http.post<{ study: StudyReadI }>(this.baseUrl, payload, {
+      headers: this.getHeaders(),
     });
+  }
 
-    return this.value.filter(e => {
-      const campos = [
-        e.paciente, e.modalidad, e.equipo, e.tecnologo, e.medico,
-        e.prioridad, e.motivo
-      ].map(v => String(v).toLowerCase());
+  
 
-      const etiquetasNombres = (e.etiquetas ?? [])
-        .map(id => (etiquetasMap.get(id) || '').toLowerCase())
-        .filter(Boolean);
+  update(id: number | string, changes: Partial<StudyCreateI>): Observable<{ study: StudyReadI }> {
+    return this.http.patch<{ study: StudyReadI }>(`${this.baseUrl}/${id}`, changes, {
+      headers: this.getHeaders(),
+    });
+  }
 
-      return [...campos, ...etiquetasNombres].some(v => v.includes(t));
+
+  /**
+   * 🟡 DELETE lógico (soft delete)
+   * Apunta a tu controlador actual:
+   * DELETE /estudios/:id -> status = "INACTIVE"
+   */
+  delete(id: number | string): Observable<DeleteStudyResponse> {
+    return this.http.delete<DeleteStudyResponse>(`${this.baseUrl}/${id}`, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  /**
+   * 🔴 DELETE físico (hard delete)
+   * Necesitas crear el endpoint en el backend, por ejemplo:
+   * DELETE /estudios/:id/hard
+   */
+  deleteHard(id: number | string): Observable<DeleteStudyResponse> {
+    return this.http.delete<DeleteStudyResponse>(`${this.baseUrl}/${id}/hard`, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  /** Helpers de estado local */
+  setLocal(list: StudyReadI[]): void {
+    this.studiesSubject.next(list);
+  }
+
+  refresh(): void {
+    this.getAll().subscribe({
+      next: ({ studies }) => this.studiesSubject.next(studies),
+      error: (err) => console.error('Error refreshing studies', err),
     });
   }
 }

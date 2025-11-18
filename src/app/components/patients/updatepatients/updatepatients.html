@@ -1,1 +1,151 @@
-<p>updatepatients works!</p>
+<!-- src/app/components/patients/editpatients/editpatients.html -->
+<div class="mx-auto w-full max-w-[880px] rounded-xl bg-white p-4 sm:p-6 shadow-sm">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-lg font-semibold text-slate-800">
+      Editar Paciente
+    </h2>
+
+    <button
+      pButton
+      type="button"
+      class="p-button p-component p-button-text"
+      icon="pi pi-arrow-left"
+      label="Volver"
+      (click)="cancelar()">
+    </button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="grid grid-cols-12 gap-3 text-sm">
+    <!-- NOMBRE -->
+    <div class="col-span-12 md:col-span-6">
+      <label for="nombre" class="block mb-1 text-sm font-medium text-slate-700">Nombre</label>
+      <input
+        id="nombre"
+        type="text"
+        pInputText
+        formControlName="nombre"
+        placeholder="Ej. Ana"
+        [ngClass]="{'p-invalid': form.get('nombre')?.invalid && form.get('nombre')?.touched}" />
+    </div>
+
+    <!-- APELLIDO -->
+    <div class="col-span-12 md:col-span-6">
+      <label for="apellido" class="block mb-1 text-sm font-medium text-slate-700">Apellido</label>
+      <input
+        id="apellido"
+        type="text"
+        pInputText
+        formControlName="apellido"
+        placeholder="Ej. Pérez"
+        [ngClass]="{'p-invalid': form.get('apellido')?.invalid && form.get('apellido')?.touched}" />
+    </div>
+
+    <!-- TIPO DOCUMENTO -->
+    <div class="col-span-12 md:col-span-4">
+      <label for="tpdocumento" class="block mb-1 text-sm font-medium text-slate-700">Tipo Doc.</label>
+      <p-select
+        inputId="tpdocumento"
+        formControlName="tpdocumento"
+        [options]="tpDocOptions"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Seleccione">
+      </p-select>
+    </div>
+
+    <!-- DOCUMENTO -->
+    <div class="col-span-12 md:col-span-4">
+      <label for="documento" class="block mb-1 text-sm font-medium text-slate-700">Documento</label>
+      <input
+        id="documento"
+        type="text"
+        pInputText
+        formControlName="documento"
+        placeholder="Número de documento"
+        [ngClass]="{'p-invalid': form.get('documento')?.invalid && form.get('documento')?.touched}" />
+    </div>
+
+    <!-- SEXO -->
+    <div class="col-span-12 md:col-span-4">
+      <label for="sexo" class="block mb-1 text-sm font-medium text-slate-700">Sexo</label>
+      <p-select
+        inputId="sexo"
+        formControlName="sexo"
+        [options]="sexoOptions"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Seleccione">
+      </p-select>
+    </div>
+
+    <!-- TELÉFONO -->
+    <div class="col-span-12 md:col-span-4">
+      <label for="telefono" class="block mb-1 text-sm font-medium text-slate-700">Teléfono</label>
+      <input
+        id="telefono"
+        type="text"
+        pInputText
+        formControlName="telefono"
+        placeholder="Ej. 3001234567"
+        [ngClass]="{'p-invalid': form.get('telefono')?.invalid && form.get('telefono')?.touched}" />
+    </div>
+
+    <!-- EPS -->
+    <div class="col-span-12 md:col-span-4">
+      <label for="eps" class="block mb-1 text-sm font-medium text-slate-700">EPS</label>
+      <p-select
+        inputId="eps"
+        formControlName="eps"
+        [options]="epsOptions"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Seleccione">
+      </p-select>
+    </div>
+
+    <!-- CORREO -->
+    <div class="col-span-12 md:col-span-4">
+      <label for="correo" class="block mb-1 text-sm font-medium text-slate-700">Correo</label>
+      <input
+        id="correo"
+        type="email"
+        pInputText
+        formControlName="correo"
+        placeholder="ejemplo@correo.com"
+        [ngClass]="{'p-invalid': form.get('correo')?.invalid && form.get('correo')?.touched}" />
+    </div>
+
+    <!-- ESTADO -->
+    <div class="col-span-12 md:col-span-4">
+      <label for="status" class="block mb-1 text-sm font-medium text-slate-700">Estado</label>
+      <p-select
+        inputId="status"
+        formControlName="status"
+        [options]="statusOptions"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Seleccione">
+      </p-select>
+    </div>
+
+    <!-- BOTONES -->
+    <div class="col-span-12 flex justify-end gap-2 mt-4">
+      <button
+        pButton
+        type="button"
+        class="p-button-text"
+        label="Cancelar"
+        (click)="cancelar()">
+      </button>
+
+      <button
+        pButton
+        type="submit"
+        label="Guardar cambios"
+        [disabled]="loading || form.invalid">
+      </button>
+    </div>
+  </form>
+</div>
+
+<p-toast></p-toast>

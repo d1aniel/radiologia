@@ -1,3 +1,6 @@
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
 <div class="mx-auto w-full max-w-[1100px] p-4 sm:p-6">
   <div class="mb-4 flex items-center justify-between">
     <h2 class="text-lg font-semibold text-slate-800">Pagos</h2>
@@ -6,7 +9,14 @@
     </a>
   </div>
 
-  <p-table [value]="payments" dataKey="id" class="shadow-sm rounded-xl overflow-hidden">
+  <p-table
+    [value]="(payments$ | async) || []"
+    [loading]="(loading$ | async) ?? true"
+    dataKey="id"
+    class="shadow-sm rounded-xl overflow-hidden"
+    [tableStyle]="{ 'min-width': '60rem' }"
+    [rowTrackBy]="trackById"
+  >
     <ng-template pTemplate="header">
       <tr>
         <th class="text-sm">ID</th>
@@ -31,15 +41,43 @@
         <td class="text-sm">
           <p-tag [severity]="colorEstado(row.estado)" [value]="row.estado"></p-tag>
         </td>
-        <td class="text-right">
-          <button pButton type="button" label="Eliminar" (click)="onDelete(row.id)" class="p-button-danger p-button-sm"></button>
+        <td class="text-right space-x-1">
+          <button
+            pButton
+            type="button"
+            icon="pi pi-pencil"
+            class="p-button-rounded p-button-text p-button-warning"
+            [routerLink]="['/payments/update', row.id]"
+            pTooltip="Editar"
+          ></button>
+
+
+          <button
+            pButton
+            type="button"
+            icon="pi pi-ban"
+            class="p-button-rounded p-button-text p-button-secondary"
+            (click)="deletePaymentAdv(row)"
+            pTooltip="Marcar como VOID"
+          ></button>
+
+          <button
+            pButton
+            type="button"
+            icon="pi pi-trash"
+            class="p-button-rounded p-button-text p-button-danger"
+            (click)="deletePayment(row)"
+            pTooltip="Eliminar definitivamente"
+          ></button>
         </td>
       </tr>
     </ng-template>
 
     <ng-template pTemplate="emptymessage">
       <tr>
-        <td colspan="8" class="text-center py-6 text-sm text-slate-500">Sin pagos registrados.</td>
+        <td colspan="8" class="text-center py-6 text-sm text-slate-500">
+          Sin pagos registrados.
+        </td>
       </tr>
     </ng-template>
   </p-table>

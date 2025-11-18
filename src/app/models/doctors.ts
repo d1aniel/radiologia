@@ -2,7 +2,7 @@ export interface MedicoI {
   id: number;
   nombre: string;
   especialidad: string;
-  telefono: number;
+  telefono: string;
   correo: string;
   registro?: string;
   status: 'ACTIVATE' | 'INACTIVE';

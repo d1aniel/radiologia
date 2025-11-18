@@ -1,25 +1,32 @@
-<main class="flex flex-col h-screen">
-  <!-- Header fijo arriba -->
-  <header class="fixed top-0 left-0 right-0 z-50 h-1/5 bg-white border border-white">
-    <app-header></app-header>
+<main class="min-h-screen flex flex-col pt-16 pb-16">
+
+  <!-- HEADER fijo arriba -->
+  <header class="h-16 bg-white flex items-center w-full fixed top-0 left-0 right-0 z-50 border-b border-white">
+    <app-header class="w-full"></app-header>
   </header>
 
-  <!-- Cuerpo: aside + sección -->
-  <div class="flex flex-1 pt-[20vh] pb-[2vh]"> 
-    <!-- Aside -->
-    <aside class="w-1/5 border-4 border-white overflow-y-auto">
-      <app-aside></app-aside>
-    </aside>
+  <!-- ASIDE fijo -->
+  <aside
+    *ngIf="authService.isLoggedIn()"
+    class="fixed left-0 top-16 bottom-16 w-64 bg-white overflow-y-auto border-r border-white"
+  >
+    <app-aside></app-aside>
+  </aside>
 
-    <!-- Contenido -->
-    <section class="flex-1 border border-white overflow-y-auto">
-      <router-outlet></router-outlet>
-      
-    </section>
-  </div>
+  <!-- CONTENIDO -->
+  <section
+    class="flex-1 bg-white overflow-y-auto border-l border-white"
+    [class.ml-64]="authService.isLoggedIn()"
+  >
+    <router-outlet></router-outlet>
+  </section>
 
-  <!-- Footer fijo abajo -->
-  <footer class="fixed bottom-0 left-0 right-0 h-[2vh] bg-white border border-white flex items-center justify-center">
+  <!-- FOOTER fijo abajo -->
+  <footer
+    *ngIf="authService.isLoggedIn()"
+    class="h-16 bg-white flex items-center justify-center fixed bottom-0 left-0 right-0 z-50 border-t border-white"
+  >
     <app-footer></app-footer>
   </footer>
+
 </main>

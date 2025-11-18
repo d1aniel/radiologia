@@ -1,42 +1,101 @@
-<div class="card p-1">
-  <div class="flex flex-wrap gap-4 justify-end mb-2">
-    <p-button
+<div class="card p-8">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-2xl font-bold">Gestión de Pacientes</h2>
+
+    <button
+      pButton
       type="button"
+      class="p-button p-component bg-blue-500 hover:bg-blue-600 text-white"
+      icon="pi pi-plus"
       label="Nuevo Paciente"
-      icon="pi pi-user-plus"
-      [routerLink]="'/patients/create'">
-    </p-button>
+      [routerLink]="['/patients/create']">
+    </button>
   </div>
 
-  <p-table [value]="pacients" stripedRows [tableStyle]="{'min-width': '50rem'}">
-    <ng-template pTemplate="header">
-      <tr>
-        <th>id</th>
-        <th>nombre</th>
-        <th>apellido</th>
-        <th>tpdocumento</th>
-        <th>documento</th>
-        <th>Sexo</th>
-        <th>telefono</th>
-        <th>eps</th>
-        <th>correo</th>
-        <th>estado</th>
-      </tr>
-    </ng-template>
+  <!-- Usamos async pipe; derivamos loading del stream -->
+  <ng-container *ngIf="pacients$ | async as pacients">
+    <p-table
+      [value]="pacients"
+      [loading]="loading$ | async"
+      stripedRows
+      [tableStyle]="{'min-width': '50rem'}"
+      [paginator]="true"
+      [rows]="10"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros">
 
-    <ng-template pTemplate="body" let-pacient>
-      <tr>
-        <td>{{ pacient.id }}</td>
-        <td>{{ pacient.nombre }}</td>
-        <td>{{ pacient.apellido }}</td>
-        <td>{{ pacient.tpdocumento }}</td>
-        <td>{{ pacient.documento }}</td>
-        <td>{{ pacient.sexo }}</td>
-        <td>{{ pacient.telefono }}</td>
-        <td>{{ pacient.eps }}</td>
-        <td>{{ pacient.correo }}</td>
-        <td>{{ pacient.status }}</td>
-      </tr>
-    </ng-template>
-  </p-table>
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="text-left">ID</th>
+          <th class="text-left">Nombre</th>
+          <th class="text-left">Apellido</th>
+          <th class="text-left">Tipo Doc.</th>
+          <th class="text-left">Documento</th>
+          <th class="text-left">Sexo</th>
+          <th class="text-left">Teléfono</th>
+          <th class="text-left">EPS</th>
+          <th class="text-left">Correo</th>
+          <th class="text-left">Estado</th>
+          <th class="text-center">Acciones</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-pacient>
+        <tr>
+          <td>{{ pacient.id }}</td>
+          <td>{{ pacient.nombre }}</td>
+          <td>{{ pacient.apellido }}</td>
+          <td>{{ pacient.tpdocumento }}</td>
+          <td>{{ pacient.documento }}</td>
+          <td>{{ pacient.sexo }}</td>
+          <td>{{ pacient.telefono }}</td>
+          <td>{{ pacient.eps }}</td>
+          <td>{{ pacient.correo }}</td>
+          <td>
+            <span
+              class="px-2 py-1 rounded text-xs font-semibold"
+              [class]="pacient.status === 'ACTIVATE' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+              {{ pacient.status }}
+            </span>
+          </td>
+          <td class="text-center">
+            <div class="flex justify-center gap-2">
+              <button
+                pButton
+                type="button"
+                icon="pi pi-pencil"
+                class="p-button-rounded p-button-text p-button-warning"
+                [routerLink]="['/patients/update', pacient.id]"
+                pTooltip="Editar">
+              </button>
+
+
+              <button
+                pButton
+                type="button"
+                icon="pi pi-trash"
+                class="p-button-rounded p-button-text p-button-danger"
+                (click)="deletePatient(pacient)"
+                pTooltip="Eliminar físico">
+              </button>
+
+              <!-- 🔹 Botón de borrado lógico (solo si está ACTIVATE) -->
+              <button
+                *ngIf="pacient.status === 'ACTIVATE'"
+                pButton
+                type="button"
+                icon="pi pi-ban"
+                class="p-button-rounded p-button-text p-button-secondary"
+                (click)="deletePatientAdv(pacient)"
+                pTooltip="Marcar INACTIVE">
+              </button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </ng-container>
 </div>
+
+<p-confirmDialog></p-confirmDialog>
+<p-toast></p-toast>

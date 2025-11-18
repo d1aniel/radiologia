@@ -1,34 +1,96 @@
+// src/app/services/modalidad.service.ts
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { ModalidadI } from '../models/modalities';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-@Injectable({ providedIn: 'root' })
+import { AuthService } from '../services/auth';
+import { ModalidadI } from '../models/modalities'; // ajusta la ruta/nombre según tu proyecto
+
+@Injectable({
+  providedIn: 'root'
+})
 export class ModalidadService {
-  private subject = new BehaviorSubject<ModalidadI[]>([
-    { id: 1, nombre: 'RX',  descripcion: 'Radiografía convencional', activa: true },
-    { id: 2, nombre: 'TAC', descripcion: 'Tomografía computarizada', activa: true },
-    { id: 3, nombre: 'RM',  descripcion: 'Resonancia magnética',    activa: false },
-  ]);
+  private baseUrl = 'http://localhost:4000/api/modalidades';
 
-  modalidades$ = this.subject.asObservable();
-  private get value() { return this.subject.value; }
+  private modalidadesSubject = new BehaviorSubject<ModalidadI[]>([]);
+  public modalidades$ = this.modalidadesSubject.asObservable();
 
-  getAll(): ModalidadI[] { return this.value; }
-  getById(id: number) { return this.value.find(m => m.id === id); }
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) {}
 
-  add(payload: Omit<ModalidadI, 'id'>): ModalidadI {
-    const nextId = this.value.length ? Math.max(...this.value.map(x => x.id)) + 1 : 1;
-    const row: ModalidadI = { id: nextId, ...payload };
-    this.subject.next([...this.value, row]);
-    return row;
+  private getHeaders(): HttpHeaders {
+    let headers = new HttpHeaders();
+    const token = this.authService.getToken();
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+    return headers;
   }
 
-  update(id: number, changes: Partial<ModalidadI>): void {
-    const updated = this.value.map(m => m.id === id ? { ...m, ...changes, id } : m);
-    this.subject.next(updated);
+  // GET /api/modalidades  → { modalidades: ModalidadI[] }
+  getAllModalidades(): Observable<ModalidadI[]> {
+    return this.http
+      .get<{ modalidades: ModalidadI[] }>(this.baseUrl, { headers: this.getHeaders() })
+      .pipe(
+        map(resp => resp.modalidades ?? [])
+      );
   }
 
-  remove(id: number): void {
-    this.subject.next(this.value.filter(m => m.id !== id));
+  // GET /api/modalidades/:id → { modalidad: ModalidadI }
+  getModalidadById(id: number | string): Observable<ModalidadI> {
+    return this.http
+      .get<{ modalidad: ModalidadI }>(`${this.baseUrl}/${id}`, { headers: this.getHeaders() })
+      .pipe(
+        map(resp => resp.modalidad)
+      );
+  }
+
+  // POST /api/modalidades → { modalidad: ModalidadI }
+  createModalidad(data: Omit<ModalidadI, 'id'>): Observable<ModalidadI> {
+    return this.http
+      .post<{ modalidad: ModalidadI }>(this.baseUrl, data, { headers: this.getHeaders() })
+      .pipe(
+        map(resp => resp.modalidad)
+      );
+  }
+
+  // PATCH /api/modalidades/:id → { modalidad: ModalidadI }
+  updateModalidad(id: number | string, data: Partial<ModalidadI>): Observable<ModalidadI> {
+    return this.http
+      .patch<{ modalidad: ModalidadI }>(`${this.baseUrl}/${id}`, data, { headers: this.getHeaders() })
+      .pipe(
+        map(resp => resp.modalidad)
+      );
+  }
+
+  // DELETE /api/modalidades/:id → { message: string }
+  deleteModalidad(id: number | string): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(
+      `${this.baseUrl}/${id}`,
+      { headers: this.getHeaders() }
+    );
+  }
+
+  // DELETE lógico /api/modalidades/:id/logic → { message: string }
+  deleteModalidadAdv(id: number | string): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(
+      `${this.baseUrl}/${id}/logic`,
+      { headers: this.getHeaders() }
+    );
+  }
+
+  // ==== Manejo de estado local (igual que pacientes) ====
+
+  updateLocalModalidades(modalidades: ModalidadI[]): void {
+    this.modalidadesSubject.next(modalidades);
+  }
+
+  refreshModalidades(): void {
+    this.getAllModalidades().subscribe(modalidades => {
+      this.modalidadesSubject.next(modalidades);
+    });
   }
 }

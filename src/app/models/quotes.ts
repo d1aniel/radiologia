@@ -3,8 +3,8 @@ export type EstadoCita = 'PENDIENTE' | 'CONFIRMADA' | 'ATENDIDA' | 'CANCELADA';
 export interface CitaI {
   id: number;
 
-  paciente: string;      
-  modalidad: string;     
+  patient_id: number;          
+  technologist_id: number;     
   equipo: string;        
   tecnologo: string;     
 

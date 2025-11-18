@@ -1,19 +1,24 @@
+<!-- src/app/components/payments/createpayments/createpayments.html -->
+
+<p-toast></p-toast>
+
 <div class="mx-auto w-full max-w-[880px] rounded-xl bg-white p-4 sm:p-6 shadow-sm">
   <h2 class="mb-4 text-lg font-semibold text-slate-800">Registrar Pago</h2>
 
-  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="grid grid-cols-12 gap-3">
+  <form [formGroup]="form" (ngSubmit)="submit()" class="grid grid-cols-12 gap-3">
     <!-- PACIENTE -->
     <div class="col-span-12">
       <label class="block mb-1 text-sm font-medium text-slate-700">Paciente</label>
       <p-select
-        [options]="pacientesOptions"
+        [options]="pacientesOpts"
         optionLabel="label"
         optionValue="value"
         formControlName="pacienteId"
         placeholder="Seleccione paciente"
         class="w-full">
       </p-select>
-      <small class="block mt-1 text-xs text-red-600" *ngIf="f['pacienteId'].touched && f['pacienteId'].invalid">
+      <small class="block mt-1 text-xs text-red-600"
+             *ngIf="f['pacienteId'].touched && f['pacienteId'].invalid">
         El paciente es obligatorio.
       </small>
     </div>
@@ -28,11 +33,20 @@
     <!-- MONTO -->
     <div class="col-span-12 md:col-span-6">
       <label class="block mb-1 text-sm font-medium text-slate-700">Monto</label>
-      <p-inputnumber formControlName="monto" [useGrouping]="true" inputId="monto" class="w-full"></p-inputnumber>
+      <p-inputnumber
+        formControlName="monto"
+        [useGrouping]="true"
+        inputId="monto"
+        class="w-full">
+      </p-inputnumber>
       <small class="block mt-1 text-xs text-red-600"
-             *ngIf="f['monto'].touched && f['monto'].errors?.['required']">El monto es obligatorio.</small>
+             *ngIf="f['monto'].touched && f['monto'].errors?.['required']">
+        El monto es obligatorio.
+      </small>
       <small class="block mt-1 text-xs text-red-600"
-             *ngIf="f['monto'].touched && f['monto'].errors?.['min']">El monto debe ser mayor a 0.</small>
+             *ngIf="f['monto'].touched && f['monto'].errors?.['min']">
+        El monto debe ser mayor a 0.
+      </small>
     </div>
 
     <!-- METODO -->
@@ -47,7 +61,9 @@
         class="w-full">
       </p-select>
       <small class="block mt-1 text-xs text-red-600"
-             *ngIf="f['metodo'].touched && f['metodo'].invalid">Seleccione un método.</small>
+             *ngIf="f['metodo'].touched && f['metodo'].invalid">
+        Seleccione un método.
+      </small>
     </div>
 
     <!-- FECHA -->
@@ -60,13 +76,30 @@
         styleClass="w-full">
       </p-datepicker>
       <small class="block mt-1 text-xs text-red-600"
-             *ngIf="f['fecha'].touched && f['fecha'].invalid">La fecha es obligatoria.</small>
+             *ngIf="f['fecha'].touched && f['fecha'].invalid">
+        La fecha es obligatoria.
+      </small>
     </div>
 
     <!-- BOTONES -->
-    <div class="col-span-12 flex gap-2 pt-2">
-      <button pButton type="submit" label="Guardar" class="p-button-success"></button>
-      <button pButton type="button" label="Cancelar" class="p-button-text" (click)="onCancel()"></button>
+    <div class="col-span-12 flex gap-2 pt-2 justify-end">
+      <button
+        pButton
+        type="button"
+        label="Cancelar"
+        class="p-button-text"
+        (click)="cancelar()">
+      </button>
+
+      <button
+        pButton
+        type="submit"
+        label="Guardar"
+        icon="pi pi-check"
+        class="p-button-success"
+        [disabled]="form.invalid || loading"
+        [loading]="loading">
+      </button>
     </div>
   </form>
 </div>

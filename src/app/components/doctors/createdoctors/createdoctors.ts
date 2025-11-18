@@ -1,25 +1,35 @@
-import { Component } from '@angular/core';
+// src/app/components/doctors/createdoctors/createdoctors.ts
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 
-import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { SelectModule } from 'primeng/select';
+import { InputTextModule } from 'primeng/inputtext';
+import { Select } from 'primeng/select';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
-import { MedicosService } from '../../../services/doctor';
+import { MedicoService } from '../../../services/doctor';
 
 @Component({
-  selector: 'app-create-medico',
+  selector: 'app-create-doctors',
   standalone: true,
   imports: [
-    CommonModule, ReactiveFormsModule, RouterModule,
-    InputTextModule, ButtonModule, SelectModule
+    CommonModule,
+    ReactiveFormsModule,
+    ButtonModule,
+    InputTextModule,
+    Select,
+    ToastModule
   ],
-  templateUrl: './createdoctors.html'
+  templateUrl: './createdoctors.html',
+  styleUrls: ['./createdoctors.css'],
+  providers: [MessageService]
 })
 export class Createdoctors {
   form: FormGroup;
+  loading = false;
 
   especialidades = [
     { label: 'Radiología General', value: 'Radiología General' },
@@ -32,7 +42,8 @@ export class Createdoctors {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private medicosService: MedicosService
+    private medicoService: MedicoService,
+    private messageService: MessageService
   ) {
     this.form = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(2)]],
@@ -40,26 +51,76 @@ export class Createdoctors {
       telefono: ['', [Validators.required, Validators.pattern(/^\d{7,15}$/)]],
       correo: ['', [Validators.required, Validators.email]],
       registro: [''] // opcional
+      // status no es necesario: backend lo fuerza a "ACTIVATE"
     });
   }
 
+  submit(): void {
+    if (this.form.valid) {
+      this.loading = true;
+      const payload = this.form.value;
+
+      this.medicoService.createMedico(payload).subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Éxito',
+            detail: 'Médico creado correctamente'
+          });
+          setTimeout(() => {
+            // ajusta si tu listado es otra ruta
+            this.router.navigate(['/doctors/show']);
+          }, 800);
+        },
+        error: (error) => {
+          console.error('Error creating doctor:', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: error?.error?.error || 'Error al crear el médico'
+          });
+          this.loading = false;
+        }
+      });
+    } else {
+      this.markFormGroupTouched();
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Advertencia',
+        detail: 'Por favor complete todos los campos requeridos'
+      });
+    }
+  }
+
+  cancelar(): void {
+    // ajusta si tu listado es otra ruta
+    this.router.navigate(['/doctors/show']);
+  }
+
+  private markFormGroupTouched(): void {
+    Object.keys(this.form.controls).forEach(key => {
+      this.form.get(key)?.markAsTouched();
+    });
+  }
+
+  getFieldError(fieldName: string): string {
+    const field = this.form.get(fieldName);
+    if (field?.errors && field?.touched) {
+      if (field.errors['required']) return `${fieldName} es requerido`;
+      if (field.errors['email']) return 'Correo no válido';
+      if (field.errors['minlength']) {
+        return `${fieldName} debe tener al menos ${field.errors['minlength'].requiredLength} caracteres`;
+      }
+      if (field.errors['pattern']) {
+        if (fieldName === 'telefono') return 'Teléfono debe tener entre 7 y 15 dígitos';
+        return 'Formato no válido';
+      }
+    }
+    return '';
+  }
+
+  // atajo para el template
   get f() {
     return this.form.controls;
-  }
-
-  onSubmit() {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
-    this.medicosService.addMedico({
-      ...this.form.value,
-      status: 'ACTIVATE'   // 🔹 por defecto todos los médicos nuevos estarán activos
-    });
-    this.router.navigate(['/doctors/show']);
-  }
-
-  onCancel() {
-    this.router.navigate(['/doctors/show']);
   }
 }

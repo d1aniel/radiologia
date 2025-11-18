@@ -1,48 +1,126 @@
-// src/app/features/citas/showcitas.ts
-import { Component } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { Observable } from 'rxjs';
-
+// src/app/components/quotes/showquotes/showquotes.ts
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
-import { TagModule } from 'primeng/tag';
-import { InputTextModule } from 'primeng/inputtext';
-import { FormsModule } from '@angular/forms'; 
+import { RouterModule } from '@angular/router';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
-import { CitaService } from '../../../services/quote';
-import { CitaI, EstadoCita } from '../../../models/quotes';
+import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
+import { catchError, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
+
+import { CitaI } from '../../../models/quotes';
+import { QuoteService } from '../../../services/quote';
 
 @Component({
-  selector: 'app-showcitas',
+  selector: 'app-show-quotes',
   standalone: true,
   imports: [
-    CommonModule, RouterModule, DatePipe,
-    TableModule, ButtonModule, TagModule, InputTextModule, FormsModule
+    CommonModule,
+    TableModule,
+    ButtonModule,
+    RouterModule,
+    ConfirmDialogModule,
+    ToastModule
   ],
-  templateUrl: './showquotes.html'
+  templateUrl: './showquotes.html',
+  styleUrls: ['./showquotes.css'],
+  encapsulation: ViewEncapsulation.None,
+  providers: [ConfirmationService, MessageService]
 })
-export class Showquotes {
-  citas$: Observable<CitaI[]>;
-  globalFilter = '';
+export class Showquotes implements OnInit {
+  private refresh$ = new BehaviorSubject<void>(undefined);
 
-  constructor(private citaService: CitaService) {
-    this.citas$ = this.citaService.citas$;
+  quotes$: Observable<CitaI[]> = this.refresh$.pipe(
+    switchMap(() =>
+      this.quoteService.getAllQuotes().pipe(
+        tap(q => this.quoteService.updateLocalQuotes(q)),
+        catchError(err => {
+          console.error('Error loading quotes:', err);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Error al cargar las citas'
+          });
+          return EMPTY;
+        })
+      )
+    ),
+    shareReplay(1)
+  );
+
+  loading$: Observable<boolean> = this.quotes$.pipe(
+    map(() => false),
+    startWith(true)
+  );
+
+  constructor(
+    private quoteService: QuoteService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
+  ) {}
+
+  ngOnInit(): void {}
+
+  trackById = (_: number, item: CitaI) => item.id;
+
+  deleteQuote(cita: CitaI): void {
+    this.confirmationService.confirm({
+      message: `¿Está seguro de eliminar la cita #${cita.id}?`,
+      header: 'Confirmar eliminación',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.quoteService.deleteQuote(cita.id).pipe(
+          tap(() => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Éxito',
+              detail: 'Cita eliminada correctamente'
+            });
+            this.refresh$.next();
+          }),
+          catchError(error => {
+            console.error('Error deleting quote:', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Error al eliminar la cita'
+            });
+            return EMPTY;
+          })
+        ).subscribe();
+      }
+    });
   }
 
-  tagSeverity(estado: EstadoCita) {
-    switch (estado) {
-      case 'PENDIENTE':  return 'warn';
-      case 'CONFIRMADA': return 'info';
-      case 'ATENDIDA':   return 'success';
-      case 'CANCELADA':  return 'danger';
-      default:           return 'info';
-    }
+  cancelQuote(cita: CitaI): void {
+    this.confirmationService.confirm({
+      message: `¿Marcar la cita #${cita.id} como CANCELADA?`,
+      header: 'Confirmar cancelación',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.quoteService.deleteQuoteAdv(cita.id).pipe(
+          tap(() => {
+            this.messageService.add({
+              severity: 'info',
+              summary: 'Actualizado',
+              detail: 'Cita marcada como CANCELADA'
+            });
+            this.refresh$.next();
+          }),
+          catchError(error => {
+            console.error('Error cancelando cita:', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'No se pudo cancelar la cita'
+            });
+            return EMPTY;
+          })
+        ).subscribe();
+      }
+    });
   }
-
-  get filtered(): CitaI[] {
-    return this.citaService.search(this.globalFilter);
-  }
-
-  delete(row: CitaI) { this.citaService.remove(row.id); }
 }

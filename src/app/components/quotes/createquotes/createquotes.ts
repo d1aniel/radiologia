@@ -1,75 +1,194 @@
-// src/app/features/citas/createcitas.ts
-import { Component, inject } from '@angular/core';
+// src/app/components/quotes/createquotes/createquotes.ts
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { InputTextModule } from 'primeng/inputtext';
-import { SelectModule } from 'primeng/select';
 import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
 import { DatePickerModule } from 'primeng/datepicker';
-import { TextareaModule } from 'primeng/textarea';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+import { Select } from 'primeng/select';
 
-import { CitaService } from '../../../services/quote';
-import { EstadoCita } from '../../../models/quotes';
+import { AuthService } from '../../../services/auth';
+import { QuoteService } from '../../../services/quote';
+
+type Opt = { label: string; value: number | string | null };
 
 @Component({
-  selector: 'app-createcitas',
+  selector: 'app-create-quotes',
   standalone: true,
   imports: [
-    CommonModule, ReactiveFormsModule, RouterModule,
-    InputTextModule, SelectModule, ButtonModule, DatePickerModule, TextareaModule
+    CommonModule,
+    ReactiveFormsModule,
+    ButtonModule,
+    InputTextModule,
+    DatePickerModule,
+    ToastModule,
+    Select
   ],
-  templateUrl: './createquotes.html'
+  templateUrl: './createquotes.html',
+  styleUrls: ['./createquotes.css'],
+  providers: [MessageService]
 })
-export class Createquotes {
-  private fb = inject(FormBuilder);
-  private router = inject(Router);
-  private citaService = inject(CitaService);
+export class Createquotes implements OnInit {
+  form!: FormGroup;
+  loading = false;
 
-  modalidades = [
-    { label: 'Rayos X (RX)', value: 'RX' },
-    { label: 'Tomografía (TAC)', value: 'TAC' },
-    { label: 'Resonancia (RM)', value: 'RM' }
-  ];
+  // Combos
+  patients: Opt[] = [];
+  technologists: Opt[] = [];
+  modalities: Opt[] = [];
+  teams: Opt[] = [];
 
-  estados: { label: string; value: EstadoCita }[] = [
-    { label: 'Pendiente',  value: 'PENDIENTE'  },
-    { label: 'Confirmada', value: 'CONFIRMADA' },
-    { label: 'Atendida',   value: 'ATENDIDA'   },
-    { label: 'Cancelada',  value: 'CANCELADA'  }
-  ];
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private http: HttpClient,
+    private auth: AuthService,
+    private citaService: QuoteService,
+    private messageService: MessageService
+  ) {}
 
-  form = this.fb.group({
-    paciente:   ['', [Validators.required, Validators.minLength(2)]],
-    modalidad:  ['', Validators.required],
-    equipo:     ['', Validators.required],
-    fechaHora:  [new Date(), Validators.required],  // DatePicker usa Date
-    tecnologo:  ['', Validators.required],
-    motivo:     ['', [Validators.required, Validators.minLength(5)]],
-    estado:     ['PENDIENTE' as EstadoCita, Validators.required]
-  });
-
-  get f() { return this.form.controls; }
-
-  onSubmit() {
-    if (this.form.invalid) { this.form.markAllAsTouched(); return; }
-    const v = this.form.value;
-
-    this.citaService.add({
-      paciente:  v.paciente!,
-      modalidad: v.modalidad!,
-      equipo:    v.equipo!,
-      fechaHora: (v.fechaHora as Date).toISOString(), // Date -> ISO
-      tecnologo: v.tecnologo!,
-      motivo:    v.motivo!,
-      estado:    v.estado!
+  ngOnInit(): void {
+    this.form = this.fb.group({
+      patient_id: [null, Validators.required],
+      technologist_id: [null, Validators.required],
+      modalidad: [null, Validators.required],
+      equipo: [null, Validators.required],
+      fechaHora: [new Date(), Validators.required],
+      motivo: ['', [Validators.required, Validators.minLength(3)]]
+      // 👈 ya no hay 'estado' en el formulario
     });
 
+    this.loadCombos();
+  }
+
+  /* ========== Helpers ========== */
+
+  private headers(): HttpHeaders {
+    let h = new HttpHeaders();
+    const t = this.auth.getToken?.();
+    if (t) h = h.set('Authorization', `Bearer ${t}`);
+    return h;
+  }
+
+  private loadCombos(): void {
+    // Pacientes
+    this.http.get<any>('http://localhost:4000/api/pacientes', { headers: this.headers() })
+      .subscribe({
+        next: (data) => {
+          const list = Array.isArray(data) ? data : (data.patients || data);
+          this.patients = (list || []).map((p: any) => ({
+            label: `${p.nombre} ${p.apellido}${p.documento ? ' (' + p.documento + ')' : ''}`,
+            value: p.id
+          }));
+        },
+        error: () => {}
+      });
+
+    // Tecnólogos
+    this.http.get<any>('http://localhost:4000/api/tecnologos', { headers: this.headers() })
+      .subscribe({
+        next: (data) => {
+          const list = Array.isArray(data) ? data : (data.technologists || []);
+          this.technologists = (list || []).map((t: any) => ({
+            label: `${t.nombre} - ${t.especialidad}`,
+            value: t.id
+          }));
+        },
+        error: () => {}
+      });
+
+    // Modalidades
+    this.http.get<any>('http://localhost:4000/api/modalidades', { headers: this.headers() })
+      .subscribe({
+        next: (data) => {
+          const list = Array.isArray(data) ? data : (data.modalidades || []);
+          this.modalities = (list || []).map((m: any) => ({
+            label: `${m.nombre} - ${m.descripcion ?? ''}`,
+            value: m.nombre
+          }));
+        },
+        error: () => {}
+      });
+
+    // Equipos
+    this.http.get<any>('http://localhost:4000/api/equipos', { headers: this.headers() })
+      .subscribe({
+        next: (data) => {
+          const list = Array.isArray(data) ? data : (data.teams || []);
+          this.teams = (list || []).map((t: any) => ({
+            label: `${t.nombre} - ${t.ubicacion} - ${t.estado}`,
+            value: t.nombre
+          }));
+        },
+        error: () => {}
+      });
+  }
+
+  submit(): void {
+    if (this.form.invalid) {
+      this.markAllTouched();
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Campos requeridos',
+        detail: 'Revisa el formulario.'
+      });
+      return;
+    }
+
+    const v = this.form.value;
+
+    const payload: any = {
+      patient_id: v.patient_id,
+      technologist_id: v.technologist_id,
+      modalidad: v.modalidad,
+      equipo: v.equipo,
+      fechaHora: (v.fechaHora instanceof Date)
+        ? v.fechaHora.toISOString()
+        : v.fechaHora,
+      motivo: v.motivo,
+      estado: 'PENDIENTE' // 👈 SIEMPRE pendiente al crear
+    };
+
+    this.loading = true;
+    this.citaService.createQuote(payload).subscribe({
+      next: (quote) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: `Cita #${quote.id} creada`
+        });
+        setTimeout(() => this.router.navigate(['/quotes/show']), 700);
+      },
+      error: (err) => {
+        console.error('Error creating quote:', err);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: err?.error?.error || 'No se pudo crear la cita'
+        });
+        this.loading = false;
+      }
+    });
+  }
+
+  cancelar(): void {
     this.router.navigate(['/quotes/show']);
   }
 
-  onCancel() {
-    this.router.navigate(['/quotes/show']);
+  getError(field: string): string {
+    const c = this.form.get(field);
+    if (!c || !c.touched || !c.errors) return '';
+    if (c.errors['required']) return 'Campo requerido';
+    if (c.errors['minlength']) return `Mínimo ${c.errors['minlength'].requiredLength} caracteres`;
+    return 'Valor no válido';
+  }
+
+  private markAllTouched(): void {
+    Object.values(this.form.controls).forEach(c => c.markAsTouched());
   }
 }

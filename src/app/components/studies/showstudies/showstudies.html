@@ -1,55 +1,98 @@
+<!-- src/app/components/studies/showstudies/showstudies.html -->
+
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
 <div class="card p-4 max-w-screen-xl mx-auto">
   <div class="flex items-center justify-between mb-3">
-    <h2 class="text-xl font-semibold">Estudios</h2>
+    <h2 class="text-xl font-semibold text-slate-800">Estudios</h2>
+
     <a pButton label="Nuevo Estudio" icon="pi pi-plus" routerLink="/studies/create"></a>
   </div>
 
   <p-table
     [value]="(studies$ | async) || []"
+    [loading]="loading$ | async"
+    dataKey="id"
+    [rowHover]="true"
     [paginator]="true"
     [rows]="10"
-    [rowsPerPageOptions]="[5,10,20]"
-    [tableStyle]="{'min-width':'70rem'}"
+    [rowsPerPageOptions]="[10,20,50]"
     responsiveLayout="scroll"
-    stripedRows
-    sortMode="multiple">
-
+    styleClass="p-datatable-sm"
+  >
     <ng-template pTemplate="header">
       <tr>
-        <th pSortableColumn="paciente">Paciente <p-sortIcon field="paciente"/></th>
-        <th pSortableColumn="modalidad">Modalidad <p-sortIcon field="modalidad"/></th>
-        <th pSortableColumn="equipo">Equipo <p-sortIcon field="equipo"/></th>
-        <th pSortableColumn="fechaHora">Fecha/Hora <p-sortIcon field="fechaHora"/></th>
-        <th pSortableColumn="prioridad">Prioridad <p-sortIcon field="prioridad"/></th>
-        <th>Motivo / Indicación</th>
-        <th pSortableColumn="tecnologo" class="hidden lg:table-cell">Tecnólogo</th>
-        <th pSortableColumn="medico" class="hidden lg:table-cell">Médico</th>
+        <th style="width: 80px">#ID</th>
+        <th>Paciente</th>
+        <th>Modalidad</th>
+        <th>Equipo</th>
+        <th>Médico</th>
+        <th>Tecnólogo</th>
+        <th>Fecha/Hora</th>
+        <th>Prioridad</th>
         <th>Etiquetas</th>
-        <th class="w-28 text-center">Acciones</th>
+        <th style="width: 220px; text-align:center">Acciones</th>
       </tr>
     </ng-template>
 
     <ng-template pTemplate="body" let-row>
       <tr>
-        <td>{{ row.paciente }}</td>
-        <td>{{ row.modalidad }}</td>
-        <td>{{ row.equipo }}</td>
-        <td>{{ row.fechaHora | date:'yyyy-MM-dd HH:mm' }}</td>
-        <td>
-          <p-tag [value]="row.prioridad" [severity]="severity(row.prioridad)"></p-tag>
-        </td>
-        <td class="max-w-[20rem] truncate" title="{{ row.motivo }}">{{ row.motivo }}</td>
-        <td class="hidden lg:table-cell">{{ row.tecnologo }}</td>
-        <td class="hidden lg:table-cell">{{ row.medico }}</td>
-        <td>
-          <div class="flex flex-wrap gap-1">
-            <!-- 🔹 Usamos labelNames(row) para mostrar nombres en lugar de IDs -->
-            <p-chip *ngFor="let name of labelNames(row)" [label]="name"></p-chip>
+        <td>{{ row.id }}</td>
+        <td>{{ fullPatientName(row) }}</td>
+        <td>{{ modalityName(row) }}</td>
+        <td>{{ teamName(row) }}</td>
+        <td>{{ doctorName(row) }}</td>
+        <td>{{ technologistName(row) }}</td>
+        <td>{{ row.fechaHora | date:'short' }}</td>
+        <td>{{ row.prioridad }}</td>
+        <td>{{ labelsCount(row) }}</td>
+
+        <td class="text-center">
+          <div class="flex justify-center gap-2">
+
+            
+
+            <!-- Editar -->
+            <button
+              pButton
+              type="button"
+              icon="pi pi-pencil"
+              class="p-button-rounded p-button-text p-button-warning"
+              [routerLink]="['/studies/update', row.id]"
+              pTooltip="Editar">
+            </button>
+
+
+            <!-- 🔴 Eliminación FÍSICA -->
+            <button
+              pButton
+              type="button"
+              icon="pi pi-trash"
+              class="p-button-rounded p-button-text p-button-danger"
+              (click)="deleteStudy(row)"
+              pTooltip="Eliminar físico">
+            </button>
+
+            <!-- 🟡 Borrado lógico (solo si está ACTIVATE) -->
+            <button
+              *ngIf="row.status === 'ACTIVE' || row.status === 'ACTIVATE'"
+              pButton
+              type="button"
+              icon="pi pi-ban"
+              class="p-button-rounded p-button-text p-button-secondary"
+              (click)="deleteStudyAdv(row)"
+              pTooltip="Marcar INACTIVE">
+            </button>
+
           </div>
         </td>
-        <td class="flex gap-2 justify-center">
-          <button pButton icon="pi pi-trash" class="p-button-text p-button-danger" (click)="delete(row)"></button>
-        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="10">No hay estudios activos.</td>
       </tr>
     </ng-template>
   </p-table>

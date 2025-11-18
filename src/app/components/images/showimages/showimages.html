@@ -1,43 +1,174 @@
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
 <div class="mx-auto w-full max-w-[1100px] p-4 sm:p-6">
   <div class="mb-4 flex items-center justify-between">
     <h2 class="text-lg font-semibold text-slate-800">Imágenes de Estudios</h2>
-    <a routerLink="/images/create" class="p-button p-component">
+
+    <a routerLink="/images/create" class="p-button p-component p-button-sm p-button-success no-underline">
+      <span class="p-button-icon pi pi-plus"></span>
       <span class="p-button-label">Subir imagen</span>
     </a>
   </div>
 
-  <p-table [value]="images" [tableStyle]="{'min-width':'980px'}" class="text-sm">
-    <ng-template pTemplate="header">
-      <tr>
-        <th>Estudio</th>
-        <th>Tipo</th>
-        <th>Nombre / Serie</th>
-        <th># / Orden</th>
-        <th>Fecha carga</th>
-        <th>Tamaño</th>
-      </tr>
-    </ng-template>
+  <ng-container *ngIf="images$ | async as images">
+    <p-table
+      [value]="images"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[10,20,50]"
+      [loading]="loading$ | async"
+      [responsiveLayout]="'scroll'"
+      sortMode="multiple"
+      dataKey="id"
+      styleClass="p-datatable-sm"
+      [tableStyle]="{'min-width':'980px'}">
 
-    <ng-template pTemplate="body" let-img>
-      <tr>
-        <td>{{ getStudyLabel(img.estudioId) }}</td>
-        <td>{{ img.tipo }}</td>
-        <td>
-          <div class="flex flex-col">
-            <span class="font-medium">{{ img.nombreArchivo }}</span>
-            <small class="text-slate-500" *ngIf="img.serie">Serie: {{ img.serie }}</small>
-          </div>
-        </td>
-        <td>{{ img.orden ?? '-' }}</td>
-        <td>{{ img.fechaCarga | date:'short' }}</td>
-        <td>{{ fmtBytes(img.tamanoBytes) }}</td>
-      </tr>
-    </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="id"># <p-sortIcon field="id"></p-sortIcon></th>
+          <th pSortableColumn="estudioId">Estudio <p-sortIcon field="estudioId"></p-sortIcon></th>
+          <th pSortableColumn="tipo">Tipo <p-sortIcon field="tipo"></p-sortIcon></th>
+          <th pSortableColumn="nombreArchivo">Nombre / Serie <p-sortIcon field="nombreArchivo"></p-sortIcon></th>
+          <th pSortableColumn="orden"># / Orden <p-sortIcon field="orden"></p-sortIcon></th>
+          <th pSortableColumn="fechaCarga">Fecha carga <p-sortIcon field="fechaCarga"></p-sortIcon></th>
+          <th pSortableColumn="tamanoBytes">Tamaño <p-sortIcon field="tamanoBytes"></p-sortIcon></th>
+          <th class="text-right">Acciones</th>
+        </tr>
+      </ng-template>
 
-    <ng-template pTemplate="emptymessage">
-      <tr>
-        <td colspan="6" class="text-center py-6 text-slate-500">Aún no hay imágenes cargadas.</td>
-      </tr>
-    </ng-template>
-  </p-table>
+      <ng-template pTemplate="body" let-img>
+        <tr>
+          <td>{{ img.id }}</td>
+
+          <td>
+            <div class="text-slate-800 font-medium">{{ getStudyLabel(img.estudioId) }}</div>
+            <div class="text-xs text-slate-500">ID: {{ img.estudioId }}</div>
+          </td>
+
+          <td>
+            <span class="px-2 py-1 rounded text-xs font-medium"
+                  [ngClass]="{
+                    'bg-cyan-100 text-cyan-800': img.tipo === 'DICOM',
+                    'bg-emerald-100 text-emerald-800': img.tipo === 'PNG',
+                    'bg-indigo-100 text-indigo-800': img.tipo === 'JPG',
+                    'bg-amber-100 text-amber-800': img.tipo === 'Serie'
+                  }">
+              {{ img.tipo }}
+            </span>
+          </td>
+
+          <td class="break-all">
+            <div class="flex flex-col">
+              <span class="font-medium">{{ img.nombreArchivo }}</span>
+              <small class="text-slate-500" *ngIf="img.serie">Serie: {{ img.serie }}</small>
+              <small class="text-slate-500 break-all" *ngIf="img.url">{{ img.url }}</small>
+            </div>
+          </td>
+
+          <td>{{ img.orden ?? '—' }}</td>
+
+          <td>{{ img.fechaCarga | date:'yyyy-MM-dd HH:mm' }}</td>
+
+          <td>{{ fmtBytes(img.tamanoBytes) }}</td>
+
+          <td class="text-right">
+            <div class="flex justify-end gap-2">
+
+              <!-- 👁️ Botón para ver en modal (solo imagen JPG/PNG) -->
+              <button
+                pButton
+                type="button"
+                class="p-button-rounded p-button-text"
+                icon="pi pi-eye"
+                pTooltip="Ver imagen"
+                (click)="onPreview(img)"
+                [disabled]="!isPreviewable(img.tipo)">
+              </button>
+
+              <!-- 🌐 Botón para abrir en nueva pestaña -->
+              <button
+                pButton
+                type="button"
+                class="p-button-rounded p-button-text"
+                icon="pi pi-external-link"
+                pTooltip="Ver/Descargar en nueva pestaña"
+                (click)="onViewExternal(img)"
+                [disabled]="!img.url">
+              </button>
+
+              <a
+                pButton
+                type="button"
+                class="p-button-rounded p-button-text"
+                icon="pi pi-pencil"
+                pTooltip="Editar"
+                [routerLink]="['/images/update', img.id]">
+              </a>
+
+
+              <button
+                pButton
+                type="button"
+                class="p-button-rounded p-button-text p-button-warning"
+                icon="pi pi-ban"
+                pTooltip="Eliminar (Adv)"
+                (click)="deleteImageAdv(img)">
+              </button>
+
+              <button
+                pButton
+                type="button"
+                class="p-button-rounded p-button-text p-button-danger"
+                icon="pi pi-trash"
+                pTooltip="Eliminar físico"
+                (click)="deleteImage(img)">
+              </button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8" class="text-center py-6 text-slate-500">
+            Aún no hay imágenes cargadas.
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </ng-container>
 </div>
+
+<!-- 🪟 Dialog de vista previa -->
+<p-dialog
+  header="Vista previa de imagen"
+  [(visible)]="previewVisible"
+  [modal]="true"
+  [closable]="true"
+  [dismissableMask]="true"
+  [style]="{ width: '60vw' }"
+  *ngIf="previewImage">
+
+  <ng-container *ngIf="previewImage as img">
+    <div class="mb-2 text-sm text-slate-600">
+      <div class="font-medium">{{ img.nombreArchivo }}</div>
+      <div class="text-xs text-slate-500">
+        Estudio: {{ getStudyLabel(img.estudioId) }} (ID {{ img.estudioId }})
+      </div>
+    </div>
+
+    <div class="flex justify-center items-center">
+      <img
+        *ngIf="isPreviewable(img.tipo)"
+        [src]="getImageFullUrl(img)"
+        [alt]="img.nombreArchivo"
+        class="max-h-[70vh] max-w-full rounded shadow-sm" />
+
+      <p *ngIf="!isPreviewable(img.tipo)" class="text-sm text-slate-500">
+        Este tipo de archivo ({{ img.tipo }}) no se puede previsualizar aquí.
+        Puedes usar el botón de "Ver/Descargar" para abrirlo externamente.
+      </p>
+    </div>
+  </ng-container>
+</p-dialog>

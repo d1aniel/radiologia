@@ -1,10 +1,13 @@
 export type InformeEstado = 'BORRADOR' | 'FIRMADO';
 
-export interface InformeI {
+export interface InformeCreateI {
+  estudio_id: number;
+  estado: InformeEstado;
+  cuerpo: string;
+  medico_id: number;
+}
+
+export interface InformeI extends InformeCreateI {
   id: number;
-  estudioId: number;       
-  estado: InformeEstado;   
-  cuerpo: string;          
-  medicoId: number;        
-  fechaCreacion: string;   
+  fechaCreacion: string;
 }

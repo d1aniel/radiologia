@@ -1,88 +1,89 @@
-<!-- src/app/features/informes/createinforme.html -->
+<p-toast></p-toast>
+
 <div class="mx-auto w-full max-w-[880px] rounded-xl bg-white p-4 sm:p-6 shadow-sm">
   <h2 class="mb-4 text-lg font-semibold text-slate-800">Crear Informe</h2>
 
-  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="grid grid-cols-12 gap-3">
+  <form [formGroup]="form" (ngSubmit)="submit()" class="grid grid-cols-12 gap-3 text-sm">
 
     <!-- ESTUDIO -->
     <div class="col-span-12 md:col-span-6">
-      <label for="estudioId" class="block mb-1 text-sm font-medium text-slate-700">Estudio*</label>
-      <p-select
-        inputId="estudioId"
-        formControlName="estudioId"
-        [options]="estudiosOptions"
+      <label class="block mb-1 text-sm font-medium text-slate-700">Estudio*</label>
+     <p-select
+        formControlName="estudio_id"
+        [options]="estudios"
         optionLabel="label"
         optionValue="value"
         placeholder="Seleccione..."
-        class="w-full text-sm">
+        class="w-full">
       </p-select>
-      <small class="block mt-1 text-xs text-red-600"
-             *ngIf="f['estudioId'].touched && f['estudioId'].errors?.['required']">
-        El estudio es obligatorio.
+
+      <small class="block mt-1 text-xs text-red-600" *ngIf="getError('estudio_id')">
+        {{ getError('estudio_id') }}
       </small>
     </div>
 
     <!-- MÉDICO -->
     <div class="col-span-12 md:col-span-6">
-      <label for="medicoId" class="block mb-1 text-sm font-medium text-slate-700">Médico*</label>
+      <label class="block mb-1 text-sm font-medium text-slate-700">Médico*</label>
       <p-select
-        inputId="medicoId"
-        formControlName="medicoId"
-        [options]="medicosOptions"
+        formControlName="medico_id"
+        [options]="medicos"
         optionLabel="label"
         optionValue="value"
         placeholder="Seleccione..."
-        class="w-full text-sm">
+        class="w-full">
       </p-select>
-      <small class="block mt-1 text-xs text-red-600"
-             *ngIf="f['medicoId'].touched && f['medicoId'].errors?.['required']">
-        El médico es obligatorio.
+      <small class="block mt-1 text-xs text-red-600" *ngIf="getError('medico_id')">
+        {{ getError('medico_id') }}
       </small>
     </div>
 
     <!-- ESTADO -->
     <div class="col-span-12 md:col-span-4">
-      <label for="estado" class="block mb-1 text-sm font-medium text-slate-700">Estado*</label>
+      <label class="block mb-1 text-sm font-medium text-slate-700">Estado*</label>
       <p-select
-        inputId="estado"
         formControlName="estado"
-        [options]="estadoOptions"
+        [options]="estadoOpts"
         optionLabel="label"
         optionValue="value"
-        placeholder="Seleccione..."
-        class="w-full text-sm">
+        class="w-full">
       </p-select>
-      <small class="block mt-1 text-xs text-red-600"
-             *ngIf="f['estado'].touched && f['estado'].errors?.['required']">
-        El estado es obligatorio.
+      <small class="block mt-1 text-xs text-red-600" *ngIf="getError('estado')">
+        {{ getError('estado') }}
       </small>
     </div>
 
     <!-- CUERPO -->
     <div class="col-span-12">
-      <label for="cuerpo" class="block mb-1 text-sm font-medium text-slate-700">Cuerpo*</label>
-      <textarea id="cuerpo" formControlName="cuerpo" rows="8"
-                placeholder="Escribe el informe (puede ser texto/markdown)..."
-                class="w-full text-sm px-3 py-2 border rounded-md focus:outline-none focus:ring"></textarea>
-      <small class="block mt-1 text-xs text-red-600"
-             *ngIf="f['cuerpo'].touched && f['cuerpo'].errors?.['required']">
-        El cuerpo es obligatorio.
-      </small>
-      <small class="block mt-1 text-xs text-red-600"
-             *ngIf="f['cuerpo'].touched && f['cuerpo'].errors?.['minlength']">
-        Mínimo 10 caracteres.
+      <label class="block mb-1 text-sm font-medium text-slate-700">Cuerpo*</label>
+      <textarea
+        formControlName="cuerpo"
+        rows="8"
+        placeholder="Escribe el informe..."
+        class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring">
+      </textarea>
+      <small class="block mt-1 text-xs text-red-600" *ngIf="getError('cuerpo')">
+        {{ getError('cuerpo') }}
       </small>
     </div>
 
     <!-- ACCIONES -->
-    <div class="col-span-12">
-      <div class="mt-3 flex items-center justify-end gap-2">
-        <p-button label="Cancelar" severity="secondary" [size]="'small'"
-                  (onClick)="onCancel()" type="button"></p-button>
-        <p-button label="Guardar" icon="pi pi-check" [size]="'small'"
-                  type="submit" [disabled]="form.invalid"></p-button>
-      </div>
-    </div>
+    <div class="col-span-12 mt-2 flex gap-2 justify-end">
+      <button
+        pButton
+        type="button"
+        label="Cancelar"
+        class="p-button-text"
+        (click)="cancelar()">
+      </button>
 
+      <button
+        pButton
+        type="submit"
+        label="Crear"
+        icon="pi pi-check"
+        [disabled]="loading">
+      </button>
+    </div>
   </form>
 </div>

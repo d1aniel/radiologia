@@ -1,83 +1,185 @@
-// src/app/features/informes/createinforme.ts
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
-import { InputTextModule } from 'primeng/inputtext';
-import { ButtonModule } from 'primeng/button';
-import { SelectModule } from 'primeng/select';
-import { InformeService } from '../../../services/report';
-import { InformeEstado } from '../../../models/reports';
+import { Router } from '@angular/router';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-type OptionNum = { label: string; value: number };
-type OptionStr = { label: string; value: InformeEstado };
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+import { Select } from 'primeng/select';
+
+import { AuthService } from '../../../services/auth';
+import { ReportService } from '../../../services/report';
+import { InformeCreateI, InformeEstado } from '../../../models/reports';
+
+type Opt = { label: string; value: number };
 
 @Component({
-  selector: 'app-create-informe',
+  selector: 'app-create-reports',
   standalone: true,
   imports: [
-    CommonModule, ReactiveFormsModule, RouterModule,
-    InputTextModule, ButtonModule, SelectModule
+    CommonModule,
+    ReactiveFormsModule,
+    ButtonModule,
+    InputTextModule,
+    ToastModule,
+    Select
   ],
-  templateUrl: './createreports.html'
+  templateUrl: './createreports.html',
+  styleUrls: ['./createreports.css'],
+  providers: [MessageService]
 })
-export class Createreports {
-  form: FormGroup;
+export class Createreports implements OnInit {
+  form!: FormGroup;
+  loading = false;
 
-  // Reemplaza estos catálogos por tus services reales (StudiesService, DoctorsService)
-  estudiosOptions: OptionNum[] = [
-    { label: 'Estudio #1 – RX Tórax', value: 1 },
-    { label: 'Estudio #2 – TAC Abdomen', value: 2 },
-  ];
+  // Combos
+  estudios: Opt[] = [];
+  medicos: Opt[] = [];
 
-  medicosOptions: OptionNum[] = [
-    { label: 'Dr. Juan Pérez', value: 1 },
-    { label: 'Dra. Ana Gómez', value: 2 },
-  ];
-
-  estadoOptions: OptionStr[] = [
+  estadoOpts: { label: string; value: InformeEstado }[] = [
     { label: 'Borrador', value: 'BORRADOR' },
-    { label: 'Firmado',  value: 'FIRMADO' },
+    { label: 'Firmado', value: 'FIRMADO' }
   ];
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private informeService: InformeService
-  ) {
+    private http: HttpClient,
+    private auth: AuthService,
+    private reportService: ReportService,
+    private messageService: MessageService
+  ) {}
+
+  ngOnInit(): void {
     this.form = this.fb.group({
-      estudioId: [null, Validators.required],
-      medicoId:  [null, Validators.required],
-      estado:    ['BORRADOR' as InformeEstado, Validators.required],
-      cuerpo:    ['', [Validators.required, Validators.minLength(10)]],
+      estudio_id: [null, Validators.required],
+      medico_id: [null, Validators.required],
+      estado: ['BORRADOR' as InformeEstado, Validators.required],
+      cuerpo: ['', [Validators.required, Validators.minLength(10)]]
     });
+
+    this.loadCombos();
   }
 
-  get f() { return this.form.controls; }
+  /** ===== Helpers ===== */
 
-  onSubmit() {
+  private headers(): HttpHeaders {
+    let h = new HttpHeaders();
+    const t = this.auth.getToken?.();
+    if (t) h = h.set('Authorization', `Bearer ${t}`);
+    return h;
+  }
+
+  private loadCombos(): void {
+    // === ESTUDIOS ===
+    this.http.get<any>('http://localhost:4000/api/estudios', { headers: this.headers() })
+      .subscribe({
+        next: (data) => {
+          const list = Array.isArray(data) ? data : (data.studies || data.estudios || []);
+
+          this.estudios = (list || []).map((s: any) => {
+            const p =
+              s.patient ??
+              s.paciente_obj ??
+              null;
+
+            const nombrePaciente = p
+              ? `${p.nombre ?? ''} ${p.apellido ?? ''}`.trim()
+              : `Paciente #${s.patient_id}`;
+
+            return {
+              label: `${nombrePaciente} - Estudio #${s.id}`,
+              value: s.id
+            };
+          });
+        },
+        error: (err) => {
+          console.error('Error cargando estudios:', err);
+        }
+      });
+
+    // === MÉDICOS ===
+    this.http.get<any>('http://localhost:4000/api/doctores', { headers: this.headers() })
+      .subscribe({
+        next: (data) => {
+          const list = Array.isArray(data) ? data : (data.doctors || data.doctores || []);
+
+          this.medicos = (list || []).map((d: any) => {
+            const nombre = `${d.nombre ?? ''} ${d.apellido ?? ''}`.trim() || `Médico #${d.id}`;
+            const especialidad = d.especialidad ? ` - ${d.especialidad}` : '';
+            return {
+              label: `${nombre}${especialidad}`,
+              value: d.id
+            };
+          });
+        },
+        error: (err) => {
+          console.error('Error cargando doctores:', err);
+        }
+      });
+  }
+
+  getError(field: string): string {
+    const c = this.form.get(field);
+    if (!c || !c.touched || !c.errors) return '';
+    if (c.errors['required']) return 'Campo requerido';
+    if (c.errors['minlength']) return `Mínimo ${c.errors['minlength'].requiredLength} caracteres`;
+    return 'Valor no válido';
+  }
+
+  private markAllTouched(): void {
+    Object.values(this.form.controls).forEach(c => c.markAsTouched());
+  }
+
+  /** ===== Acciones ===== */
+
+  submit(): void {
     if (this.form.invalid) {
-      this.form.markAllAsTouched();
+      this.markAllTouched();
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Campos requeridos',
+        detail: 'Revisa el formulario.'
+      });
       return;
     }
 
-    const { estudioId } = this.form.value;
-    // Enforce 1:1 (un estudio no puede tener 2 informes)
-    const yaTiene = this.informeService.getByEstudioId(estudioId);
-    if (yaTiene) {
-      alert('Este estudio ya tiene un informe. Selecciona otro.');
-      return;
-    }
+    const v = this.form.value;
 
-    this.informeService.addInforme({
-      ...this.form.value
-      // el service setea id y fechaCreacion
+    const payload: InformeCreateI = {
+      estudio_id: v.estudio_id,
+      medico_id: v.medico_id,
+      estado: v.estado,
+      cuerpo: v.cuerpo
+    };
+
+    this.loading = true;
+
+    this.reportService.createReport(payload).subscribe({
+      next: (report) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: `Informe #${report.id} creado`
+        });
+        setTimeout(() => this.router.navigate(['/reports/show']), 700);
+      },
+      error: (err) => {
+        console.error('Error creando informe:', err);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: err?.error?.error || 'No se pudo crear el informe'
+        });
+        this.loading = false;
+      }
     });
-
-    this.router.navigate(['/reports/show']);
   }
 
-  onCancel() {
+  cancelar(): void {
     this.router.navigate(['/reports/show']);
   }
 }

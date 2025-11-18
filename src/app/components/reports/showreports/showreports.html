@@ -1,41 +1,105 @@
-<div class="mx-auto w-full max-w-[1100px] p-4 sm:p-6">
-  <div class="flex items-center justify-between mb-3">
-    <h2 class="text-lg font-semibold text-slate-800">Informes</h2>
-    <a routerLink="/reports/create" class="p-button p-component px-3 py-2 rounded-md">
-      <span class="p-button-label">Nuevo Informe</span>
-    </a>
+<div class="card p-8">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-2xl font-bold">Gestión de Informes</h2>
+
+    <button
+      pButton
+      type="button"
+      class="p-button p-component bg-blue-500 hover:bg-blue-600 text-white"
+      icon="pi pi-plus"
+      label="Nuevo Informe"
+      [routerLink]="['/reports/create']">
+    </button>
   </div>
 
-  <p-table [value]="filas" dataKey="id" class="text-sm">
-    <ng-template pTemplate="header">
-      <tr>
-        <th>ID</th>
-        <th>Estudio</th>
-        <th>Paciente</th>
-        <th>Médico</th>
-        <th>Estado</th>
-        <th>Fecha creación</th>
-        <th class="w-28 text-right">Acciones</th>
-      </tr>
-    </ng-template>
+  <!-- Usamos async pipe; derivamos loading del stream -->
+  <ng-container *ngIf="informes$ | async as informes">
+    <p-table
+      [value]="informes"
+      [loading]="loading$ | async"
+      stripedRows
+      [tableStyle]="{'min-width': '50rem'}"
+      [paginator]="true"
+      [rows]="10"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros">
 
-    <ng-template pTemplate="body" let-row>
-      <tr>
-        <td>{{ row.id }}</td>
-        <td>{{ row.estudioLabel }}</td>
-        <td>{{ row.pacienteNombre }}</td>
-        <td>{{ row.medicoNombre }}</td>
-        <td>
-          <p-tag [value]="row.estado"
-                 [severity]="row.estado === 'FIRMADO' ? 'success' : 'info'"></p-tag>
-        </td>
-        <td>{{ row.fechaCreacion | date:'short' }}</td>
-        <td class="text-right space-x-2">
-          <button pButton type="button" label="Borrar"
-                  (click)="borrar(row.id)"
-                  class="p-button-danger p-button-sm"></button>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="text-left">ID</th>
+          <th class="text-left">Estudio</th>
+          <th class="text-left">Médico</th>
+          <th class="text-left">Estado</th>
+          <th class="text-left">Fecha creación</th>
+          <th class="text-left">Resumen</th>
+          <th class="text-center">Acciones</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-inf>
+        <tr>
+          <td>{{ inf.id }}</td>
+          <td>#{{ inf.estudioId }}</td>
+          <td>Médico {{ inf.medicoId }}</td>
+
+          <td>
+            <span
+              class="px-2 py-1 rounded text-xs font-semibold"
+              [class]="inf.estado === 'FIRMADO'
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-blue-100 text-blue-800'">
+              {{ inf.estado }}
+            </span>
+          </td>
+
+          <td>
+            {{ inf.fechaCreacion | date:'short' }}
+          </td>
+
+          <td>
+            <!-- pequeño recorte del cuerpo -->
+            {{ inf.cuerpo | slice:0:40 }}{{ inf.cuerpo.length > 40 ? '…' : '' }}
+          </td>
+
+          <td class="text-center">
+            <div class="flex justify-center gap-2">
+              <!-- Editar -->
+              <button
+                pButton
+                type="button"
+                icon="pi pi-pencil"
+                class="p-button-rounded p-button-text p-button-warning"
+                [routerLink]="['/reports/update', inf.id]"
+                pTooltip="Editar">
+              </button>
+
+              <!-- Firmar (solo si está en BORRADOR) -->
+              <button
+                *ngIf="inf.estado === 'BORRADOR'"
+                pButton
+                type="button"
+                icon="pi pi-check"
+                class="p-button-rounded p-button-text p-button-success"
+                (click)="signReport(inf)"
+                pTooltip="Firmar informe">
+              </button>
+
+              <!-- Eliminar -->
+              <button
+                pButton
+                type="button"
+                icon="pi pi-trash"
+                class="p-button-rounded p-button-text p-button-danger"
+                (click)="deleteReport(inf)"
+                pTooltip="Eliminar informe">
+              </button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </ng-container>
 </div>
+
+<p-confirmDialog></p-confirmDialog>
+<p-toast></p-toast>
