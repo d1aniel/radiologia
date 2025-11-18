@@ -1,34 +1,34 @@
-// src/app/models/studies.ts
+
 
 export type Prioridad = 'BAJA' | 'MEDIA' | 'ALTA' | 'URGENTE';
 
-/** Payload para CREATE/UPDATE (coincide con req.body del controller) */
+
 export interface StudyCreateI {
-  // FKs requeridas
+  
   patient_id: number;
   modality_id: number;
   team_id: number;
 
-  // FKs opcionales
+  
   technologist_id?: number | null;
   medico_id?: number | null;
   quote_id?: number | null;
 
-  // Datos propios
-  fechaHora: string;            // ISO string
-  prioridad: Prioridad;         // 'BAJA' | 'MEDIA' | 'ALTA' | 'URGENTE'
+  
+  fechaHora: string;            
+  prioridad: Prioridad;         
   motivo: string;
   status?: 'ACTIVE' | 'INACTIVE';
 
-  // N:N opcional (IDs de labels). El controller lo acepta en POST/PUT.
+  
   labels?: number[];
 }
 
-/** Estructura que devuelve el backend (Study + relaciones del STUDY_INCLUDE) */
+
 export interface StudyReadI {
   id: number;
 
-  // FKs tal cual las guarda el backend
+  
   patient_id: number;
   modality_id: number;
   team_id: number;
@@ -36,13 +36,13 @@ export interface StudyReadI {
   medico_id: number | null;
   quote_id: number | null;
 
-  // Datos propios
-  fechaHora: string;            // el controller te lo devolverá serializado
+  
+  fechaHora: string;            
   prioridad: Prioridad;
   motivo: string;
   status: 'ACTIVE' | 'INACTIVE';
 
-  // Relaciones incluidas (alias EXACTOS del controller)
+  
   patient?: {
     id: number;
     nombre: string;
@@ -72,7 +72,7 @@ export interface StudyReadI {
 
   cita_obj?: {
     id: number;
-    // el controller ahora expone solo "id" en attributes; ajusta si luego añades más
+    
   } | null;
 
   imagenes?: Array<{
@@ -88,7 +88,7 @@ export interface StudyReadI {
   }>;
 }
 
-/** Wrappers EXACTOS que retorna el controller */
+
 export interface GetAllStudiesResponse {
   studies: StudyReadI[];
 }

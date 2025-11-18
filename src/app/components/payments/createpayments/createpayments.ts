@@ -1,4 +1,4 @@
-// src/app/components/payments/createpayments/createpayments.ts
+
 
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
@@ -61,16 +61,16 @@ export class Createpayments implements OnInit {
   ngOnInit(): void {
     this.form = this.fb.group({
       pacienteId: [null, Validators.required],
-      estudioId: [null], // opcional
+      estudioId: [null], 
       monto: [null, [Validators.required, Validators.min(1)]],
       metodo: ['EFECTIVO', Validators.required],
-      fecha: [new Date(), Validators.required] // Date; lo pasamos a YYYY-MM-DD
+      fecha: [new Date(), Validators.required] 
     });
 
     this.loadPacientes();
   }
 
-  /** ===== Helpers ===== */
+  
 
   private headers(): HttpHeaders {
     let h = new HttpHeaders();
@@ -104,14 +104,14 @@ export class Createpayments implements OnInit {
   }
 
   private toISODateOnly(d: Date): string {
-    // YYYY-MM-DD en zona local
+    
     const tzOff = d.getTimezoneOffset() * 60000;
     return new Date(d.getTime() - tzOff).toISOString().slice(0, 10);
   }
 
   get f() { return this.form.controls; }
 
-  /** ===== Acciones ===== */
+  
 
   submit(): void {
     if (this.form.invalid) {
@@ -132,7 +132,7 @@ export class Createpayments implements OnInit {
       monto: Number(v.monto),
       metodo: v.metodo as MetodoPago,
       fecha: this.toISODateOnly(v.fecha as Date)
-      // estado: se deja que el backend use el default "PAID"
+      
     };
 
     this.loading = true;

@@ -1,17 +1,17 @@
-// src/app/services/technologist.service.ts
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { TecnologoI } from '../models/technologists'; // ajusta ruta/nombre si difiere
+import { TecnologoI } from '../models/technologists'; 
 import { AuthService } from '../services/auth';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TechnologistService {
-  private baseUrl = 'http://localhost:4000/api/tecnologos'; // 👈 ajusta si tu endpoint es otro
+  private baseUrl = 'http://localhost:4000/api/tecnologos'; 
   private technologistsSubject = new BehaviorSubject<TecnologoI[]>([]);
   public technologists$ = this.technologistsSubject.asObservable();
 
@@ -29,7 +29,7 @@ export class TechnologistService {
     return headers;
   }
 
-  // GET /technologists  -> { technologists: [...] }
+  
   getAllTechnologists(): Observable<TecnologoI[]> {
     return this.http
       .get<{ technologists: TecnologoI[] }>(this.baseUrl, {
@@ -38,7 +38,7 @@ export class TechnologistService {
       .pipe(map(resp => resp.technologists));
   }
 
-  // GET /technologists/:id  -> { technologist: {...} }
+  
   getTechnologistById(id: number | string): Observable<TecnologoI> {
     return this.http
       .get<{ technologist: TecnologoI }>(`${this.baseUrl}/${id}`, {
@@ -47,14 +47,14 @@ export class TechnologistService {
       .pipe(map(resp => resp.technologist));
   }
 
-  // POST /technologists  -> devuelve el objeto creado
+  
   createTechnologist(technologist: TecnologoI): Observable<TecnologoI> {
     return this.http.post<TecnologoI>(this.baseUrl, technologist, {
       headers: this.getHeaders()
     });
   }
 
-  // PATCH /technologists/:id  -> devuelve el objeto actualizado
+  
   updateTechnologist(
     id: number | string,
     technologist: Partial<TecnologoI>
@@ -64,14 +64,14 @@ export class TechnologistService {
     });
   }
 
-  // DELETE físico /technologists/:id
+  
   deleteTechnologist(id: number | string): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(`${this.baseUrl}/${id}`, {
       headers: this.getHeaders()
     });
   }
 
-  // DELETE lógico /technologists/:id/logic
+  
   deleteTechnologistAdv(id: number | string): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(
       `${this.baseUrl}/${id}/logic`,
@@ -81,12 +81,12 @@ export class TechnologistService {
     );
   }
 
-  // Estado local
+  
   updateLocalTechnologists(technologists: TecnologoI[]): void {
     this.technologistsSubject.next(technologists);
   }
 
-  // Refrescar desde backend y actualizar el BehaviorSubject
+  
   refreshTechnologists(): void {
     this.getAllTechnologists().subscribe(technologists => {
       this.technologistsSubject.next(technologists);

@@ -35,7 +35,7 @@ export class Createreports implements OnInit {
   form!: FormGroup;
   loading = false;
 
-  // Combos
+  
   estudios: Opt[] = [];
   medicos: Opt[] = [];
 
@@ -64,7 +64,7 @@ export class Createreports implements OnInit {
     this.loadCombos();
   }
 
-  /** ===== Helpers ===== */
+  
 
   private headers(): HttpHeaders {
     let h = new HttpHeaders();
@@ -74,7 +74,7 @@ export class Createreports implements OnInit {
   }
 
   private loadCombos(): void {
-    // === ESTUDIOS ===
+    
     this.http.get<any>('http://localhost:4000/api/estudios', { headers: this.headers() })
       .subscribe({
         next: (data) => {
@@ -101,7 +101,7 @@ export class Createreports implements OnInit {
         }
       });
 
-    // === MÉDICOS ===
+    
     this.http.get<any>('http://localhost:4000/api/doctores', { headers: this.headers() })
       .subscribe({
         next: (data) => {
@@ -134,7 +134,7 @@ export class Createreports implements OnInit {
     Object.values(this.form.controls).forEach(c => c.markAsTouched());
   }
 
-  /** ===== Acciones ===== */
+  
 
   submit(): void {
     if (this.form.invalid) {

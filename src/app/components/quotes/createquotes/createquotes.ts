@@ -1,4 +1,4 @@
-// src/app/components/quotes/createquotes/createquotes.ts
+
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -37,7 +37,7 @@ export class Createquotes implements OnInit {
   form!: FormGroup;
   loading = false;
 
-  // Combos
+  
   patients: Opt[] = [];
   technologists: Opt[] = [];
   modalities: Opt[] = [];
@@ -60,13 +60,13 @@ export class Createquotes implements OnInit {
       equipo: [null, Validators.required],
       fechaHora: [new Date(), Validators.required],
       motivo: ['', [Validators.required, Validators.minLength(3)]]
-      // 👈 ya no hay 'estado' en el formulario
+      
     });
 
     this.loadCombos();
   }
 
-  /* ========== Helpers ========== */
+  
 
   private headers(): HttpHeaders {
     let h = new HttpHeaders();
@@ -76,7 +76,7 @@ export class Createquotes implements OnInit {
   }
 
   private loadCombos(): void {
-    // Pacientes
+    
     this.http.get<any>('http://localhost:4000/api/pacientes', { headers: this.headers() })
       .subscribe({
         next: (data) => {
@@ -89,7 +89,7 @@ export class Createquotes implements OnInit {
         error: () => {}
       });
 
-    // Tecnólogos
+    
     this.http.get<any>('http://localhost:4000/api/tecnologos', { headers: this.headers() })
       .subscribe({
         next: (data) => {
@@ -102,7 +102,7 @@ export class Createquotes implements OnInit {
         error: () => {}
       });
 
-    // Modalidades
+    
     this.http.get<any>('http://localhost:4000/api/modalidades', { headers: this.headers() })
       .subscribe({
         next: (data) => {
@@ -115,7 +115,7 @@ export class Createquotes implements OnInit {
         error: () => {}
       });
 
-    // Equipos
+    
     this.http.get<any>('http://localhost:4000/api/equipos', { headers: this.headers() })
       .subscribe({
         next: (data) => {
@@ -151,7 +151,7 @@ export class Createquotes implements OnInit {
         ? v.fechaHora.toISOString()
         : v.fechaHora,
       motivo: v.motivo,
-      estado: 'PENDIENTE' // 👈 SIEMPRE pendiente al crear
+      estado: 'PENDIENTE' 
     };
 
     this.loading = true;

@@ -1,4 +1,4 @@
-// src/app/components/studies/editstudies/updatestudies.ts
+
 
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
@@ -42,7 +42,7 @@ export class Updatestuies implements OnInit {
   loading = false;
   studyId!: number;
 
-  // Combos
+  
   patients: Opt[] = [];
   modalities: Opt[] = [];
   teams: Opt[] = [];
@@ -86,7 +86,7 @@ export class Updatestuies implements OnInit {
       motivo: ['', [Validators.required, Validators.minLength(3)]],
       status: ['ACTIVE', Validators.required],
 
-      labels: [[]] // number[]
+      labels: [[]] 
     });
 
     const idParam = this.route.snapshot.paramMap.get('id');
@@ -106,7 +106,7 @@ export class Updatestuies implements OnInit {
     this.cargarEstudio();
   }
 
-  /* ===== Helpers HTTP ===== */
+  
 
   private headers(): HttpHeaders {
     let h = new HttpHeaders();
@@ -116,7 +116,7 @@ export class Updatestuies implements OnInit {
   }
 
   private loadCombos(): void {
-    // Pacientes
+    
     this.http.get<any>('http://localhost:4000/api/pacientes', { headers: this.headers() })
       .subscribe({
         next: (data) => {
@@ -129,7 +129,7 @@ export class Updatestuies implements OnInit {
         error: () => {}
       });
 
-    // Modalidades
+    
     this.http.get<any>('http://localhost:4000/api/modalidades', { headers: this.headers() })
       .subscribe({
         next: (data) => {
@@ -142,7 +142,7 @@ export class Updatestuies implements OnInit {
         error: () => {}
       });
 
-    // Equipos
+    
     this.http.get<any>('http://localhost:4000/api/equipos', { headers: this.headers() })
       .subscribe({
         next: (data) => {
@@ -155,7 +155,7 @@ export class Updatestuies implements OnInit {
         error: () => {}
       });
 
-    // Doctores
+    
     this.http.get<any>('http://localhost:4000/api/doctores', { headers: this.headers() })
       .subscribe({
         next: (data) => {
@@ -168,7 +168,7 @@ export class Updatestuies implements OnInit {
         error: () => {}
       });
 
-    // Tecnólogos
+    
     this.http.get<any>('http://localhost:4000/api/tecnologos', { headers: this.headers() })
       .subscribe({
         next: (data) => {
@@ -181,7 +181,7 @@ export class Updatestuies implements OnInit {
         error: () => {}
       });
 
-    // Etiquetas
+    
     this.http.get<any>('http://localhost:4000/api/etiquetas', { headers: this.headers() })
       .subscribe({
         next: (data) => {

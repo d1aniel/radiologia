@@ -1,11 +1,11 @@
 <main class="min-h-screen flex flex-col pt-16 pb-16">
 
-  <!-- HEADER fijo arriba -->
+  
   <header class="h-16 bg-white flex items-center w-full fixed top-0 left-0 right-0 z-50 border-b border-white">
     <app-header class="w-full"></app-header>
   </header>
 
-  <!-- ASIDE fijo -->
+  
   <aside
     *ngIf="authService.isLoggedIn()"
     class="fixed left-0 top-16 bottom-16 w-64 bg-white overflow-y-auto border-r border-white"
@@ -13,7 +13,7 @@
     <app-aside></app-aside>
   </aside>
 
-  <!-- CONTENIDO -->
+  
   <section
     class="flex-1 bg-white overflow-y-auto border-l border-white"
     [class.ml-64]="authService.isLoggedIn()"
@@ -21,7 +21,7 @@
     <router-outlet></router-outlet>
   </section>
 
-  <!-- FOOTER fijo abajo -->
+  
   <footer
     *ngIf="authService.isLoggedIn()"
     class="h-16 bg-white flex items-center justify-center fixed bottom-0 left-0 right-0 z-50 border-t border-white"

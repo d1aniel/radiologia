@@ -6,7 +6,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { Header } from './components/layout/header/header';
 import { Aside } from './components/layout/aside/aside';
 import { Footer } from './components/layout/footer/footer';
-import { AuthService } from './services/auth'; // ajusta ruta
+import { AuthService } from './services/auth'; 
 
 @Component({
   selector: 'app-root',
@@ -18,7 +18,7 @@ import { AuthService } from './services/auth'; // ajusta ruta
 export class App {
   protected readonly title = signal('radiologia');
 
-  // ✅ signal reactiva del estado de auth
+  
   isLoggedInSig!: Signal<boolean>;
 
   constructor(public authService: AuthService) {

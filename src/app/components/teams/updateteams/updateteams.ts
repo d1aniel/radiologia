@@ -1,4 +1,4 @@
-// src/app/features/teams/editteams.ts
+
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -40,7 +40,7 @@ export class Updateteams implements OnInit {
   loading = false;
   teamId!: number;
 
-  // Combo de modalidades (como en createteams / createstudies)
+  
   modalities: Opt[] = [];
 
   estados: { label: string; value: EstadoTeam }[] = [
@@ -85,7 +85,7 @@ export class Updateteams implements OnInit {
     this.cargarEquipo();
   }
 
-  /** ====== Helpers HTTP ====== */
+  
   private headers(): HttpHeaders {
     let h = new HttpHeaders();
     const t = this.auth.getToken?.();

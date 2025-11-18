@@ -22,13 +22,13 @@ export class Createtechnologists {
   form: FormGroup;
   loading = false;
 
-  // Opciones de estado (coinciden con backend)
+  
   statusOptions = [
     { label: 'Activo', value: 'ACTIVE' },
     { label: 'Inactivo', value: 'INACTIVE' }
   ];
 
-  // Opciones de especialidad
+  
   especialidadOptions = [
     { label: 'Rayos X', value: 'RX' },
     { label: 'Tomografía (TAC)', value: 'TAC' },
@@ -44,7 +44,7 @@ export class Createtechnologists {
     this.form = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(2)]],
       especialidad: ['', Validators.required],
-      // Permite dígitos, + y espacios, entre 7 y 20 caracteres
+      
       telefono: ['', [Validators.required, Validators.pattern(/^[0-9+\s]{7,20}$/)]],
       correo: ['', [Validators.required, Validators.email]],
       status: ['ACTIVE', Validators.required]
@@ -54,7 +54,7 @@ export class Createtechnologists {
   submit(): void {
     if (this.form.valid) {
       this.loading = true;
-      const payload = this.form.value; // TecnologoI compatible
+      const payload = this.form.value; 
 
       this.technologistService.createTechnologist(payload).subscribe({
         next: () => {

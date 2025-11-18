@@ -1,6 +1,6 @@
 .header-gradient {
-  background: linear-gradient(90deg, #0ea5e9, #6366f1); /* cyan -> indigo */
-  min-height: 6rem; /* más grueso */
+  background: linear-gradient(90deg, #0ea5e9, #6366f1); 
+  min-height: 6rem; 
 }
 
 h1 {

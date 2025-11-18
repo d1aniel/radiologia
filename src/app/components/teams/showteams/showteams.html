@@ -1,4 +1,4 @@
-<!-- src/app/features/teams/showteams.html -->
+
 <div class="card p-8">
   <div class="flex justify-between items-center mb-4">
     <h2 class="text-2xl font-bold">Gestión de Equipos</h2>
@@ -13,7 +13,7 @@
     </button>
   </div>
 
-  <!-- Usamos async pipe; derivamos loading del stream -->
+  
   <ng-container *ngIf="teams$ | async as teams">
     <p-table
       [value]="teams"
@@ -75,7 +75,7 @@
                 pTooltip="Eliminar físico">
               </button>
 
-              <!-- 🔹 "Borrado lógico": marcar como MANTENIMIENTO -->
+              
               <button
                 *ngIf="row.estado !== 'MANTENIMIENTO'"
                 pButton

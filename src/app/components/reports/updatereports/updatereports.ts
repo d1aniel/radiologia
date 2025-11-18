@@ -79,7 +79,7 @@ export class Updatereports implements OnInit {
     this.cargarInforme();
   }
 
-  /** ===== Helpers HTTP ===== */
+  
 
   private headers(): HttpHeaders {
     let h = new HttpHeaders();
@@ -89,7 +89,7 @@ export class Updatereports implements OnInit {
   }
 
   private loadCombos(): void {
-    // Estudios con nombre de paciente
+    
     this.http.get<any>('http://localhost:4000/api/estudios', { headers: this.headers() })
       .subscribe({
         next: (data) => {
@@ -111,7 +111,7 @@ export class Updatereports implements OnInit {
         }
       });
 
-    // Médicos
+    
     this.http.get<any>('http://localhost:4000/api/doctores', { headers: this.headers() })
       .subscribe({
         next: (data) => {
@@ -136,7 +136,7 @@ export class Updatereports implements OnInit {
 
     this.reportService.getReportById(this.reportId).subscribe({
       next: (resp: any) => {
-        const report: InformeI = resp.report ?? resp; // por si viene envuelto
+        const report: InformeI = resp.report ?? resp; 
         this.form.patchValue({
           estudio_id: report.estudio_id,
           medico_id: report.medico_id,
@@ -173,7 +173,7 @@ export class Updatereports implements OnInit {
     }
 
     this.loading = true;
-    const payload = this.form.value; // Partial<InformeI> en backend
+    const payload = this.form.value; 
 
     this.reportService.updateReport(this.reportId, payload).subscribe({
       next: () => {

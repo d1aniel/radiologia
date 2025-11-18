@@ -1,4 +1,4 @@
-// src/app/components/modalities/showmodalities/showmodalities.ts
+
 import { Component, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -13,7 +13,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
-import { ModalidadService } from '../../../services/modaliti'; // 👈 ajusta si tu archivo se llama distinto (modaliti)
+import { ModalidadService } from '../../../services/modaliti'; 
 import { ModalidadI } from '../../../models/modalities';
 
 @Component({
@@ -34,10 +34,10 @@ import { ModalidadI } from '../../../models/modalities';
   providers: [ConfirmationService, MessageService]
 })
 export class Showmodalities {
-  // Dispara recargas
+  
   private refresh$ = new BehaviorSubject<void>(undefined);
 
-  // Stream principal de modalidades (pide al backend cada vez que se hace refresh)
+  
   modalidades$: Observable<ModalidadI[]> = this.refresh$.pipe(
     switchMap(() =>
       this.service.getAllModalidades().pipe(
@@ -56,7 +56,7 @@ export class Showmodalities {
     shareReplay(1)
   );
 
-  // Loading derivado del stream
+  
   loading$: Observable<boolean> = this.modalidades$.pipe(
     map(() => false),
     startWith(true)
@@ -77,7 +77,7 @@ export class Showmodalities {
     };
   }
 
-  // 🔴 Eliminar físico
+  
   deleteModalidad(row: ModalidadI) {
     this.confirmationService.confirm({
       message: `¿Está seguro de eliminar la modalidad "${row.nombre}" de forma permanente?`,
@@ -91,7 +91,7 @@ export class Showmodalities {
               summary: 'Éxito',
               detail: 'Modalidad eliminada correctamente'
             });
-            this.refresh$.next(); // recargar
+            this.refresh$.next(); 
           }),
           catchError(err => {
             console.error('Error deleting modalidad:', err);
@@ -107,7 +107,7 @@ export class Showmodalities {
     });
   }
 
-  // 🟡 Borrado lógico (activa = false)
+  
   deleteModalidadAdv(row: ModalidadI) {
     this.confirmationService.confirm({
       message: `¿Marcar como INACTIVA la modalidad "${row.nombre}"?`,
@@ -121,7 +121,7 @@ export class Showmodalities {
               summary: 'Actualizado',
               detail: 'Modalidad marcada como INACTIVA'
             });
-            this.refresh$.next(); // recargar
+            this.refresh$.next(); 
           }),
           catchError(err => {
             console.error('Error marcando modalidad como inactiva:', err);

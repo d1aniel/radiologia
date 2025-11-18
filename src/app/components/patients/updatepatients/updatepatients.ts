@@ -1,4 +1,4 @@
-// src/app/components/patients/editpatients/editpatients.ts
+
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -33,7 +33,7 @@ export class Updatepatients implements OnInit {
   loading = false;
   patientId!: number;
 
-  // ⚠️ Usa las mismas opciones que en Createpatients
+  
   statusOptions = [
     { label: 'Activo', value: 'ACTIVATE' },
     { label: 'Inactivo', value: 'INACTIVE' }
@@ -52,7 +52,7 @@ export class Updatepatients implements OnInit {
     { label: 'Registro civil', value: 'RC' }
   ];
 
-  // Ajusta según tu dominio real
+  
   epsOptions = [
     { label: 'Sura', value: 'SURA' },
     { label: 'Nueva EPS', value: 'NUEVA_EPS' },
@@ -67,7 +67,7 @@ export class Updatepatients implements OnInit {
     private patientsService: PatientService,
     private messageService: MessageService
   ) {
-    // ⚙️ Mismos campos que en createpatients
+    
     this.form = this.fb.group({
       nombre: ['', [Validators.required]],
       apellido: ['', [Validators.required]],
@@ -102,7 +102,7 @@ export class Updatepatients implements OnInit {
     this.loading = true;
     this.patientsService.getPatientById(this.patientId).subscribe({
       next: (pacient: PacientsI) => {
-        // Rellena el formulario con lo que viene del backend
+        
         this.form.patchValue({
           nombre: pacient.nombre,
           apellido: pacient.apellido,

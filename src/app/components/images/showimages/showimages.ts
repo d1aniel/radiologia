@@ -1,4 +1,4 @@
-// src/app/components/images/showimages/showimages.ts
+
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -35,7 +35,7 @@ import { StudyReadI } from '../../../models/studies';
   providers: [ConfirmationService, MessageService, DatePipe]
 })
 export class Showimages implements OnInit {
-  // URL base del backend (ajusta si usas otra)
+  
   private readonly backendBaseUrl = 'http://localhost:4000';
 
   private estudioIdFilter?: number;
@@ -64,10 +64,10 @@ export class Showimages implements OnInit {
     startWith(true)
   );
 
-  // Mapa estudioId -> etiqueta
+  
   studyLabelById = new Map<number, string>();
 
-  // Estado para el modal de vista previa
+  
   previewVisible = false;
   previewImage: ImageI | null = null;
 
@@ -96,7 +96,7 @@ export class Showimages implements OnInit {
         }
       },
       error: () => {
-        // no bloqueamos la vista si falla
+        
       }
     });
   }
@@ -122,13 +122,13 @@ export class Showimages implements OnInit {
     return `${(bytes / Math.pow(k, i)).toFixed(2)} ${units[i]}`;
   }
 
-  // Abrir en otra pestaña
+  
   onViewExternal(img: ImageI): void {
     const url = this.getImageFullUrl(img);
     if (url) window.open(url, '_blank');
   }
 
-  // Vista previa en modal
+  
   onPreview(img: ImageI): void {
     this.previewImage = img;
     this.previewVisible = true;
@@ -138,28 +138,28 @@ export class Showimages implements OnInit {
   getImageFullUrl(img: ImageI | null): string {
     if (!img?.url) return '';
 
-    // Normalizamos slashes
+    
     let raw = img.url.replace(/\\/g, '/');
 
-    // Si ya es URL absoluta http/https
+    
     if (raw.startsWith('http://') || raw.startsWith('https://')) {
       return raw;
     }
 
-    // Buscamos el segmento /uploads/ por si viene con ruta absoluta del server
+    
     const uploadsIdx = raw.indexOf('/uploads/');
     if (uploadsIdx >= 0) {
-      raw = raw.substring(uploadsIdx); // deja /uploads/...
+      raw = raw.substring(uploadsIdx); 
     }
 
-    // Nos aseguramos de que empiece con una sola /
+    
     const relative = '/' + raw.replace(/^\/+/, '');
 
-    // Devolvemos URL completa
+    
     return `${this.backendBaseUrl}${relative}`;
   }
 
-  // Solo previsualizamos JPG/PNG en el modal
+  
   isPreviewable(tipo: TipoImagen | undefined): boolean {
     return tipo === 'JPG' || tipo === 'PNG';
   }

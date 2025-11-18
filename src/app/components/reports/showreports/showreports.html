@@ -12,7 +12,7 @@
     </button>
   </div>
 
-  <!-- Usamos async pipe; derivamos loading del stream -->
+  
   <ng-container *ngIf="informes$ | async as informes">
     <p-table
       [value]="informes"
@@ -57,13 +57,13 @@
           </td>
 
           <td>
-            <!-- pequeño recorte del cuerpo -->
+            
             {{ inf.cuerpo | slice:0:40 }}{{ inf.cuerpo.length > 40 ? '…' : '' }}
           </td>
 
           <td class="text-center">
             <div class="flex justify-center gap-2">
-              <!-- Editar -->
+              
               <button
                 pButton
                 type="button"
@@ -73,7 +73,7 @@
                 pTooltip="Editar">
               </button>
 
-              <!-- Firmar (solo si está en BORRADOR) -->
+              
               <button
                 *ngIf="inf.estado === 'BORRADOR'"
                 pButton
@@ -84,7 +84,7 @@
                 pTooltip="Firmar informe">
               </button>
 
-              <!-- Eliminar -->
+              
               <button
                 pButton
                 type="button"

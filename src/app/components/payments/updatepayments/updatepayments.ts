@@ -1,4 +1,4 @@
-// src/app/components/payments/editpayments/editpayments.ts
+
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -66,10 +66,10 @@ export class Updatepayments implements OnInit {
   ) {
     this.form = this.fb.group({
       pacienteId: [null, Validators.required],
-      estudioId: [null], // opcional (quote_id)
+      estudioId: [null], 
       monto: [null, [Validators.required, Validators.min(1)]],
       metodo: ['EFECTIVO', Validators.required],
-      fecha: [null, Validators.required], // Date en el form
+      fecha: [null, Validators.required], 
       estado: ['PAID', Validators.required]
     });
   }
@@ -92,7 +92,7 @@ export class Updatepayments implements OnInit {
     this.cargarPago();
   }
 
-  /** ===== Helpers ===== */
+  
 
   private cargarPacientes(): void {
     this.patientsService.getAllPatients().subscribe({
@@ -149,7 +149,7 @@ export class Updatepayments implements OnInit {
 
   get f() { return this.form.controls; }
 
-  /** ===== Acciones ===== */
+  
 
   submit(): void {
     if (this.form.invalid) {

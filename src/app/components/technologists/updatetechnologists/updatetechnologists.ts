@@ -1,4 +1,4 @@
-// src/app/components/technologists/edittechnologists/edittechnologists.ts
+
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -33,13 +33,13 @@ export class Updatetechnologists implements OnInit {
   loading = false;
   technologistId!: number;
 
-  // Estado (match backend: ACTIVE | INACTIVE)
+  
   statusOptions = [
     { label: 'Activo', value: 'ACTIVE' },
     { label: 'Inactivo', value: 'INACTIVE' }
   ];
 
-  // Especialidad (match backend: 'RX' | 'TAC' | 'RM')
+  
   especialidadOptions = [
     { label: 'Rayos X', value: 'RX' },
     { label: 'Tomografía (TAC)', value: 'TAC' },
@@ -53,7 +53,7 @@ export class Updatetechnologists implements OnInit {
     private technologistService: TechnologistService,
     private messageService: MessageService
   ) {
-    // Campos del modelo TecnologoI
+    
     this.form = this.fb.group({
       nombre: ['', [Validators.required]],
       especialidad: ['', [Validators.required]],

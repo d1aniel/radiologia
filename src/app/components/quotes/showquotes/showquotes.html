@@ -1,4 +1,4 @@
-<!-- src/app/components/quotes/showquotes/showquotes.html -->
+
 <div class="card p-8">
   <div class="mb-4 flex items-center justify-between">
     <h2 class="text-2xl font-bold">Gestión de Citas</h2>
@@ -42,7 +42,7 @@
         <tr>
           <td>{{ cita.id }}</td>
 
-          <!-- Paciente -->
+          
           <td>
             <ng-container *ngIf="cita.paciente_obj; else pacienteIdOnly">
               {{ cita.paciente_obj?.nombre }} {{ cita.paciente_obj?.apellido }}
@@ -52,7 +52,7 @@
             </ng-template>
           </td>
 
-          <!-- Tecnólogo -->
+          
           <td>
             <ng-container *ngIf="cita.technologist_obj; else technoIdOnly">
               {{ cita.technologist_obj?.nombre }}

@@ -1,4 +1,4 @@
-// src/app/components/quotes/editquotes/editquotes.ts
+
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -38,7 +38,7 @@ export class Updatequotes implements OnInit {
   loading = false;
   quoteId!: number;
 
-  // Combos
+  
   patients: Opt[] = [];
   technologists: Opt[] = [];
   modalities: Opt[] = [];
@@ -89,7 +89,7 @@ export class Updatequotes implements OnInit {
     this.cargarCita();
   }
 
-  /* ===== Helpers ===== */
+  
 
   private headers(): HttpHeaders {
     let h = new HttpHeaders();
@@ -99,7 +99,7 @@ export class Updatequotes implements OnInit {
   }
 
   private loadCombos(): void {
-    // Pacientes
+    
     this.http.get<any>('http://localhost:4000/api/pacientes', { headers: this.headers() })
       .subscribe({
         next: (data) => {
@@ -112,7 +112,7 @@ export class Updatequotes implements OnInit {
         error: () => {}
       });
 
-    // Tecnólogos
+    
     this.http.get<any>('http://localhost:4000/api/tecnologos', { headers: this.headers() })
       .subscribe({
         next: (data) => {
@@ -125,7 +125,7 @@ export class Updatequotes implements OnInit {
         error: () => {}
       });
 
-    // Modalidades
+    
     this.http.get<any>('http://localhost:4000/api/modalidades', { headers: this.headers() })
       .subscribe({
         next: (data) => {
@@ -138,7 +138,7 @@ export class Updatequotes implements OnInit {
         error: () => {}
       });
 
-    // Equipos
+    
     this.http.get<any>('http://localhost:4000/api/equipos', { headers: this.headers() })
       .subscribe({
         next: (data) => {
@@ -155,7 +155,7 @@ export class Updatequotes implements OnInit {
   private cargarCita(): void {
     this.loading = true;
     this.quoteService.getQuoteById(this.quoteId).subscribe({
-      next: (cita: any) => {   // 👈 aquí usamos any como en create
+      next: (cita: any) => {   
         this.form.patchValue({
           patient_id: cita.patient_id,
           technologist_id: cita.technologist_id,
@@ -198,7 +198,7 @@ export class Updatequotes implements OnInit {
         ? v.fechaHora.toISOString()
         : v.fechaHora,
       motivo: v.motivo,
-      estado: v.estado   // 👈 aquí sí puede cambiar
+      estado: v.estado   
     };
 
     this.quoteService.updateQuote(this.quoteId, payload).subscribe({

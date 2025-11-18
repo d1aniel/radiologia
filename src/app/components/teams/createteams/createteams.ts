@@ -1,4 +1,4 @@
-// src/app/features/teams/createteams.ts
+
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -13,7 +13,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 
 import { AuthService } from '../../../services/auth';
-import { TeamService } from '../../../services/team';       // 👈 service HTTP
+import { TeamService } from '../../../services/team';       
 import { EstadoTeam, TeamI } from '../../../models/teams';
 
 type Opt = { label: string; value: number | null };
@@ -39,7 +39,7 @@ export class Createteams implements OnInit {
   form!: FormGroup;
   loading = false;
 
-  // Combo de modalidades (vendrán de /api/modalidades)
+  
   modalities: Opt[] = [];
 
   estados: { label: string; value: EstadoTeam }[] = [
@@ -60,7 +60,7 @@ export class Createteams implements OnInit {
   ngOnInit(): void {
     this.form = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(2)]],
-      modality_id: [null, Validators.required],         // 👈 ya no "modalidad"
+      modality_id: [null, Validators.required],         
       ubicacion: ['', [Validators.required, Validators.minLength(2)]],
       estado: ['DISPONIBLE' as EstadoTeam, Validators.required],
       observaciones: ['']
@@ -69,7 +69,7 @@ export class Createteams implements OnInit {
     this.loadModalities();
   }
 
-  /** ====== Helpers ====== */
+  
   private headers(): HttpHeaders {
     let h = new HttpHeaders();
     const t = this.auth.getToken?.();

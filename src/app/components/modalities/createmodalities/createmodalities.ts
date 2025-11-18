@@ -1,4 +1,4 @@
-// src/app/components/modalities/createmodalities/createmodalities.ts
+
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -11,7 +11,7 @@ import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 
-import { ModalidadService } from '../../../services/modaliti'; // 👈 ajusta si tu archivo se llama distinto
+import { ModalidadService } from '../../../services/modaliti'; 
 
 @Component({
   selector: 'app-createmodalidad',

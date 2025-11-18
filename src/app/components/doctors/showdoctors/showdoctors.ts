@@ -1,4 +1,4 @@
-// src/app/components/doctors/showdoctors/showdoctors.ts
+
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
@@ -31,10 +31,10 @@ import { MedicoService } from '../../../services/doctor';
   providers: [ConfirmationService, MessageService]
 })
 export class Showdoctors implements OnInit {
-  // 🔹 Dispara recargas (igual que en pacientes)
+  
   private refresh$ = new BehaviorSubject<void>(undefined);
 
-  // 🔹 Stream principal de doctores
+  
   doctors$: Observable<MedicoI[]> = this.refresh$.pipe(
     switchMap(() =>
       this.medicoService.getAllMedicos().pipe(
@@ -53,7 +53,7 @@ export class Showdoctors implements OnInit {
     shareReplay(1)
   );
 
-  // 🔹 Loading derivado del stream (evita NG0100)
+  
   loading$: Observable<boolean> = this.doctors$.pipe(
     map(() => false),
     startWith(true)
@@ -66,12 +66,12 @@ export class Showdoctors implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // nada, todo va por async pipe
+    
   }
 
   trackById = (_: number, item: MedicoI) => item.id;
 
-  // 🔹 Borrado físico
+  
   deleteDoctor(medico: MedicoI): void {
     this.confirmationService.confirm({
       message: `¿Está seguro de eliminar al doctor(a) ${medico.nombre}?`,
@@ -86,7 +86,7 @@ export class Showdoctors implements OnInit {
                 summary: 'Éxito',
                 detail: 'Doctor eliminado correctamente'
               });
-              this.refresh$.next(); // recarga tabla
+              this.refresh$.next(); 
             }),
             catchError(error => {
               console.error('Error deleting doctor:', error);
@@ -103,7 +103,7 @@ export class Showdoctors implements OnInit {
     });
   }
 
-  // 🔹 Borrado lógico (marca status = "INACTIVE")
+  
   deleteDoctorAdv(medico: MedicoI): void {
     this.confirmationService.confirm({
       message: `¿Marcar como INACTIVE a ${medico.nombre}?`,
@@ -118,7 +118,7 @@ export class Showdoctors implements OnInit {
                 summary: 'Actualizado',
                 detail: 'Doctor marcado como INACTIVE'
               });
-              // GET /doctors solo retorna ACTIVATE → dejará de aparecer
+              
               this.refresh$.next();
             }),
             catchError(error => {

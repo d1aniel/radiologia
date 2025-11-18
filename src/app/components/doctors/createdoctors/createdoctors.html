@@ -1,9 +1,9 @@
-<!-- src/app/components/doctors/createdoctors/createdoctors.html -->
+
 <div class="mx-auto w-full max-w-[880px] rounded-xl bg-white p-4 sm:p-6 shadow-sm">
   <h2 class="mb-4 text-lg font-semibold text-slate-800">Agregar Médico</h2>
 
   <form [formGroup]="form" (ngSubmit)="submit()" class="grid grid-cols-12 gap-3 text-sm">
-    <!-- NOMBRE -->
+    
     <div class="col-span-12 md:col-span-6">
       <label for="nombre" class="block mb-1 text-sm font-medium text-slate-700">Nombre</label>
       <input id="nombre" type="text" pInputText formControlName="nombre" placeholder="Ej. Ana Pineda" class="w-full px-3 py-2"/>
@@ -12,7 +12,7 @@
       </small>
     </div>
 
-    <!-- ESPECIALIDAD -->
+    
     <div class="col-span-12 md:col-span-6">
       <label for="especialidad" class="block mb-1 text-sm font-medium text-slate-700">Especialidad</label>
       <p-select
@@ -29,7 +29,7 @@
       </small>
     </div>
 
-    <!-- TELÉFONO -->
+    
     <div class="col-span-12 md:col-span-6">
       <label for="telefono" class="block mb-1 text-sm font-medium text-slate-700">Teléfono</label>
       <input id="telefono" type="text" pInputText formControlName="telefono" placeholder="Ej. 3001234567" class="w-full px-3 py-2"/>
@@ -38,7 +38,7 @@
       </small>
     </div>
 
-    <!-- CORREO -->
+    
     <div class="col-span-12 md:col-span-6">
       <label for="correo" class="block mb-1 text-sm font-medium text-slate-700">Correo</label>
       <input id="correo" type="email" pInputText formControlName="correo" placeholder="Ej. nombre@correo.com" class="w-full px-3 py-2"/>
@@ -47,19 +47,19 @@
       </small>
     </div>
 
-    <!-- REGISTRO / LICENCIA (OPCIONAL) -->
+    
     <div class="col-span-12 md:col-span-6">
       <label for="registro" class="block mb-1 text-sm font-medium text-slate-700">Registro / Licencia (opcional)</label>
       <input id="registro" type="text" pInputText formControlName="registro" placeholder="Ej. RM-12345" class="w-full px-3 py-2"/>
     </div>
 
-    <!-- ACCIONES -->
+    
     <div class="col-span-12 flex items-center gap-2 pt-2">
       <button pButton type="submit" label="Guardar" class="p-button-sm" [loading]="loading" [disabled]="loading"></button>
       <button pButton type="button" label="Cancelar" class="p-button-sm p-button-secondary" (click)="cancelar()" [disabled]="loading"></button>
     </div>
   </form>
 
-  <!-- Toast para mensajes -->
+  
   <p-toast></p-toast>
 </div>

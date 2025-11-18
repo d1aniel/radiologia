@@ -14,7 +14,7 @@ export class Aside {
 
   ngOnInit(): void {
     this.items = [
-      // ===== Estudios =====
+      
       {
         label: 'Estudios',
         icon: 'pi pi-fw pi-images',
@@ -23,7 +23,7 @@ export class Aside {
         ]
       },
 
-      // ===== Imágenes =====
+      
       {
         label: 'Imágenes',
         icon: 'pi pi-fw pi-image',
@@ -32,7 +32,7 @@ export class Aside {
         ]
       },
 
-      // ===== Informes =====
+      
       {
         label: 'Informes',
         icon: 'pi pi-fw pi-file',
@@ -42,7 +42,7 @@ export class Aside {
       },
 
 
-      // ===== Pacientes =====
+      
       {
         label: 'Pacientes',
         icon: 'pi pi-fw pi-users',
@@ -51,7 +51,7 @@ export class Aside {
         ]
       },
 
-      // ===== Citas =====
+      
       {
         label: 'Citas',
         icon: 'pi pi-fw pi-clock',
@@ -60,7 +60,7 @@ export class Aside {
         ]
       },
 
-      // ===== Equipos =====
+      
       {
         label: 'Equipos',
         icon: 'pi pi-fw pi-cog',
@@ -69,7 +69,7 @@ export class Aside {
         ]
       },
 
-      // ===== Modalidades =====
+      
       {
         label: 'Modalidades',
         icon: 'pi pi-fw pi-clone',
@@ -78,7 +78,7 @@ export class Aside {
         ]
       },
 
-      // ===== Médicos =====
+      
       {
         label: 'Médicos',
         icon: 'pi pi-fw pi-id-card',
@@ -87,7 +87,7 @@ export class Aside {
         ]
       },
 
-      // ===== Tecnólogos =====
+      
       {
         label: 'Tecnólogos',
         icon: 'pi pi-fw pi-briefcase',
@@ -96,7 +96,7 @@ export class Aside {
         ]
       },
 
-      // ===== Etiquetas =====
+      
       {
         label: 'Etiquetas',
         icon: 'pi pi-fw pi-tag',
@@ -105,7 +105,7 @@ export class Aside {
         ]
       },
 
-      // ===== Pagos =====
+      
       {
         label: 'Pagos',
         icon: 'pi pi-fw pi-credit-card',

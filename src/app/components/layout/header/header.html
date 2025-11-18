@@ -1,19 +1,19 @@
 <header class="sticky top-0 z-50 bg-gradient-to-r from-cyan-500 to-indigo-500 px-4 py-3 shadow-md">
   <div class="flex items-center justify-between">
-    <!-- Logo -->
+    
     <div class="flex items-center gap-3 shrink-0">
       <img src="/images/logo_radiologia.png" alt="Logo" class="h-12 w-12 rounded-full shadow-md" />
     </div>
 
-    <!-- Nombre y eslogan centrados -->
+    
     <div class="text-center text-white px-2">
       <h1 class="text-lg font-semibold leading-tight m-0">Radiología en tus Huesos</h1>
       <p class="text-xs opacity-80">Diagnóstico por imagen centrado en el paciente</p>
     </div>
 
-    <!-- Acciones (derecha) -->
+    
     <div class="flex items-center gap-2 shrink-0">
-      <!-- Notificaciones solo si está logueado -->
+      
       <button
         *ngIf="isLoggedIn"
         type="button"
@@ -24,7 +24,7 @@
         </p-overlaybadge>
       </button>
 
-      <!-- Menú de usuario -->
+      
       <button
         type="button"
         class="text-orange-500 bg-gray-100 hover:bg-gray-200 rounded shadow hover:shadow-lg w-10 h-10 flex items-center justify-center"

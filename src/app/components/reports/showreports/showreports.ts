@@ -30,15 +30,15 @@ import { ReportService } from '../../../services/report';
   providers: [ConfirmationService, MessageService]
 })
 export class Showreports implements OnInit {
-  // Dispara recargas (igual que en pacientes)
+  
   private refresh$ = new BehaviorSubject<void>(undefined);
 
-  // Stream principal de informes
+  
   informes$: Observable<InformeI[]> = this.refresh$.pipe(
     switchMap(() =>
       this.reportService.getAllReports().pipe(
-        // Si quieres mantenerlos también en el service:
-        // tap(i => this.informeService.updateLocalReports(i)),
+        
+        
         catchError(err => {
           console.error('Error loading reports:', err);
           this.messageService.add({
@@ -53,7 +53,7 @@ export class Showreports implements OnInit {
     shareReplay(1)
   );
 
-  // Loading derivado del stream
+  
   loading$: Observable<boolean> = this.informes$.pipe(
     map(() => false),
     startWith(true)
@@ -66,7 +66,7 @@ export class Showreports implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // nada aquí, todo va por el stream
+    
   }
 
   trackById = (_: number, item: InformeI) => item.id;
@@ -84,7 +84,7 @@ export class Showreports implements OnInit {
               summary: 'Éxito',
               detail: 'Informe eliminado correctamente'
             });
-            this.refresh$.next(); // recarga
+            this.refresh$.next(); 
           }),
           catchError(error => {
             console.error('Error deleting report:', error);
@@ -100,7 +100,7 @@ export class Showreports implements OnInit {
     });
   }
 
-  // Firmar informe (cambiar estado a FIRMADO)
+  
   signReport(report: InformeI): void {
     this.confirmationService.confirm({
       message: `¿Desea firmar el informe #${report.id}?`,
@@ -114,7 +114,7 @@ export class Showreports implements OnInit {
               summary: 'Firmado',
               detail: 'Informe firmado correctamente'
             });
-            this.refresh$.next(); // recarga
+            this.refresh$.next(); 
           }),
           catchError(error => {
             console.error('Error signing report:', error);

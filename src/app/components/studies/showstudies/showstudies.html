@@ -1,4 +1,4 @@
-<!-- src/app/components/studies/showstudies/showstudies.html -->
+
 
 <p-toast></p-toast>
 <p-confirmDialog></p-confirmDialog>
@@ -53,7 +53,7 @@
 
             
 
-            <!-- Editar -->
+            
             <button
               pButton
               type="button"
@@ -64,7 +64,7 @@
             </button>
 
 
-            <!-- 🔴 Eliminación FÍSICA -->
+            
             <button
               pButton
               type="button"
@@ -74,7 +74,7 @@
               pTooltip="Eliminar físico">
             </button>
 
-            <!-- 🟡 Borrado lógico (solo si está ACTIVATE) -->
+            
             <button
               *ngIf="row.status === 'ACTIVE' || row.status === 'ACTIVATE'"
               pButton

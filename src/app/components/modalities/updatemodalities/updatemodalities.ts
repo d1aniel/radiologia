@@ -1,4 +1,4 @@
-// src/app/components/modalities/editmodalities/editmodalities.ts
+
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -11,7 +11,7 @@ import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 
-import { ModalidadService } from '../../../services/modaliti'; // ajusta nombre si es distinto
+import { ModalidadService } from '../../../services/modaliti'; 
 import { ModalidadI } from '../../../models/modalities';
 
 @Component({

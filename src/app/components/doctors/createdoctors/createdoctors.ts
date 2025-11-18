@@ -1,4 +1,4 @@
-// src/app/components/doctors/createdoctors/createdoctors.ts
+
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -50,8 +50,8 @@ export class Createdoctors {
       especialidad: ['', Validators.required],
       telefono: ['', [Validators.required, Validators.pattern(/^\d{7,15}$/)]],
       correo: ['', [Validators.required, Validators.email]],
-      registro: [''] // opcional
-      // status no es necesario: backend lo fuerza a "ACTIVATE"
+      registro: [''] 
+      
     });
   }
 
@@ -68,7 +68,7 @@ export class Createdoctors {
             detail: 'Médico creado correctamente'
           });
           setTimeout(() => {
-            // ajusta si tu listado es otra ruta
+            
             this.router.navigate(['/doctors/show']);
           }, 800);
         },
@@ -93,7 +93,7 @@ export class Createdoctors {
   }
 
   cancelar(): void {
-    // ajusta si tu listado es otra ruta
+    
     this.router.navigate(['/doctors/show']);
   }
 
@@ -119,7 +119,7 @@ export class Createdoctors {
     return '';
   }
 
-  // atajo para el template
+  
   get f() {
     return this.form.controls;
   }

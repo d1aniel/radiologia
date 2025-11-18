@@ -1,4 +1,4 @@
-// src/app/components/doctors/updatedoctors/updatedoctors.ts
+
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { Select } from 'primeng/select';        // 👈 IGUAL QUE EN patients
+import { Select } from 'primeng/select';        
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 
@@ -21,7 +21,7 @@ import { MedicoI } from '../../../models/doctors';
     ReactiveFormsModule,
     ButtonModule,
     InputTextModule,
-    Select,          // 👈 IMPORT CORRECTO
+    Select,          
     ToastModule
   ],
   templateUrl: './updatedoctors.html',
@@ -50,13 +50,13 @@ export class Updatedoctors implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private medicoService: MedicoService,   // 👈 asegúrate que este servicio exista
+    private medicoService: MedicoService,   
     private messageService: MessageService
   ) {
     this.form = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(2)]],
       especialidad: ['', [Validators.required]],
-      // permitimos + y espacios para cosas como "+57 3001234567"
+      
       telefono: ['', [Validators.required, Validators.pattern(/^[0-9+\s]{7,20}$/)]],
       correo: ['', [Validators.required, Validators.email]],
       registro: [''],
@@ -89,7 +89,7 @@ export class Updatedoctors implements OnInit {
         this.form.patchValue({
           nombre: medico.nombre,
           especialidad: medico.especialidad,
-          telefono: medico.telefono,        // aquí ya viene "+57 3..."
+          telefono: medico.telefono,        
           correo: medico.correo,
           registro: medico.registro || '',
           status: medico.status

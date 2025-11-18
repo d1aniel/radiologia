@@ -40,7 +40,7 @@ submit(): void {
 
     this.authService.login(credentials).subscribe({
       next: (response) => {
-        this.loading = false; // ← IMPORTANTE
+        this.loading = false; 
 
         this.messageService.add({
           severity: 'success',

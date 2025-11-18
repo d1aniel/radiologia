@@ -12,7 +12,7 @@
     </button>
   </div>
 
-  <!-- Usamos async pipe; derivamos loading del stream -->
+  
   <ng-container *ngIf="pacients$ | async as pacients">
     <p-table
       [value]="pacients"
@@ -79,7 +79,7 @@
                 pTooltip="Eliminar físico">
               </button>
 
-              <!-- 🔹 Botón de borrado lógico (solo si está ACTIVATE) -->
+              
               <button
                 *ngIf="pacient.status === 'ACTIVATE'"
                 pButton

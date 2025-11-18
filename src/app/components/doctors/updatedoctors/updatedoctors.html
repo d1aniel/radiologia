@@ -1,4 +1,4 @@
-<!-- src/app/components/doctors/updatedoctors/updatedoctors.html -->
+
 <div class="mx-auto w-full max-w-[880px] rounded-xl bg-white p-4 sm:p-6 shadow-sm">
   <div class="flex items-center justify-between mb-4">
     <h2 class="text-lg font-semibold text-slate-800">
@@ -16,7 +16,7 @@
   </div>
 
   <form [formGroup]="form" (ngSubmit)="submit()" class="grid grid-cols-12 gap-3 text-sm">
-    <!-- NOMBRE -->
+    
     <div class="col-span-12 md:col-span-6">
       <label for="nombre" class="block mb-1 text-sm font-medium text-slate-700">Nombre</label>
       <input
@@ -28,7 +28,7 @@
         [ngClass]="{'p-invalid': form.get('nombre')?.invalid && form.get('nombre')?.touched}" />
     </div>
 
-    <!-- ESPECIALIDAD -->
+    
     <div class="col-span-12 md:col-span-6">
       <label for="especialidad" class="block mb-1 text-sm font-medium text-slate-700">Especialidad</label>
       <p-select
@@ -41,7 +41,7 @@
       </p-select>
     </div>
 
-    <!-- TELÉFONO -->
+    
     <div class="col-span-12 md:col-span-6">
       <label for="telefono" class="block mb-1 text-sm font-medium text-slate-700">Teléfono</label>
       <input
@@ -53,7 +53,7 @@
         [ngClass]="{'p-invalid': form.get('telefono')?.invalid && form.get('telefono')?.touched}" />
     </div>
 
-    <!-- CORREO -->
+    
     <div class="col-span-12 md:col-span-6">
       <label for="correo" class="block mb-1 text-sm font-medium text-slate-700">Correo</label>
       <input
@@ -65,7 +65,7 @@
         [ngClass]="{'p-invalid': form.get('correo')?.invalid && form.get('correo')?.touched}" />
     </div>
 
-    <!-- REGISTRO -->
+    
     <div class="col-span-12 md:col-span-6">
       <label for="registro" class="block mb-1 text-sm font-medium text-slate-700">Registro / Licencia</label>
       <input
@@ -76,7 +76,7 @@
         placeholder="Ej. RM-12345" />
     </div>
 
-    <!-- ESTADO -->
+    
     <div class="col-span-12 md:col-span-6">
       <label for="status" class="block mb-1 text-sm font-medium text-slate-700">Estado</label>
       <p-select
@@ -89,7 +89,7 @@
       </p-select>
     </div>
 
-    <!-- BOTONES -->
+    
     <div class="col-span-12 flex justify-end gap-2 mt-4">
       <button
         pButton

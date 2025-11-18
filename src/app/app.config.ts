@@ -11,7 +11,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideHttpClient } from '@angular/common/http';
 
 import { providePrimeNG } from 'primeng/config';
-import Aura from '@primeng/themes/aura'; // puedes cambiar por Lara, Nora, etc.
+import Aura from '@primeng/themes/aura'; 
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -23,10 +23,10 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     providePrimeNG({
       theme: {
-        preset: Aura,               // <— tema
-        options: { darkModeSelector: '.dark' } // opcional
+        preset: Aura,               
+        options: { darkModeSelector: '.dark' } 
       }
-      // , ripple: true             // opcional, si te gustan los efectos ripple
+      
     })
   ]
 };

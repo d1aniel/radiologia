@@ -1,4 +1,4 @@
-// src/app/components/quotes/showquotes/showquotes.ts
+
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';

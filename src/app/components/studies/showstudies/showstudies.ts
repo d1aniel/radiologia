@@ -1,4 +1,4 @@
-// src/app/components/studies/showstudies/showstudies.ts
+
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -13,7 +13,7 @@ import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
 import { catchError, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 
 import { StudyReadI } from '../../../models/studies';
-import { StudyService } from '../../../services/studie'; // ajusta ruta si es distinto
+import { StudyService } from '../../../services/studie'; 
 
 @Component({
   selector: 'app-show-studies',
@@ -33,10 +33,10 @@ import { StudyService } from '../../../services/studie'; // ajusta ruta si es di
 })
 export class ShowStudies implements OnInit {
 
-  // 🔁 Dispara recargas (igual que en pacientes)
+  
   private refresh$ = new BehaviorSubject<void>(undefined);
 
-  // 📄 Stream principal de estudios
+  
   studies$: Observable<StudyReadI[]> = this.refresh$.pipe(
     switchMap(() =>
       this.studyService.getAll().pipe(
@@ -56,7 +56,7 @@ export class ShowStudies implements OnInit {
     shareReplay(1)
   );
 
-  // ⏳ Loading derivado del stream (como pacientes)
+  
   loading$: Observable<boolean> = this.studies$.pipe(
     map(() => false),
     startWith(true)
@@ -69,10 +69,10 @@ export class ShowStudies implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // No subscribes manuales aquí, igual que en pacientes
+    
   }
 
-  // 🔴 Borrado FÍSICO (destruir definitivamente)
+  
   deleteStudy(study: StudyReadI): void {
     this.confirmationService.confirm({
       message: `¿Está seguro de eliminar físicamente el estudio #${study.id}?`,
@@ -87,7 +87,7 @@ export class ShowStudies implements OnInit {
                 summary: 'Éxito',
                 detail: 'Estudio eliminado correctamente'
               });
-              this.refresh$.next(); // recarga lista
+              this.refresh$.next(); 
             }),
             catchError(error => {
               console.error('Error deleting study:', error);
@@ -104,7 +104,7 @@ export class ShowStudies implements OnInit {
     });
   }
 
-  // 🟡 Borrado LÓGICO: marca status = "INACTIVE"
+  
   deleteStudyAdv(study: StudyReadI): void {
     this.confirmationService.confirm({
       message: `¿Marcar como INACTIVE el estudio #${study.id}?`,
@@ -112,7 +112,7 @@ export class ShowStudies implements OnInit {
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         if (study.id) {
-          // usa el endpoint existente de soft delete
+          
           this.studyService.delete(study.id).pipe(
             tap(() => {
               this.messageService.add({
@@ -120,7 +120,7 @@ export class ShowStudies implements OnInit {
                 summary: 'Actualizado',
                 detail: 'Estudio marcado como INACTIVE'
               });
-              this.refresh$.next(); // recarga lista
+              this.refresh$.next(); 
             }),
             catchError(error => {
               console.error('Error marcando INACTIVE:', error);
@@ -137,7 +137,7 @@ export class ShowStudies implements OnInit {
     });
   }
 
-  // Helpers de presentación (como ya tenías)
+  
   fullPatientName(s: StudyReadI): string {
     if (!s.patient) return '—';
     const { nombre, apellido } = s.patient;

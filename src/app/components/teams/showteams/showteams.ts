@@ -1,4 +1,4 @@
-// src/app/features/teams/showteams.ts
+
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
@@ -13,7 +13,7 @@ import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
 import { catchError, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 
 import { TeamI } from '../../../models/teams';
-import { TeamService } from '../../../services/team';   // 👈 asegúrate que el service se llame así
+import { TeamService } from '../../../services/team';   
 
 @Component({
   selector: 'app-showteams',
@@ -33,10 +33,10 @@ import { TeamService } from '../../../services/team';   // 👈 asegúrate que e
   providers: [ConfirmationService, MessageService]
 })
 export class Showteams implements OnInit {
-  // Dispara recargas
+  
   private refresh$ = new BehaviorSubject<void>(undefined);
 
-  // Stream principal de equipos
+  
   teams$: Observable<TeamI[]> = this.refresh$.pipe(
     switchMap(() =>
       this.teamService.getAllTeams().pipe(
@@ -55,7 +55,7 @@ export class Showteams implements OnInit {
     shareReplay(1)
   );
 
-  // Loading derivado del stream
+  
   loading$: Observable<boolean> = this.teams$.pipe(
     map(() => false),
     startWith(true)
@@ -68,7 +68,7 @@ export class Showteams implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Nada que subscribir manualmente
+    
   }
 
   trackById = (_: number, item: TeamI) => item.id;
@@ -77,11 +77,11 @@ export class Showteams implements OnInit {
     switch (estado) {
       case 'DISPONIBLE':    return 'success';
       case 'MANTENIMIENTO': return 'warn';
-      default:              return 'danger'; // OCUPADO
+      default:              return 'danger'; 
     }
   }
 
-  // 🔹 Eliminación física
+  
   deleteTeam(team: TeamI): void {
     this.confirmationService.confirm({
       message: `¿Está seguro de eliminar el equipo "${team.nombre}"?`,
@@ -96,7 +96,7 @@ export class Showteams implements OnInit {
                 summary: 'Éxito',
                 detail: 'Equipo eliminado correctamente'
               });
-              this.refresh$.next(); // recarga
+              this.refresh$.next(); 
             }),
             catchError(error => {
               console.error('Error deleting team:', error);
@@ -113,7 +113,7 @@ export class Showteams implements OnInit {
     });
   }
 
-  // 🔹 "Borrado lógico": marcar como MANTENIMIENTO
+  
   deleteTeamAdv(team: TeamI): void {
     this.confirmationService.confirm({
       message: `¿Marcar el equipo "${team.nombre}" como MANTENIMIENTO?`,
@@ -128,7 +128,7 @@ export class Showteams implements OnInit {
                 summary: 'Actualizado',
                 detail: 'Equipo marcado como MANTENIMIENTO'
               });
-              this.refresh$.next(); // recarga
+              this.refresh$.next(); 
             }),
             catchError(error => {
               console.error('Error marcando MANTENIMIENTO:', error);

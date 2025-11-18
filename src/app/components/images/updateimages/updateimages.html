@@ -1,4 +1,4 @@
-<!-- src/app/components/images/editimages/updateimages.html -->
+
 <div class="mx-auto w-full max-w-[880px] rounded-xl bg-white p-4 sm:p-6 shadow-sm">
   <div class="flex items-center justify-between mb-4">
     <h2 class="text-lg font-semibold text-slate-800">
@@ -17,7 +17,7 @@
 
   <form [formGroup]="form" (ngSubmit)="submit()" class="grid grid-cols-12 gap-3 text-sm">
 
-    <!-- ESTUDIO -->
+    
     <div class="col-span-12 md:col-span-6">
       <label for="estudioId" class="block mb-1 text-sm font-medium text-slate-700">Estudio</label>
       <p-select
@@ -35,7 +35,7 @@
       </small>
     </div>
 
-    <!-- TIPO -->
+    
     <div class="col-span-12 md:col-span-6">
       <label for="tipo" class="block mb-1 text-sm font-medium text-slate-700">Tipo</label>
       <p-select
@@ -53,7 +53,7 @@
       </small>
     </div>
 
-    <!-- NOMBRE ARCHIVO (solo lectura) -->
+    
     <div class="col-span-12 md:col-span-6">
       <label for="nombreArchivo" class="block mb-1 text-sm font-medium text-slate-700">
         Nombre de archivo
@@ -67,7 +67,7 @@
         readonly />
     </div>
 
-    <!-- TAMAÑO (solo lectura) -->
+    
     <div class="col-span-12 md:col-span-6">
       <label for="tamanoBytes" class="block mb-1 text-sm font-medium text-slate-700">
         Tamaño (bytes)
@@ -81,7 +81,7 @@
         readonly />
     </div>
 
-    <!-- URL (solo lectura, para referencia) -->
+    
     <div class="col-span-12">
       <label for="url" class="block mb-1 text-sm font-medium text-slate-700">
         URL almacenada
@@ -98,7 +98,7 @@
       </small>
     </div>
 
-    <!-- SERIE -->
+    
     <div class="col-span-12 md:col-span-6">
       <label for="serie" class="block mb-1 text-sm font-medium text-slate-700">Serie</label>
       <input
@@ -114,7 +114,7 @@
       </small>
     </div>
 
-    <!-- ORDEN -->
+    
     <div class="col-span-12 md:col-span-6">
       <label for="orden" class="block mb-1 text-sm font-medium text-slate-700">Orden</label>
       <input
@@ -129,7 +129,7 @@
       </small>
     </div>
 
-    <!-- BOTONES -->
+    
     <div class="col-span-12 flex justify-end gap-2 mt-4">
       <button
         pButton

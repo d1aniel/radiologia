@@ -2,7 +2,7 @@
   <h2 class="mb-4 text-lg font-semibold text-slate-800">Agregar Paciente</h2>
 
   <form [formGroup]="form" (ngSubmit)="submit()" class="grid grid-cols-12 gap-3">
-    <!-- NOMBRE -->
+    
     <div class="col-span-12 md:col-span-6">
       <label for="nombre" class="block mb-1 text-sm font-medium text-slate-700">Nombre</label>
       <input id="nombre" type="text" pInputText formControlName="nombre" placeholder="Ej. Camilo" class="w-full text-sm px-3 py-2"/>
@@ -12,7 +12,7 @@
       </small>
     </div>
 
-    <!-- APELLIDO -->
+    
     <div class="col-span-12 md:col-span-6">
       <label for="apellido" class="block mb-1 text-sm font-medium text-slate-700">Apellido</label>
       <input id="apellido" type="text" pInputText formControlName="apellido" placeholder="Ej. Rodríguez" class="w-full text-sm px-3 py-2"/>
@@ -22,7 +22,7 @@
       </small>
     </div>
 
-    <!-- SEXO -->
+    
     <div class="col-span-12 md:col-span-4">
       <label for="sexo" class="block mb-1 text-sm font-medium text-slate-700">Sexo</label>
       <p-select
@@ -37,7 +37,7 @@
       <small class="block mt-1 text-xs text-red-600" *ngIf="form.controls['sexo'].touched && form.controls['sexo'].errors?.['required']">El sexo es obligatorio.</small>
     </div>
 
-    <!-- TIPO DOCUMENTO -->
+    
     <div class="col-span-12 md:col-span-4">
       <label for="tpdocumento" class="block mb-1 text-sm font-medium text-slate-700">Tipo de Documento</label>
       <p-select
@@ -51,7 +51,7 @@
       </p-select>
     </div>
 
-    <!-- DOCUMENTO -->
+    
     <div class="col-span-12 md:col-span-4">
       <label for="documento" class="block mb-1 text-sm font-medium text-slate-700">Documento</label>
       <input id="documento" type="text" pInputText formControlName="documento" placeholder="Solo números" class="w-full text-sm px-3 py-2"/>
@@ -61,7 +61,7 @@
       </small>
     </div>
 
-    <!-- TELÉFONO -->
+    
     <div class="col-span-12 md:col-span-4">
       <label for="telefono" class="block mb-1 text-sm font-medium text-slate-700">Teléfono</label>
       <input id="telefono" type="text" pInputText formControlName="telefono" placeholder="Ej. 3001234567" class="w-full text-sm px-3 py-2"/>
@@ -71,14 +71,14 @@
       </small>
     </div>
 
-    <!-- EPS -->
+    
     <div class="col-span-12 md:col-span-4">
       <label for="eps" class="block mb-1 text-sm font-medium text-slate-700">EPS</label>
       <input id="eps" type="text" pInputText formControlName="eps" placeholder="Ej. Sanitas" class="w-full text-sm px-3 py-2"/>
       <small class="block mt-1 text-xs text-red-600" *ngIf="form.controls['eps'].touched && form.controls['eps'].errors?.['required']">La EPS es obligatoria.</small>
     </div>
 
-    <!-- CORREO -->
+    
     <div class="col-span-12 md:col-span-4">
       <label for="correo" class="block mb-1 text-sm font-medium text-slate-700">Correo</label>
       <input id="correo" type="email" pInputText formControlName="correo" placeholder="correo@dominio.com" class="w-full text-sm px-3 py-2"/>
@@ -86,7 +86,7 @@
       <small class="block mt-1 text-xs text-red-600" *ngIf="form.controls['correo'].touched && form.controls['correo'].errors?.['email']">Correo no válido.</small>
     </div>
 
-    <!-- ESTADO -->
+    
     <div class="col-span-12 md:col-span-4">
       <label for="status" class="block mb-1 text-sm font-medium text-slate-700">Estado</label>
       <p-select
@@ -100,7 +100,7 @@
       </p-select>
     </div>
 
-    <!-- ACCIONES -->
+    
     <div class="col-span-12">
       <div class="mt-3 flex items-center justify-end gap-2">
         <p-button label="Cancelar" severity="secondary" [size]="'small'" (onClick)="cancelar()" type="button"></p-button>

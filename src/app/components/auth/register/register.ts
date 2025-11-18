@@ -35,7 +35,7 @@ export class Register {
     }, { validators: this.passwordMatchValidator });
   }
 
-  // Validador personalizado para confirmar contraseñas
+  
   passwordMatchValidator(control: AbstractControl) {
     const password = control.get('password');
     const confirmPassword = control.get('confirmPassword');

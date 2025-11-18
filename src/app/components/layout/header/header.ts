@@ -30,7 +30,7 @@ export class Header implements OnInit, OnDestroy {
   ngOnInit() {
     this.updateMenuItems();
 
-    // 🔁 Escuchar los cambios del estado de autenticación
+    
     this.authSubscription = this.authService.authState$.subscribe(() => {
       this.updateMenuItems();
     });
@@ -80,12 +80,12 @@ export class Header implements OnInit, OnDestroy {
 
   private goToProfile(): void {
     console.log('Perfil clicked');
-    // Ejemplo: this.router.navigate(['/perfil']);
+    
   }
 
   private goToOptions(): void {
     console.log('Opciones clicked');
-    // Ejemplo: this.router.navigate(['/opciones']);
+    
   }
 
   private logout(): void {

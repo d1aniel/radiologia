@@ -1,4 +1,4 @@
-<!-- src/app/components/payments/createpayments/createpayments.html -->
+
 
 <p-toast></p-toast>
 
@@ -6,7 +6,7 @@
   <h2 class="mb-4 text-lg font-semibold text-slate-800">Registrar Pago</h2>
 
   <form [formGroup]="form" (ngSubmit)="submit()" class="grid grid-cols-12 gap-3">
-    <!-- PACIENTE -->
+    
     <div class="col-span-12">
       <label class="block mb-1 text-sm font-medium text-slate-700">Paciente</label>
       <p-select
@@ -23,14 +23,14 @@
       </small>
     </div>
 
-    <!-- ESTUDIO (opcional) -->
+    
     <div class="col-span-12 md:col-span-6">
       <label for="estudioId" class="block mb-1 text-sm font-medium text-slate-700">ID Estudio (opcional)</label>
       <input id="estudioId" type="text" pInputText formControlName="estudioId"
              placeholder="Ej. 101" class="w-full text-sm px-3 py-2"/>
     </div>
 
-    <!-- MONTO -->
+    
     <div class="col-span-12 md:col-span-6">
       <label class="block mb-1 text-sm font-medium text-slate-700">Monto</label>
       <p-inputnumber
@@ -49,7 +49,7 @@
       </small>
     </div>
 
-    <!-- METODO -->
+    
     <div class="col-span-12 md:col-span-6">
       <label class="block mb-1 text-sm font-medium text-slate-700">Método de pago</label>
       <p-select
@@ -66,7 +66,7 @@
       </small>
     </div>
 
-    <!-- FECHA -->
+    
     <div class="col-span-12 md:col-span-6">
       <label class="block mb-1 text-sm font-medium text-slate-700">Fecha</label>
       <p-datepicker
@@ -81,7 +81,7 @@
       </small>
     </div>
 
-    <!-- BOTONES -->
+    
     <div class="col-span-12 flex gap-2 pt-2 justify-end">
       <button
         pButton

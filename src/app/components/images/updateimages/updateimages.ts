@@ -1,4 +1,4 @@
-// src/app/components/images/editimages/editimages.ts
+
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -53,15 +53,15 @@ export class Updateimages implements OnInit {
     private studiesService: StudyService,
     private messageService: MessageService
   ) {
-    // Campos a editar / mostrar (NO cambiamos archivo aquí)
+    
     this.form = this.fb.group({
       estudioId: [null, Validators.required],
       tipo: ['', Validators.required],
-      // solo lectura (info actual del archivo)
+      
       nombreArchivo: [{ value: '', disabled: true }],
       tamanoBytes: [{ value: '', disabled: true }],
       url: [{ value: '', disabled: true }],
-      // editables
+      
       serie: [''],
       orden: [null, [Validators.min(0)]],
     });
@@ -81,10 +81,10 @@ export class Updateimages implements OnInit {
       return;
     }
 
-    // Cargar estudios para el select
+    
     this.cargarEstudios();
 
-    // Validación dinámica de serie cuando tipo = 'Serie'
+    
     this.form.get('tipo')!.valueChanges.subscribe((tipo: TipoImagen) => {
       const serieCtl = this.form.get('serie')!;
       if (tipo === 'Serie') {
@@ -95,7 +95,7 @@ export class Updateimages implements OnInit {
       serieCtl.updateValueAndValidity({ emitEvent: false });
     });
 
-    // Cargar datos de la imagen
+    
     this.cargarImagen();
   }
 
@@ -162,10 +162,10 @@ export class Updateimages implements OnInit {
       tipo: v.tipo,
       serie: v.serie || null,
       orden: v.orden != null ? Number(v.orden) : null,
-      // NO tocamos archivo ni url salvo que quieras permitir editar manualmente
-      // nombreArchivo: v.nombreArchivo,
-      // tamanoBytes: v.tamanoBytes,
-      // url: v.url,
+      
+      
+      
+      
     };
 
     this.imageService.updateImage(this.imageId, payload).subscribe({
@@ -176,7 +176,7 @@ export class Updateimages implements OnInit {
           summary: 'Éxito',
           detail: 'Imagen actualizada correctamente'
         });
-        this.router.navigate(['/images/show']); // ajusta si tu listado es /images/show
+        this.router.navigate(['/images/show']); 
       },
       error: (err) => {
         console.error('Error actualizando imagen', err);
@@ -191,7 +191,7 @@ export class Updateimages implements OnInit {
   }
 
   cancelar(): void {
-    this.router.navigate(['/images/show']); // ajusta si usas /images/show
+    this.router.navigate(['/images/show']); 
   }
 
   private formatStudyLabel(study: StudyReadI): string {

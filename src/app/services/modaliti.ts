@@ -1,11 +1,11 @@
-// src/app/services/modalidad.service.ts
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { AuthService } from '../services/auth';
-import { ModalidadI } from '../models/modalities'; // ajusta la ruta/nombre según tu proyecto
+import { ModalidadI } from '../models/modalities'; 
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +30,7 @@ export class ModalidadService {
     return headers;
   }
 
-  // GET /api/modalidades  → { modalidades: ModalidadI[] }
+  
   getAllModalidades(): Observable<ModalidadI[]> {
     return this.http
       .get<{ modalidades: ModalidadI[] }>(this.baseUrl, { headers: this.getHeaders() })
@@ -39,7 +39,7 @@ export class ModalidadService {
       );
   }
 
-  // GET /api/modalidades/:id → { modalidad: ModalidadI }
+  
   getModalidadById(id: number | string): Observable<ModalidadI> {
     return this.http
       .get<{ modalidad: ModalidadI }>(`${this.baseUrl}/${id}`, { headers: this.getHeaders() })
@@ -48,7 +48,7 @@ export class ModalidadService {
       );
   }
 
-  // POST /api/modalidades → { modalidad: ModalidadI }
+  
   createModalidad(data: Omit<ModalidadI, 'id'>): Observable<ModalidadI> {
     return this.http
       .post<{ modalidad: ModalidadI }>(this.baseUrl, data, { headers: this.getHeaders() })
@@ -57,7 +57,7 @@ export class ModalidadService {
       );
   }
 
-  // PATCH /api/modalidades/:id → { modalidad: ModalidadI }
+  
   updateModalidad(id: number | string, data: Partial<ModalidadI>): Observable<ModalidadI> {
     return this.http
       .patch<{ modalidad: ModalidadI }>(`${this.baseUrl}/${id}`, data, { headers: this.getHeaders() })
@@ -66,7 +66,7 @@ export class ModalidadService {
       );
   }
 
-  // DELETE /api/modalidades/:id → { message: string }
+  
   deleteModalidad(id: number | string): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(
       `${this.baseUrl}/${id}`,
@@ -74,7 +74,7 @@ export class ModalidadService {
     );
   }
 
-  // DELETE lógico /api/modalidades/:id/logic → { message: string }
+  
   deleteModalidadAdv(id: number | string): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(
       `${this.baseUrl}/${id}/logic`,
@@ -82,7 +82,7 @@ export class ModalidadService {
     );
   }
 
-  // ==== Manejo de estado local (igual que pacientes) ====
+  
 
   updateLocalModalidades(modalidades: ModalidadI[]): void {
     this.modalidadesSubject.next(modalidades);

@@ -1,4 +1,4 @@
-// src/app/components/payments/showpayments/showpayments.ts
+
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
@@ -13,7 +13,7 @@ import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
 import { catchError, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 
 import { PaymentI } from '../../../models/payments';
-import { PaymentService } from '../../../services/payment';   // 👈 Ojo: nombre igual al service que creamos
+import { PaymentService } from '../../../services/payment';   
 import { PacientsI } from '../../../models/pacients';
 import { PatientService } from '../../../services/patient';
 
@@ -35,10 +35,10 @@ import { PatientService } from '../../../services/patient';
   providers: [ConfirmationService, MessageService]
 })
 export class Showpayments implements OnInit {
-  // Dispara recargas de la tabla
+  
   private refresh$ = new BehaviorSubject<void>(undefined);
 
-  // Stream principal de pagos
+  
   payments$: Observable<PaymentI[]> = this.refresh$.pipe(
     switchMap(() =>
       this.paymentsService.getAllPayments().pipe(
@@ -57,13 +57,13 @@ export class Showpayments implements OnInit {
     shareReplay(1)
   );
 
-  // Loading derivado del stream
+  
   loading$: Observable<boolean> = this.payments$.pipe(
     map(() => false),
     startWith(true)
   );
 
-  // Índice de pacientes para mostrar nombre en lugar de ID
+  
   patientsIndex = new Map<number, PacientsI>();
 
   constructor(
@@ -74,7 +74,7 @@ export class Showpayments implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Cargamos pacientes una vez para tener el índice
+    
     this.patientsService.getAllPatients().subscribe(ps => {
       this.patientsIndex.clear();
       ps.forEach(p => {
@@ -101,7 +101,7 @@ export class Showpayments implements OnInit {
     }
   }
 
-  // Borrado físico
+  
   deletePayment(payment: PaymentI): void {
     this.confirmationService.confirm({
       message: `¿Está seguro de eliminar el pago #${payment.id}?`,
@@ -116,7 +116,7 @@ export class Showpayments implements OnInit {
                 summary: 'Éxito',
                 detail: 'Pago eliminado correctamente'
               });
-              this.refresh$.next(); // recarga la tabla
+              this.refresh$.next(); 
             }),
             catchError(error => {
               console.error('Error deleting payment:', error);
@@ -133,7 +133,7 @@ export class Showpayments implements OnInit {
     });
   }
 
-  // Borrado lógico -> marca estado = "VOID"
+  
   deletePaymentAdv(payment: PaymentI): void {
     this.confirmationService.confirm({
       message: `¿Marcar como VOID el pago #${payment.id}?`,
@@ -148,7 +148,7 @@ export class Showpayments implements OnInit {
                 summary: 'Actualizado',
                 detail: 'Pago marcado como VOID'
               });
-              this.refresh$.next(); // recarga
+              this.refresh$.next(); 
             }),
             catchError(error => {
               console.error('Error marcando VOID:', error);

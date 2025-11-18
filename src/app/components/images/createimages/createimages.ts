@@ -1,4 +1,4 @@
-// src/app/components/images/createimages/createimages.ts
+
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -59,18 +59,18 @@ export class Createimages implements OnInit, OnDestroy {
     this.form = this.fb.group({
       estudioId: [null, Validators.required],
       tipo: ['DICOM', Validators.required],
-      // Solo lectura, se rellenan al elegir archivo
+      
       nombreArchivo: [{ value: '', disabled: true }, Validators.required],
       tamanoBytes: [{ value: '', disabled: true }, Validators.required],
       serie: [''],
       orden: [null, [Validators.min(0)]],
-      // Campo virtual para validar que se subió archivo
+      
       fileCtl: [null, Validators.required]
     });
   }
 
   ngOnInit(): void {
-    // Cargar estudios para el dropdown
+    
     const s = this.studiesService.getAll().subscribe({
       next: ({ studies }) => {
         this.estudios = (studies ?? []).map((st: StudyReadI) => ({
@@ -89,7 +89,7 @@ export class Createimages implements OnInit, OnDestroy {
     });
     this.subs.add(s);
 
-    // Si el tipo es "Serie", exigimos "serie"
+    
     const s2 = this.form.get('tipo')!.valueChanges.subscribe((tipo: TipoImagen) => {
       const serieCtl = this.form.get('serie')!;
       if (tipo === 'Serie') {
@@ -159,7 +159,7 @@ export class Createimages implements OnInit, OnDestroy {
     const v = this.form.getRawValue();
     this.loading = true;
 
-    // 🔹 Construimos el FormData tal como lo espera el backend (file + campos texto)
+    
     const formData = new FormData();
     formData.append('file', this.selectedFile);
     formData.append('estudioId', String(v.estudioId));
@@ -175,7 +175,7 @@ export class Createimages implements OnInit, OnDestroy {
           detail: 'Imagen subida correctamente'
         });
         setTimeout(() => {
-          this.router.navigate(['/images/show']); // ajusta si tu listado es /images/show
+          this.router.navigate(['/images/show']); 
         }, 700);
       },
       error: (err) => {
@@ -191,7 +191,7 @@ export class Createimages implements OnInit, OnDestroy {
   }
 
   cancelar(): void {
-    this.router.navigate(['/images/show']); // ajusta si usas otra ruta
+    this.router.navigate(['/images/show']); 
   }
 
   getFieldError(fieldName: string): string {

@@ -39,7 +39,7 @@ export class Createstudies implements OnInit {
   form!: FormGroup;
   loading = false;
 
-  // Combos
+  
   patients: Opt[] = [];
   modalities: Opt[] = [];
   teams: Opt[] = [];
@@ -47,7 +47,7 @@ export class Createstudies implements OnInit {
   technologists: Opt[] = [];
   labelsOpt: { label: string; value: number }[] = [];
 
-  // Opciones estáticas
+  
   prioridadOpts: { label: string; value: Prioridad }[] = [
     { label: 'Baja', value: 'BAJA' },
     { label: 'Media', value: 'MEDIA' },
@@ -78,19 +78,19 @@ export class Createstudies implements OnInit {
       medico_id: [null],
       quote_id: [null],
 
-      fechaHora: [new Date(), Validators.required], // Calendar devuelve Date
+      fechaHora: [new Date(), Validators.required], 
       prioridad: ['MEDIA', Validators.required],
       motivo: ['', [Validators.required, Validators.minLength(3)]],
       status: ['ACTIVE', Validators.required],
 
-      labels: [[]] // number[]
+      labels: [[]] 
     });
 
-    // Cargar combos
+    
     this.loadCombos();
   }
 
-  /** ====== Helpers ====== */
+  
   private headers(): HttpHeaders {
     let h = new HttpHeaders();
     const t = this.auth.getToken?.();
@@ -99,7 +99,7 @@ export class Createstudies implements OnInit {
   }
 
   private loadCombos(): void {
-    // Ajusta si tus endpoints difieren. Estos son convenciones típicas:
+    
     this.http.get<any>('http://localhost:4000/api/pacientes', { headers: this.headers() })
       .subscribe({
         next: (data) => {
@@ -131,7 +131,7 @@ export class Createstudies implements OnInit {
     this.http.get<any>('http://localhost:4000/api/equipos', { headers: this.headers() })
       .subscribe({
         next: (data) => {
-          // Tu backend devuelve { teams: [...] }
+          
           const list = Array.isArray(data) ? data : (data.teams || []);
 
           this.teams = (list || []).map((t: any) => ({

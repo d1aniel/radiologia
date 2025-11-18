@@ -1,4 +1,4 @@
-// src/app/components/patients/showpatients/showpatients.ts
+
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
@@ -31,10 +31,10 @@ import { PatientService } from '../../../services/patient';
   providers: [ConfirmationService, MessageService]
 })
 export class Showpatients implements OnInit {
-  // Dispara recargas
+  
   private refresh$ = new BehaviorSubject<void>(undefined);
 
-  // Stream principal de pacientes
+  
   pacients$: Observable<PacientsI[]> = this.refresh$.pipe(
     switchMap(() =>
       this.patientsService.getAllPatients().pipe(
@@ -53,7 +53,7 @@ export class Showpatients implements OnInit {
     shareReplay(1)
   );
 
-  // Loading derivado del stream (evita NG0100)
+  
   loading$: Observable<boolean> = this.pacients$.pipe(
     map(() => false),
     startWith(true)
@@ -66,7 +66,7 @@ export class Showpatients implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // No subscribe aquí
+    
   }
 
   trackById = (_: number, item: PacientsI) => item.id ?? item.documento;
@@ -85,7 +85,7 @@ export class Showpatients implements OnInit {
                 summary: 'Éxito',
                 detail: 'Paciente eliminado correctamente'
               });
-              this.refresh$.next(); // recarga
+              this.refresh$.next(); 
             }),
             catchError(error => {
               console.error('Error deleting patient:', error);
@@ -102,7 +102,7 @@ export class Showpatients implements OnInit {
     });
   }
 
-  // 🔹 Borrado lógico: marca status = "INACTIVE"
+  
   deletePatientAdv(patient: PacientsI): void {
     this.confirmationService.confirm({
       message: `¿Marcar como INACTIVE a ${patient.nombre} ${patient.apellido}?`,
@@ -117,7 +117,7 @@ export class Showpatients implements OnInit {
                 summary: 'Actualizado',
                 detail: 'Paciente marcado como INACTIVE'
               });
-              this.refresh$.next(); // recarga
+              this.refresh$.next(); 
             }),
             catchError(error => {
               console.error('Error marcando INACTIVE:', error);

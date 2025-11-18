@@ -1,4 +1,4 @@
-// src/app/components/labels/showlabels/showlabels.ts
+
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -21,7 +21,7 @@ import {
 } from 'rxjs/operators';
 
 import { LabelsI } from '../../../models/labels';
-// 👇 Usa el nombre real de tu service: LabelService o TagsService
+
 import { LabelService } from '../../../services/label';
 
 @Component({
@@ -42,10 +42,10 @@ import { LabelService } from '../../../services/label';
   providers: [ConfirmationService, MessageService]
 })
 export class Showlabels implements OnInit {
-  // Dispara recargas
+  
   private refresh$ = new BehaviorSubject<void>(undefined);
 
-  // Stream principal de labels
+  
   labels$: Observable<LabelsI[]> = this.refresh$.pipe(
     switchMap(() =>
       this.labelService.getAllLabels().pipe(
@@ -64,7 +64,7 @@ export class Showlabels implements OnInit {
     shareReplay(1)
   );
 
-  // Loading derivado del stream
+  
   loading$: Observable<boolean> = this.labels$.pipe(
     map(() => false),
     startWith(true)
@@ -77,12 +77,12 @@ export class Showlabels implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Nada aquí, el stream se dispara con refresh$
+    
   }
 
   trackById = (_: number, item: LabelsI) => item.id;
 
-  // 🔴 Eliminar físico
+  
   deleteLabel(label: LabelsI): void {
     this.confirmationService.confirm({
       message: `¿Está seguro de eliminar la etiqueta "${label.nombre}"?`,
@@ -99,7 +99,7 @@ export class Showlabels implements OnInit {
                   summary: 'Éxito',
                   detail: 'Etiqueta eliminada correctamente'
                 });
-                this.refresh$.next(); // recarga
+                this.refresh$.next(); 
               }),
               catchError(error => {
                 console.error('Error deleting label:', error);
@@ -117,7 +117,7 @@ export class Showlabels implements OnInit {
     });
   }
 
-  // 🟡 Borrado lógico: status = "INACTIVE"
+  
   deleteLabelAdv(label: LabelsI): void {
     this.confirmationService.confirm({
       message: `¿Marcar como INACTIVE la etiqueta "${label.nombre}"?`,
@@ -134,7 +134,7 @@ export class Showlabels implements OnInit {
                   summary: 'Actualizado',
                   detail: 'Etiqueta marcada como INACTIVE'
                 });
-                this.refresh$.next(); // recarga
+                this.refresh$.next(); 
               }),
               catchError(error => {
                 console.error('Error marcando INACTIVE:', error);

@@ -1,4 +1,4 @@
-// src/app/components/labels/createlabels/createlabels.ts
+
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -9,7 +9,7 @@ import { Select } from 'primeng/select';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 
-// 👇 Usa el service real: LabelService o TagsService
+
 import { LabelService } from '../../../services/label';
 
 @Component({
@@ -45,7 +45,7 @@ export class Createlabels {
   submit(): void {
     if (this.form.valid) {
       this.loading = true;
-      const payload = this.form.value; // { nombre, descripcion, status }
+      const payload = this.form.value; 
 
       this.labelService.createLabel(payload).subscribe({
         next: () => {
@@ -55,7 +55,7 @@ export class Createlabels {
             detail: 'Etiqueta creada correctamente'
           });
           setTimeout(() => {
-            // Ajusta según tu ruta de listado
+            
             this.router.navigate(['/labels/show']);
           }, 800);
         },

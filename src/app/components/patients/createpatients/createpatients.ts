@@ -1,4 +1,4 @@
-// src/app/components/patients/createpatients/createpatients.ts
+
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -23,7 +23,7 @@ export class Createpatients {
   form: FormGroup;
   loading = false;
 
-  // Opciones (coinciden con tu modelo/backend)
+  
   statusOptions = [
     { label: 'Activo', value: 'ACTIVATE' },
     { label: 'Inactivo', value: 'INACTIVE' }
@@ -52,7 +52,7 @@ export class Createpatients {
       apellido: ['', [Validators.required, Validators.minLength(2)]],
       tpdocumento: ['cedula', Validators.required],
       documento: ['', [Validators.required, Validators.pattern(/^\d{6,15}$/)]],
-      sexo: ['', Validators.required], // M | F | O según tu modelo
+      sexo: ['', Validators.required], 
       telefono: ['', [Validators.required, Validators.pattern(/^\d{7,15}$/)]],
       eps: ['', [Validators.required, Validators.minLength(2)]],
       correo: ['', [Validators.required, Validators.email]],
@@ -73,7 +73,7 @@ export class Createpatients {
             detail: 'Paciente creado correctamente'
           });
           setTimeout(() => {
-            // Ajusta la ruta según tu listado (ej: '/patients' o '/patients/show')
+            
             this.router.navigate(['/patients/show']);
           }, 800);
         },
@@ -98,7 +98,7 @@ export class Createpatients {
   }
 
   cancelar(): void {
-    // Ajusta la ruta según tu listado (ej: '/patients' o '/patients/show')
+    
     this.router.navigate(['/patients/show']);
   }
 

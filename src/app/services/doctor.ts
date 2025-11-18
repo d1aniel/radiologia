@@ -1,12 +1,12 @@
-// src/app/services/medico.service.ts
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AuthService } from '../services/auth';
-import { MedicoI } from '../models/doctors'; // ajusta la ruta/nombre
+import { MedicoI } from '../models/doctors'; 
 
-// Modelo tal como lo devuelve el backend (telefono como string)
+
 interface DoctorBackendI {
   id: number;
   nombre: string;
@@ -21,7 +21,7 @@ interface DoctorBackendI {
   providedIn: 'root'
 })
 export class MedicoService {
-  // AJUSTA esta URL a tu ruta real
+  
   private baseUrl = 'http://localhost:4000/api/doctores';
 
   private medicosSubject = new BehaviorSubject<MedicoI[]>([]);
@@ -41,18 +41,18 @@ export class MedicoService {
     return headers;
   }
 
-  // ==== Helpers de mapeo ====
+  
 
-  // Backend -> Front
+  
   private mapBackendToFront(d: DoctorBackendI): MedicoI {
     return {
       ...d,
-      telefono: d.telefono || '', // por si viene algo raro
-      registro: d.registro || undefined, // convert null to undefined
+      telefono: d.telefono || '', 
+      registro: d.registro || undefined, 
     };
   }
 
-  // Front -> Backend (para crear/actualizar)
+  
   private mapFrontToBackend(m: MedicoI | Partial<MedicoI>): any {
     return {
       ...m,
@@ -60,9 +60,9 @@ export class MedicoService {
     };
   }
 
-  // ==== CRUD ====
+  
 
-  // GET /doctores  -> { doctors: DoctorBackendI[] }
+  
   getAllMedicos(): Observable<MedicoI[]> {
     return this.http
       .get<{ doctors: DoctorBackendI[] }>(this.baseUrl, { headers: this.getHeaders() })
@@ -71,7 +71,7 @@ export class MedicoService {
       );
   }
 
-  // GET /doctores/:id  -> { doctor: DoctorBackendI }
+  
   getMedicoById(id: number | string): Observable<MedicoI> {
     return this.http
       .get<{ doctor: DoctorBackendI }>(`${this.baseUrl}/${id}`, { headers: this.getHeaders() })
@@ -80,7 +80,7 @@ export class MedicoService {
       );
   }
 
-  // POST /doctores
+  
   createMedico(medico: MedicoI): Observable<MedicoI> {
     const body = this.mapFrontToBackend(medico);
     return this.http
@@ -88,7 +88,7 @@ export class MedicoService {
       .pipe(map(d => this.mapBackendToFront(d)));
   }
 
-  // PATCH /doctores/:id
+  
   updateMedico(id: number | string, medico: Partial<MedicoI>): Observable<MedicoI> {
     const body = this.mapFrontToBackend(medico);
     return this.http
@@ -96,14 +96,14 @@ export class MedicoService {
       .pipe(map(d => this.mapBackendToFront(d)));
   }
 
-  // DELETE físico /doctores/:id
+  
   deleteMedico(id: number | string): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(`${this.baseUrl}/${id}`, {
       headers: this.getHeaders(),
     });
   }
 
-  // DELETE lógico /doctores/:id/logic
+  
   deleteMedicoAdv(id: number | string): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(
       `${this.baseUrl}/${id}/logic`,
@@ -111,7 +111,7 @@ export class MedicoService {
     );
   }
 
-  // ==== Estado local ====
+  
 
   updateLocalMedicos(medicos: MedicoI[]): void {
     this.medicosSubject.next(medicos);

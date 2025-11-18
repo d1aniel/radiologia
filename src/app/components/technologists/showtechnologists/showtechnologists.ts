@@ -1,4 +1,4 @@
-// src/app/components/technologists/showtechnologists/showtechnologists.ts
+
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
@@ -31,10 +31,10 @@ import { TechnologistService } from '../../../services/technologist';
   providers: [ConfirmationService, MessageService]
 })
 export class Showtechnologists implements OnInit {
-  // Dispara recargas
+  
   private refresh$ = new BehaviorSubject<void>(undefined);
 
-  // Stream principal de tecnólogos
+  
   technologists$: Observable<TecnologoI[]> = this.refresh$.pipe(
     switchMap(() =>
       this.technologistService.getAllTechnologists().pipe(
@@ -53,7 +53,7 @@ export class Showtechnologists implements OnInit {
     shareReplay(1)
   );
 
-  // Loading derivado del stream
+  
   loading$: Observable<boolean> = this.technologists$.pipe(
     map(() => false),
     startWith(true)
@@ -66,7 +66,7 @@ export class Showtechnologists implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // no subscribe aquí
+    
   }
 
   trackById = (_: number, item: TecnologoI) => item.id;
@@ -85,7 +85,7 @@ export class Showtechnologists implements OnInit {
                 summary: 'Éxito',
                 detail: 'Tecnólogo eliminado correctamente'
               });
-              this.refresh$.next(); // recarga
+              this.refresh$.next(); 
             }),
             catchError(error => {
               console.error('Error deleting technologist:', error);
@@ -102,7 +102,7 @@ export class Showtechnologists implements OnInit {
     });
   }
 
-  // 🔹 Borrado lógico: marca status = "INACTIVE"
+  
   deleteTechnologistAdv(technologist: TecnologoI): void {
     this.confirmationService.confirm({
       message: `¿Marcar como INACTIVE al tecnólogo ${technologist.nombre}?`,
@@ -117,7 +117,7 @@ export class Showtechnologists implements OnInit {
                 summary: 'Actualizado',
                 detail: 'Tecnólogo marcado como INACTIVE'
               });
-              this.refresh$.next(); // recarga
+              this.refresh$.next(); 
             }),
             catchError(error => {
               console.error('Error marcando INACTIVE:', error);
